@@ -1,0 +1,59 @@
+{
+  "name": "@olwiba/docs",
+  "version": "0.0.1",
+  "private": false,
+  "type": "module",
+  "sideEffects": false,
+  "description": "olwibaDOCS - Fumadocs abstraction for TanStack Start documentation sites",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    },
+    "./styles": "./src/styles/docs.css",
+    "./source": {
+      "import": "./dist/lib/source.js"
+    },
+    "./mdx": {
+      "import": "./dist/lib/mdx-components.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "types:check": "tsc --noEmit",
+    "sync": "bun run scripts/sync-from-cn.ts",
+    "sync:build": "bun run sync && bun run build",
+    "prepublishOnly": "bun run build"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "fumadocs-core": "^16.4.7",
+    "fumadocs-ui": "^16.4.7",
+    "lucide-react": "^0.562.0",
+    "tailwind-merge": "^3.4.0"
+  },
+  "peerDependencies": {
+    "@olwiba/cn": ">=0.0.1",
+    "@tanstack/react-router": ">=1.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Olwiba/olwibaDOCS"
+  },
+  "author": "Olwiba",
+  "license": "MIT"
+}
