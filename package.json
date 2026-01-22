@@ -1,6 +1,6 @@
 {
   "name": "@olwiba/docs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "type": "module",
   "sideEffects": false,
@@ -33,7 +33,8 @@
     "sync": "bun run scripts/sync-from-cn.ts",
     "sync:build": "bun run sync && bun run build",
     "postinstall": "fumadocs-mdx",
-    "prepublishOnly": "bun run build"
+    "prepublishOnly": "bun run build",
+    "release": "npm publish --registry https://npm.olwiba.com/"
   },
   "dependencies": {
     "clsx": "^2.1.1",

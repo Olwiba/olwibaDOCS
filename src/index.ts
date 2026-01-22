@@ -1,6 +1,7 @@
 // Components
 export { Callout, type CalloutProps } from './components/Callout';
 export { CopyButton } from './components/CopyButton';
+export { DocsProvider, type DocsProviderProps } from './components/DocsProvider';
 export { DocsSidebar, type DocsSidebarProps, type SidebarSection } from './components/DocsSidebar';
 export { DocsToc, type DocsTocProps, type TocItem } from './components/DocsToc';
 export { ModeSwitcher, type ModeSwitcherProps } from './components/ModeSwitcher';

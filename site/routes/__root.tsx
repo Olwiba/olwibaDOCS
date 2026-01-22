@@ -1,19 +1,14 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from '@tanstack/react-router';
 import * as React from 'react';
 import appCss from '~/styles/app.css?url';
-import { RootProvider } from 'fumadocs-ui/provider/tanstack';
+import { DocsProvider } from '@/components/DocsProvider';
 import { SiteHeader } from '~/components/SiteHeader';
 import { SiteFooter } from '~/components/SiteFooter';
-import { SearchDialog, type SearchDialogItem, type SearchDialogProps } from '@/components/SearchDialog';
 
-const searchItems: SearchDialogItem[] = [
+const searchItems = [
   { label: 'Get Started', href: '/docs' },
   { label: 'Components', href: '/docs/components' },
 ];
-
-function DocsSearchDialog(props: SearchDialogProps) {
-  return <SearchDialog items={searchItems} {...props} />;
-}
 
 export const Route = createRootRoute({
   head: () => ({
@@ -49,17 +44,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="flex min-h-screen flex-col antialiased [--header-height:3.5rem] [--footer-height:3.5rem]">
-        <RootProvider
-          search={{
-            SearchDialog: DocsSearchDialog,
-          }}
-        >
+        <DocsProvider searchItems={searchItems}>
           <SiteHeader />
           <div className="mx-auto w-full max-w-[1400px] flex-1 border-r border-l border-dashed">
             {children}
           </div>
           <SiteFooter />
-        </RootProvider>
+        </DocsProvider>
         <Scripts />
       </body>
     </html>
