@@ -44,8 +44,8 @@ const HOOKS = [
 // Note: docs components are in src/components/docs/, so paths go up 2 levels
 function transformImports(content: string, filePath: string): string {
   return content
-    // Change @/components/ui/* imports to @olwiba/cn
-    .replace(/@\/components\/ui\//g, '@olwiba/cn/')
+    // Change @/components/ui/* imports to @olwiba/cn (no subpaths - CN doesn't export them)
+    .replace(/from ['"]@\/components\/ui\/[^'"]+['"]/g, "from '@olwiba/cn'")
     .replace(/from ['"]@\/components\/ui['"]/g, "from '@olwiba/cn'")
     // Change @/lib/utils to ../../lib/utils (2 levels up from components/docs/)
     .replace(/@\/lib\/utils/g, '../../lib/utils')

@@ -1,0 +1,71 @@
+---
+title: DocsToc
+description: Table of contents component for documentation pages.
+---
+
+## Overview
+
+The `DocsToc` component renders a table of contents based on the headings in your MDX content. It highlights the currently visible section as the user scrolls.
+
+## Import
+
+```tsx
+import { DocsToc, type TocItem } from '@olwiba/docs';
+```
+
+## Usage
+
+```tsx
+import { DocsToc } from '@olwiba/docs';
+
+function DocsPage({ toc }) {
+  return (
+    <div className="sticky top-16">
+      <DocsToc toc={toc} />
+    </div>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `toc` | `TocItem[]` | Array of table of contents items |
+
+## TocItem Type
+
+```ts
+interface TocItem {
+  title: string;
+  url: string;
+  depth: number;
+}
+```
+
+## Extracting TOC from MDX
+
+The TOC is typically extracted during the server-side loading of your MDX content:
+
+```tsx
+const serverLoader = createServerFn()
+  .handler(async ({ data: slugs }) => {
+    const page = source.getPage(slugs);
+
+    return {
+      toc: (page.data.toc ?? []).map((item) => ({
+        title: extractTextFromReactNode(item.title),
+        url: item.url,
+        depth: item.depth,
+      })),
+      // ...other data
+    };
+  });
+```
+
+## Features
+
+- Automatic scroll tracking
+- Smooth scroll to section on click
+- Nested heading support (h2, h3, h4)
+- Highlights active section

@@ -1,0 +1,45 @@
+---
+title: Components
+description: Pre-built documentation components for TanStack Start sites.
+---
+
+## Overview
+
+`@olwiba/docs` provides a collection of pre-built components designed specifically for documentation sites built with TanStack Start and Fumadocs.
+
+## Available Components
+
+| Component | Description |
+|-----------|-------------|
+| [DocsSidebar](/docs/components/docs-sidebar) | Navigation sidebar with page tree |
+| [DocsToc](/docs/components/docs-toc) | Table of contents for current page |
+| [SearchDialog](/docs/components/search-dialog) | Full-text search dialog |
+| [SearchButton](/docs/components/search-dialog) | Trigger button for search |
+| [ModeSwitcher](/docs/components/docs-sidebar) | Dark/light mode toggle |
+| [Callout](/docs/components/mdx-components) | Highlighted callout boxes |
+| [CopyButton](/docs/components/mdx-components) | Copy to clipboard button |
+
+## Usage
+
+All components can be imported from the main package:
+
+```tsx
+import {
+  DocsSidebar,
+  DocsToc,
+  SearchDialog,
+  SearchButton,
+  ModeSwitcher,
+  Callout,
+  CopyButton,
+  mdxComponents,
+} from '@olwiba/docs';
+```
+
+## Dependencies
+
+These components depend on `@olwiba/cn` for UI primitives like buttons, dialogs, and the sidebar system. Make sure you have it installed:
+
+```bash
+bun add @olwiba/cn
+```

@@ -1,0 +1,85 @@
+---
+title: SearchDialog
+description: Full-text search dialog for documentation sites.
+---
+
+## Overview
+
+The `SearchDialog` component provides a full-text search experience for your documentation. It integrates with Fumadocs' search functionality and supports keyboard navigation.
+
+## Import
+
+```tsx
+import { SearchDialog, SearchButton } from '@olwiba/docs';
+```
+
+## Usage
+
+### With RootProvider
+
+The recommended way to use the search dialog is with the `RootProvider` from fumadocs-ui:
+
+```tsx
+import { RootProvider } from 'fumadocs-ui/provider/tanstack';
+import { SearchDialog } from '@olwiba/docs';
+
+function RootDocument({ children }) {
+  return (
+    <RootProvider
+      search={{
+        SearchDialog,
+      }}
+    >
+      {children}
+    </RootProvider>
+  );
+}
+```
+
+### SearchButton
+
+Use the `SearchButton` component to trigger the search dialog:
+
+```tsx
+import { SearchButton } from '@olwiba/docs';
+
+function Header() {
+  return (
+    <header>
+      <SearchButton />
+    </header>
+  );
+}
+```
+
+## Search API
+
+You need to set up a search API endpoint for the dialog to work:
+
+```ts
+// routes/api/search/index.ts
+import { createFileRoute } from '@tanstack/react-router';
+import { createFromSource } from 'fumadocs-core/search/server';
+import { source } from '~/lib/source';
+
+const search = createFromSource(source, {
+  language: 'english',
+});
+
+export const Route = createFileRoute('/api/search/')({
+  server: {
+    handlers: {
+      GET: async ({ request }) => {
+        return search.GET(request);
+      },
+    },
+  },
+});
+```
+
+## Keyboard Shortcuts
+
+- `Cmd/Ctrl + K`: Open search dialog
+- `Escape`: Close dialog
+- `Arrow Up/Down`: Navigate results
+- `Enter`: Go to selected result

@@ -1,0 +1,61 @@
+---
+title: DocsSidebar
+description: Navigation sidebar component for documentation pages.
+---
+
+## Overview
+
+The `DocsSidebar` component renders a navigation sidebar based on your Fumadocs page tree. It automatically highlights the current page and organizes content into sections.
+
+## Import
+
+```tsx
+import { DocsSidebar } from '@olwiba/docs';
+```
+
+## Usage
+
+```tsx
+import { DocsSidebar } from '@olwiba/docs';
+import { SidebarProvider } from '@olwiba/cn';
+
+function DocsPage({ pageTree }) {
+  return (
+    <SidebarProvider>
+      <DocsSidebar tree={pageTree} />
+      {/* Page content */}
+    </SidebarProvider>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `tree` | `PageTree.Root` | The Fumadocs page tree structure |
+| `...props` | `SidebarProps` | All other props are passed to the underlying Sidebar component |
+
+## Page Tree
+
+The page tree is typically obtained from your Fumadocs source loader:
+
+```tsx
+const serverLoader = createServerFn()
+  .handler(async ({ data: slugs }) => {
+    const page = source.getPage(slugs);
+    const pageTree = source.getPageTree();
+
+    return {
+      pageTree: await source.serializePageTree(pageTree),
+      // ...other data
+    };
+  });
+```
+
+## Styling
+
+The sidebar is styled to match the olwiba design system. It uses CSS variables for customization:
+
+- `--sidebar-width`: Width of the sidebar (default: 220px on mobile, 240px on desktop)
+- `--header-height`: Height of the site header for proper positioning

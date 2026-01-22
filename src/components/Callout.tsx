@@ -2,7 +2,12 @@
 
 import * as React from 'react';
 import { cn } from '../lib/utils';
-import { Alert, AlertDescription, AlertTitle } from '@olwiba/cn/alert';
+import { Alert, AlertDescription, AlertTitle } from '@olwiba/cn';
+
+export interface CalloutProps extends React.ComponentProps<typeof Alert> {
+  icon?: React.ReactNode;
+  variant?: 'default' | 'info' | 'warning';
+}
 
 export function Callout({
   title,
@@ -11,10 +16,7 @@ export function Callout({
   className,
   variant = 'default',
   ...props
-}: React.ComponentProps<typeof Alert> & {
-  icon?: React.ReactNode;
-  variant?: 'default' | 'info' | 'warning';
-}) {
+}: CalloutProps) {
   return (
     <Alert
       data-variant={variant}

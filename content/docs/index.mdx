@@ -1,0 +1,93 @@
+---
+title: Getting Started
+description: Get started with @olwiba/docs - a Fumadocs abstraction for TanStack Start documentation sites.
+---
+
+## Introduction
+
+`@olwiba/docs` provides pre-built documentation components and utilities for creating beautiful documentation sites with TanStack Start and Fumadocs.
+
+## Installation
+
+```bash
+bun add @olwiba/docs @olwiba/cn fumadocs-core fumadocs-ui fumadocs-mdx
+```
+
+## Quick Setup
+
+### 1. Configure Fumadocs MDX
+
+Create a `source.config.ts` in your project root:
+
+```ts
+import { defineConfig, defineDocs } from 'fumadocs-mdx/config';
+import rehypePrettyCode from 'rehype-pretty-code';
+
+export const docs = defineDocs({
+  dir: 'content/docs',
+});
+
+export default defineConfig({
+  mdxOptions: {
+    rehypePlugins: (plugins) => {
+      plugins.shift();
+      plugins.push([
+        rehypePrettyCode,
+        {
+          theme: {
+            dark: 'github-dark',
+            light: 'github-light-default',
+          },
+        },
+      ]);
+      return plugins;
+    },
+  },
+});
+```
+
+### 2. Create Source Loader
+
+Create `lib/source.ts`:
+
+```ts
+import { createSource } from '@olwiba/docs/source';
+import { docs } from 'fumadocs-mdx:collections/server';
+
+export const source = createSource({
+  source: docs.toFumadocsSource(),
+  baseUrl: '/docs',
+});
+```
+
+### 3. Update Vite Config
+
+```ts
+import mdx from 'fumadocs-mdx/vite';
+
+export default defineConfig({
+  plugins: [
+    mdx(await import('./source.config')),
+    // ... other plugins
+  ],
+});
+```
+
+### 4. Use Components
+
+```tsx
+import { DocsSidebar, DocsToc, SearchDialog, mdxComponents } from '@olwiba/docs';
+import { SidebarProvider, Button } from '@olwiba/cn';
+```
+
+## Requirements
+
+- React 18+
+- TanStack Router / Start
+- Tailwind CSS v4
+- `@olwiba/cn` for UI primitives
+
+## Next Steps
+
+- Browse the [Components](/docs/components) to see what's available
+- Check out individual component documentation for usage examples

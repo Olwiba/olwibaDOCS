@@ -2,13 +2,13 @@
 
 import { Menu, Text } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button } from "@olwiba/cn/button";
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@olwiba/cn/dropdown-menu";
+} from "@olwiba/cn";
 import { cn } from "../lib/utils";
 
 function useActiveItem(itemIds: string[]) {
@@ -190,15 +190,17 @@ export interface TocItem {
   depth: number;
 }
 
+export interface DocsTocProps {
+  toc: TocItem[];
+  variant?: "dropdown" | "list";
+  className?: string;
+}
+
 export function DocsToc({
   toc,
   variant = "list",
   className,
-}: {
-  toc: TocItem[];
-  variant?: "dropdown" | "list";
-  className?: string;
-}) {
+}: DocsTocProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemIds = useMemo(

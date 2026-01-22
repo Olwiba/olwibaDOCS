@@ -1,0 +1,89 @@
+---
+title: MDX Components
+description: Pre-styled MDX component mappings for documentation.
+---
+
+## Overview
+
+`@olwiba/docs` exports a set of pre-styled MDX components that you can use to render your documentation content with consistent styling.
+
+## Import
+
+```tsx
+import { mdxComponents } from '@olwiba/docs';
+// or
+import { mdxComponents } from '@olwiba/docs/mdx';
+```
+
+## Usage
+
+Use the components with fumadocs-ui's default MDX components:
+
+```tsx
+import defaultMdxComponents from 'fumadocs-ui/mdx';
+import { mdxComponents } from '@olwiba/docs';
+
+<MDX
+  components={{
+    ...defaultMdxComponents,
+    ...mdxComponents,
+  }}
+/>
+```
+
+## Included Components
+
+### Typography
+
+- `h1`, `h2`, `h3`, `h4` - Styled headings with proper spacing
+- `p` - Paragraphs with comfortable line height
+- `a` - Links with underline styling
+- `strong` - Bold text
+- `blockquote` - Styled block quotes
+
+### Lists
+
+- `ul` - Unordered lists
+- `ol` - Ordered lists
+- `li` - List items
+
+### Code
+
+- `pre` - Code blocks with copy button
+- `code` - Inline code with background
+
+### Tables
+
+- `table`, `tr`, `th`, `td` - Styled tables with borders
+
+### Special Components
+
+- `Steps` / `Step` - Numbered step-by-step instructions
+- `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` - Tabbed content
+- `Callout` - Highlighted information boxes
+- `Button` - Interactive buttons
+- `Accordion` - Collapsible content sections
+
+## Callout Component
+
+```tsx
+import { Callout } from '@olwiba/docs';
+
+<Callout type="info">
+  This is an informational callout.
+</Callout>
+
+<Callout type="warning">
+  This is a warning callout.
+</Callout>
+```
+
+## CopyButton Component
+
+```tsx
+import { CopyButton } from '@olwiba/docs';
+
+<CopyButton text="Text to copy" />
+```
+
+The `CopyButton` is automatically included in code blocks rendered by the `pre` component.

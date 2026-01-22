@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Copy } from "lucide-react";
-import { Button } from "@olwiba/cn/button";
+import { Button } from "@olwiba/cn";
 import { useCopyToClipboard } from "../hooks/use-copy-to-clipboard";
 import { cn } from "../lib/utils";
 

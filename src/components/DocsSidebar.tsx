@@ -10,20 +10,22 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@olwiba/cn/sidebar';
-import { ScrollArea } from '@olwiba/cn/scroll-area';
+  ScrollArea,
+} from '@olwiba/cn';
 import type { PageTree } from 'fumadocs-core/source';
 
-const TOP_LEVEL_SECTIONS = [
-  { name: 'Get Started', href: '/docs' },
-  { name: 'Components', href: '/docs/components' },
-];
-
-interface DocsSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  tree: PageTree.Root;
+export interface SidebarSection {
+  name: string;
+  href: string;
 }
 
-export function DocsSidebar({ tree, ...props }: DocsSidebarProps) {
+export interface DocsSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  tree: PageTree.Root;
+  /** Top-level navigation sections shown above the page tree */
+  sections?: SidebarSection[];
+}
+
+export function DocsSidebar({ tree, sections, ...props }: DocsSidebarProps) {
   const location = useLocation();
   const pathname = location.pathname;
 
@@ -36,30 +38,32 @@ export function DocsSidebar({ tree, ...props }: DocsSidebarProps) {
       <SidebarContent className="no-scrollbar overflow-x-hidden px-2">
         <ScrollArea className="h-[calc(90svh-50px)]">
           <div className="sticky -top-1 z-10 h-8 shrink-0 bg-gradient-to-b from-background via-background/80 to-background/50" />
-          <SidebarGroup>
-            <SidebarGroupLabel className="font-medium text-muted-foreground">
-              Sections
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {TOP_LEVEL_SECTIONS.map(({ name, href }) => (
-                  <SidebarMenuItem key={name}>
-                    <SidebarMenuButton
-                      asChild
-                      className="relative h-[30px] w-fit overflow-visible border border-transparent font-medium text-[0.8rem] data-[active=true]:border-accent data-[active=true]:bg-accent"
-                      isActive={
-                        href === '/docs'
-                          ? pathname === href
-                          : pathname.startsWith(href)
-                      }
-                    >
-                      <Link to={href}>{name}</Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          {sections && sections.length > 0 && (
+            <SidebarGroup>
+              <SidebarGroupLabel className="font-medium text-muted-foreground">
+                Sections
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                    {sections.map(({ name, href }) => (
+                    <SidebarMenuItem key={name}>
+                      <SidebarMenuButton
+                        asChild
+                        className="relative h-[30px] w-fit overflow-visible border border-transparent font-medium text-[0.8rem] data-[active=true]:border-accent data-[active=true]:bg-accent"
+                        isActive={
+                          href === '/docs'
+                            ? pathname === href
+                            : pathname.startsWith(href)
+                        }
+                      >
+                        <Link to={href}>{name}</Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )}
 
           {tree.children.map((item) => {
             if (item.$id === 'root:index.mdx') return null;

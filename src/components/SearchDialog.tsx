@@ -13,11 +13,15 @@ import {
 } from 'fumadocs-ui/components/dialog/search';
 import { Search } from 'lucide-react';
 
-const searchDialogItems = [
-  { label: 'Components', href: '/docs/components' },
-];
+export type SearchDialogItem = { label: string; href: string };
+export type SearchDialogSharedProps = SharedProps;
 
-export default function SearchDialog(props: SharedProps) {
+export interface SearchDialogProps extends SharedProps {
+  /** Quick links shown when search input is empty */
+  items?: SearchDialogItem[];
+}
+
+export function SearchDialog({ items, ...props }: SearchDialogProps) {
   const { search, setSearch, query } = useDocsSearch({
     type: 'fetch',
   });
@@ -42,9 +46,9 @@ export default function SearchDialog(props: SharedProps) {
         </SearchDialogHeader>
         <SearchDialogList items={query.data !== 'empty' ? query.data : null} />
 
-        {search ? null : (
+        {search ? null : items && items.length > 0 ? (
           <div className="flex flex-col">
-            {searchDialogItems.map((item) => (
+            {items.map((item) => (
               <a
                 className="px-6 py-3 text-muted-foreground text-sm hover:bg-muted"
                 href={item.href}
@@ -54,7 +58,7 @@ export default function SearchDialog(props: SharedProps) {
               </a>
             ))}
           </div>
-        )}
+        ) : null}
       </SearchDialogContent>
     </FumaSearchDialog>
   );

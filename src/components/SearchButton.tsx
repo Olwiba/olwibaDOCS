@@ -1,10 +1,12 @@
 'use client';
 
 import { useSearchContext } from 'fumadocs-ui/contexts/search';
-import { Button } from '@olwiba/cn/button';
+import { Button } from '@olwiba/cn';
 import { cn } from '../lib/utils';
 
-export function SearchButton() {
+export interface SearchButtonProps {}
+
+export function SearchButton(_props: SearchButtonProps = {}) {
   const { setOpenSearch } = useSearchContext();
 
   return (
