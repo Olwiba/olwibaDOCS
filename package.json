@@ -28,7 +28,7 @@
     "dev": "tsup --watch",
     "web:build": "fumadocs-mdx && vite build",
     "web:dev": "fumadocs-mdx && vite dev",
-    "start": "node .output/server/index.mjs",
+    "start": "node dist/server/server.js",
     "types:check": "fumadocs-mdx && tsc --noEmit",
     "sync": "bun run scripts/sync-from-cn.ts",
     "sync:build": "bun run sync && bun run build",
