@@ -3,8 +3,12 @@ WORKDIR /app
 
 # Install dependencies
 FROM base AS deps
-COPY package.json bun.lock* bunfig.toml ./
-RUN bun install --frozen-lockfile
+ARG NPM_TOKEN
+COPY package.json bun.lock* ./
+RUN echo '[install.scopes]' > bunfig.toml && \
+    echo "\"@olwiba\" = { url = \"https://npm.olwiba.com/\", token = '${NPM_TOKEN}' }" >> bunfig.toml && \
+    echo "\"@genesis\" = { url = \"https://npm.olwiba.com/\", token = '${NPM_TOKEN}' }" >> bunfig.toml && \
+    bun install --frozen-lockfile
 
 # Build
 FROM base AS builder

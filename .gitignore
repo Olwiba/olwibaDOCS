@@ -16,6 +16,7 @@ bunfig.toml
 # Environment
 .env
 .env.local
+.env.production
 .env.*.local
 
 # IDE
