@@ -14,7 +14,12 @@ RUN echo '[install.scopes]' > bunfig.toml && \
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN bun run web:build && ls -la && ls -la .output || echo "No .output directory created"
+RUN echo "Running fumadocs-mdx..." && \
+    bunx fumadocs-mdx && \
+    echo "fumadocs-mdx complete. Running vite build..." && \
+    bunx vite build --debug && \
+    echo "Build complete. Listing directory:" && \
+    ls -la
 
 # Production
 FROM base AS runner
