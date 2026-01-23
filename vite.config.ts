@@ -26,6 +26,7 @@ export default defineConfig({
     }),
     tanstackStart({
       srcDirectory: 'site',
+      customViteReactPlugin: true,
     }),
     react(),
   ],
