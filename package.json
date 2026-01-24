@@ -28,7 +28,7 @@
     "dev": "tsup --watch",
     "web:build": "fumadocs-mdx && vite build",
     "web:dev": "fumadocs-mdx && vite dev",
-    "start": "node dist/server/server.js",
+    "start": "bun run server.ts",
     "types:check": "fumadocs-mdx && tsc --noEmit",
     "sync": "bun run scripts/sync-from-cn.ts",
     "sync:build": "bun run sync && bun run build",
@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "hono": "^4.7.0",
     "fumadocs-core": "^16.4.7",
     "fumadocs-ui": "^16.4.7",
     "lucide-react": "^0.562.0",
