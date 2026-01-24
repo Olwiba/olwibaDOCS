@@ -13,7 +13,7 @@
       },
       "devDependencies": {
         "@olwiba/cn": "^0.0.2",
-        "@tailwindcss/vite": "^4.1.18",
+        "@tailwindcss/postcss": "^4.1.18",
         "@tanstack/react-router": "^1.151.6",
         "@tanstack/react-router-devtools": "^1.151.6",
         "@tanstack/react-start": "^1.153.0",
@@ -37,7 +37,7 @@
         "vite-tsconfig-paths": "^5.1.4",
       },
       "peerDependencies": {
-        "@olwiba/cn": "^0.0.2",
+        "@olwiba/cn": ">=0.0.1",
         "@tanstack/react-router": ">=1.0.0",
         "react": ">=18.0.0",
         "react-dom": ">=18.0.0",
@@ -45,6 +45,8 @@
     },
   },
   "packages": {
+    "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
+
     "@babel/code-frame": ["@babel/code-frame@7.27.1", "", { "dependencies": { "@babel/helper-validator-identifier": "^7.27.1", "js-tokens": "^4.0.0", "picocolors": "^1.1.1" } }, "sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg=="],
 
     "@babel/compat-data": ["@babel/compat-data@7.28.6", "", {}, "sha512-2lfu57JtzctfIrcGMz992hyLlByuzgIk58+hhGCxjKZ3rWI82NnVLjXcaTqkI2NvlcvOskZaiZ5kjUALo3Lpxg=="],
@@ -393,7 +395,7 @@
 
     "@tailwindcss/oxide-win32-x64-msvc": ["@tailwindcss/oxide-win32-x64-msvc@4.1.18", "", { "os": "win32", "cpu": "x64" }, "sha512-bJWbyYpUlqamC8dpR7pfjA0I7vdF6t5VpUGMWRkXVE3AXgIZjYUYAK7II1GNaxR8J1SSrSrppRar8G++JekE3Q=="],
 
-    "@tailwindcss/vite": ["@tailwindcss/vite@4.1.18", "", { "dependencies": { "@tailwindcss/node": "4.1.18", "@tailwindcss/oxide": "4.1.18", "tailwindcss": "4.1.18" }, "peerDependencies": { "vite": "^5.2.0 || ^6 || ^7" } }, "sha512-jVA+/UpKL1vRLg6Hkao5jldawNmRo7mQYrZtNHMIVpLfLhDml5nMRUo/8MwoX2vNXvnaXNNMedrMfMugAVX1nA=="],
+    "@tailwindcss/postcss": ["@tailwindcss/postcss@4.1.18", "", { "dependencies": { "@alloc/quick-lru": "^5.2.0", "@tailwindcss/node": "4.1.18", "@tailwindcss/oxide": "4.1.18", "postcss": "^8.4.41", "tailwindcss": "4.1.18" } }, "sha512-Ce0GFnzAOuPyfV5SxjXGn0CubwGcuDB0zcdaPuCSzAa/2vII24JTkH+I6jcbXLb1ctjZMZZI6OjDaLPJQL1S0g=="],
 
     "@tanstack/history": ["@tanstack/history@1.153.2", "", {}, "sha512-TVa0Wju5w6JZGq/S74Q7TQNtKXDatJaB4NYrhMZVU9ETlkgpr35NhDfOzsCJ93P0KCo1ZoDodlFp3c54/dLsyw=="],
 
