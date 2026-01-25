@@ -385,6 +385,65 @@ import type {
 } from '@olwiba/docs';
 ```
 
+## Deployment
+
+### Why Hono?
+
+TanStack Start v1 (post-vinxi migration) compiles to `dist/server/server.js` which is a **fetch handler only** - not a standalone server. It handles SSR and server functions but doesn't serve static files (JS, CSS, images).
+
+We use [Hono](https://hono.dev/) to:
+1. Serve static assets from `dist/client/assets/`
+2. Pass all other requests to TanStack Start's SSR handler
+
+Hono was chosen because it's lightweight (~14kb), has native Bun support, and works directly with fetch-based handlers.
+
+### Production Server
+
+The `server.ts` file configures the production server:
+
+```ts
+import { Hono } from 'hono'
+import { serveStatic } from 'hono/bun'
+
+const app = new Hono()
+
+// Serve static assets from dist/client
+app.use('/assets/*', serveStatic({ root: './dist/client' }))
+app.use('/favicon.ico', serveStatic({ root: './dist/client' }))
+
+// Let TanStack Start handle everything else (SSR, server functions)
+app.all('*', async (c) => {
+  const handler = await import('./dist/server/server.js')
+  return handler.default.fetch(c.req.raw)
+})
+
+export default {
+  port: Number(process.env.PORT) || 3000,
+  fetch: app.fetch,
+}
+```
+
+### Docker
+
+The included `Dockerfile` builds a production image using Bun:
+
+```bash
+# Build and run locally
+docker build -t olwiba-docs .
+docker run -p 3000:3000 olwiba-docs
+```
+
+**Build stages:**
+1. **deps** - Installs dependencies with private registry access
+2. **builder** - Runs `web:build` (fumadocs-mdx + vite build)
+3. **runner** - Production image with `dist/`, `server.ts`, and minimal deps
+
+**Environment variables:**
+- `NPM_TOKEN` - Required at build time for private `@olwiba` packages
+- `PORT` - Server port (default: 3000)
+
+For Coolify deployment, set `NPM_TOKEN` as a **Build Variable**.
+
 ## License
 
 MIT

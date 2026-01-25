@@ -1,6 +1,6 @@
 {
   "name": "@olwiba/docs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "type": "module",
   "sideEffects": false,
@@ -17,6 +17,9 @@
     },
     "./mdx": {
       "import": "./dist/lib/mdx-components.js"
+    },
+    "./server": {
+      "import": "./dist/lib/server.js"
     }
   },
   "files": [

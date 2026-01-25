@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.0.3
+
+### Added
+
+- `createServer` export (`@olwiba/docs/server`) - Production server for TanStack Start apps
+  - Uses Hono to serve static assets from `dist/client`
+  - Routes SSR/server functions to TanStack Start handler
+  - Configurable port and static patterns
+- Deployment documentation in README
+
+### Changed
+
+- Updated `start` script to use new server.ts with Hono
+- Dockerfile now copies server.ts for production
+
 ## 0.0.2
 
 ### Added
