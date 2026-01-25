@@ -1,10 +1,11 @@
 import { Hono } from 'hono'
 import { serveStatic } from 'hono/bun'
+import path from 'path'
 
 export interface ServerOptions {
   /** Port to run the server on (default: 3000) */
   port?: number
-  /** Path to the dist directory (default: './dist') */
+  /** Path to the dist directory, relative to app root (default: './dist') */
   distPath?: string
   /** Additional static file patterns to serve */
   staticPatterns?: string[]
@@ -38,8 +39,11 @@ export function createServer(options: ServerOptions = {}) {
     staticPatterns = [],
   } = options
 
+  // Resolve paths relative to the app root (process.cwd), not the module location
+  const absoluteDistPath = path.resolve(process.cwd(), distPath)
+  const clientPath = path.join(absoluteDistPath, 'client')
+
   const app = new Hono()
-  const clientPath = `${distPath}/client`
 
   // Serve static assets from dist/client
   app.use('/assets/*', serveStatic({ root: clientPath }))
@@ -52,7 +56,8 @@ export function createServer(options: ServerOptions = {}) {
 
   // Let TanStack Start handle everything else (SSR, server functions)
   app.all('*', async (c) => {
-    const handler = await import(`${distPath}/server/server.js`)
+    const serverPath = path.join(absoluteDistPath, 'server', 'server.js')
+    const handler = await import(serverPath)
     return handler.default.fetch(c.req.raw)
   })
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.4
+
+### Fixed
+
+- `createServer` now uses absolute paths via `process.cwd()` - works correctly when imported from node_modules
+
 ## 0.0.3
 
 ### Added
