@@ -1,3 +1,3 @@
-import { createServer } from './src/lib/server'
+import { createServer } from './dist/lib/server.js'
 
 export default createServer()
