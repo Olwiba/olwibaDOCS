@@ -35,6 +35,7 @@
     "web:build": "fumadocs-mdx && vite build",
     "web:dev": "fumadocs-mdx && vite dev",
     "start": "bun run server.ts",
+    "tsc": "tsc",
     "types:check": "fumadocs-mdx && tsc --noEmit",
     "sync": "bun run scripts/sync-from-cn.ts",
     "sync:build": "bun run sync && bun run build",

@@ -48,7 +48,7 @@ export function SiteHeader() {
               </svg>
               <span className="hidden sm:inline">GitHub</span>
             </a>
-            <span className="absolute -right-1 -top-1.5 rotate-12 bg-primary px-1 pb-0.5 text-[6px] font-bold text-primary-foreground rounded-xs sm:-right-2 sm:-top-2 sm:px-1.5 sm:pt-0.5 sm:pb-1 sm:text-[8px]">
+            <span className="absolute -right-1 -top-0.5 rotate-12 bg-primary px-1 pb-0.5 text-[6px] font-bold text-primary-foreground rounded-xs sm:-right-1 sm:-top-1 sm:px-1 sm:pt-0.5 sm:pb-1 sm:text-[8px]">
               soon
             </span>
           </div>

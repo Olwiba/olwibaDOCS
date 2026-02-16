@@ -1,11 +1,11 @@
 ---
 title: Themes
-description: 7 built-in color themes with runtime switching and cookie persistence.
+description: Customize the look and feel of your application with color themes.
 ---
 
-## Theme Selector
+## Try it out
 
-Switch between themes using the dropdown below. Your selection is saved automatically.
+Select a theme below to see it applied across the documentation:
 
 <div className="my-6 flex items-center gap-4">
   <ThemeSelector />
@@ -13,28 +13,40 @@ Switch between themes using the dropdown below. Your selection is saved automati
 
 ## Available Themes
 
+The following themes are available:
+
 | Theme | Description |
 |-------|-------------|
-| Default | Neutral monochrome, classic light/dark |
-| Emerald | Green-tinted primary (default) |
-| Blue | Vibrant blue primary |
-| Purple | Rich purple primary |
-| Rose | Warm rose/red primary |
-| Orange | Energetic orange primary |
-| Slate | Cool blue-grey primary |
+| Default | Neutral grayscale theme |
+| Emerald | Fresh green tones |
+| Blue | Classic blue accent |
+| Purple | Vibrant purple highlights |
+| Rose | Warm rose/pink tones |
+| Orange | Energetic orange accent |
+| Slate | Professional slate blue |
 
 ## Installation
 
-### 1. Add CSS Variables
+To use themes in your project, you need to:
 
-Your `app.css` needs to include the `surface`, `code`, and `blueprint-fg` CSS variables. See the [Getting Started](/docs) page for the full CSS setup.
+1. Copy the theme CSS variables to your global stylesheet
+2. Wrap your app with the `ActiveThemeProvider`
+3. Use the `ThemeSelector` component or create your own
 
-### 2. Wrap with ActiveThemeProvider
+### Step 1: Add Theme CSS
+
+Copy the CSS variables for your chosen theme and add them to your global CSS file.
+
+<ThemeCodeBlock />
+
+### Step 2: Add the Theme Provider
+
+Wrap your application with the `ActiveThemeProvider`:
 
 ```tsx
 import { ActiveThemeProvider } from '@olwiba/docs';
 
-function RootLayout({ children }) {
+export function App({ children }) {
   return (
     <ActiveThemeProvider>
       {children}
@@ -43,25 +55,26 @@ function RootLayout({ children }) {
 }
 ```
 
-### 3. Add ThemeSelector
+### Step 3: Add Theme Selector (Optional)
 
-Place the `ThemeSelector` component anywhere you want users to switch themes:
+Add the theme selector to allow users to switch themes:
 
 ```tsx
 import { ThemeSelector } from '@olwiba/docs';
 
-<ThemeSelector />
+export function Settings() {
+  return (
+    <div>
+      <h2>Theme</h2>
+      <ThemeSelector />
+    </div>
+  );
+}
 ```
-
-## Copy Theme CSS
-
-Use the block below to select and copy the full CSS variables for any theme into your own project:
-
-<ThemeCodeBlock />
 
 ## Custom Themes
 
-You can create your own theme by overriding the CSS variables. The key variables are:
+You can create your own themes by defining CSS variables in the same format. The key variables are:
 
 | Variable | Description |
 |----------|-------------|

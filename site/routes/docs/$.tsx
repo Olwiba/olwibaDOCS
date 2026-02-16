@@ -157,6 +157,11 @@ function Page() {
                     </p>
                   )}
                 </div>
+                {loaderData.toc?.length > 0 && (
+                  <div className="xl:hidden">
+                    <DocsToc toc={loaderData.toc} variant="dropdown" />
+                  </div>
+                )}
                 <Suspense fallback={<div className="animate-pulse h-64 bg-muted rounded-lg" />}>
                   {clientLoader.useContent(data.path, undefined)}
                 </Suspense>

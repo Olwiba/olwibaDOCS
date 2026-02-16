@@ -396,6 +396,7 @@ export function DocsToc({
         <DropdownMenuContent
           align="start"
           className="no-scrollbar max-h-[70svh]"
+          onCloseAutoFocus={(e) => e.preventDefault()}
         >
           {toc.map((item) => (
             <DropdownMenuItem
