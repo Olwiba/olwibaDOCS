@@ -18,12 +18,13 @@ export type { LoaderOptions };
  * });
  * ```
  */
-export function createSource<T extends LoaderOptions>(options: T) {
+export function createSource(options: Parameters<typeof loader>[0]) {
+  const existingPlugins = Array.isArray(options.plugins) ? options.plugins : [];
   return loader({
     ...options,
     plugins: [
       lucideIconsPlugin(),
-      ...(options.plugins ?? []),
+      ...existingPlugins,
     ],
   });
 }

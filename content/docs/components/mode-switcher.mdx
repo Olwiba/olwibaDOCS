@@ -1,0 +1,36 @@
+---
+title: ModeSwitcher
+description: Dark/light mode toggle button with localStorage persistence.
+---
+
+## Overview
+
+The `ModeSwitcher` component provides a simple toggle between dark and light modes. It persists the user's preference in `localStorage` and toggles the `dark` class on the `<html>` element.
+
+## Import
+
+```tsx
+import { ModeSwitcher } from '@olwiba/docs';
+```
+
+## Usage
+
+```tsx
+import { ModeSwitcher } from '@olwiba/docs';
+
+function Header() {
+  return (
+    <header>
+      <ModeSwitcher />
+    </header>
+  );
+}
+```
+
+## Features
+
+- Sun/Moon icons from Lucide
+- Toggles the `dark` class on `<html>`
+- Persists in `localStorage` under the `theme` key
+- Defaults to dark mode
+- Ghost variant, compact 32px button

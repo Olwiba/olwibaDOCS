@@ -2,8 +2,9 @@ import { Link } from '@tanstack/react-router';
 
 export function SiteFooter() {
   return (
-    <footer className="flex h-14 shrink-0 items-center gap-2 border-t border-dashed">
-      <div className="mx-auto flex h-full w-full max-w-[1400px] items-center gap-1 border-r border-l border-dashed px-4 lg:gap-2 lg:px-6">
+    <footer className="flex h-14 shrink-0 justify-center border-t">
+      <div className="h-full w-4 shrink-0 border-dashed lg:w-12 lg:border-l" aria-hidden="true" />
+      <div className="flex h-full w-full max-w-[1400px] items-center gap-1 border-l border-r border-dashed px-4 lg:gap-2 lg:px-6">
         <p className="text-muted-foreground text-xs md:text-sm">
           Built with 💖 by <a
             className="underline"
@@ -15,6 +16,7 @@ export function SiteFooter() {
           </a>
         </p>
       </div>
+      <div className="h-full w-4 shrink-0 border-dashed lg:w-12 lg:border-r" aria-hidden="true" />
     </footer>
   );
 }

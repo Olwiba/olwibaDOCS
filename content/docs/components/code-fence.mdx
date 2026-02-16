@@ -1,0 +1,49 @@
+---
+title: CodeFence
+description: Enhanced code blocks with overflow detection, fade effect, and copy button.
+---
+
+## Overview
+
+The `CodeFence` component wraps code blocks with a styled container that includes overflow detection with a gradient fade effect, a persistent copy button, and theme-aware background colors using the `--code` CSS variable.
+
+## Import
+
+```tsx
+import { CodeFence } from '@olwiba/docs';
+```
+
+## Usage
+
+### As a direct component
+
+```tsx
+<CodeFence code="const hello = 'world';" />
+```
+
+### As an MDX pre replacement
+
+`CodeFence` is automatically used as the `pre` element in the `mdxComponents` mapping, so all fenced code blocks in your MDX content use it:
+
+```tsx
+import { mdxComponents } from '@olwiba/docs';
+
+// mdxComponents.pre renders CodeFence
+<MDX components={{ ...defaultMdxComponents, ...mdxComponents }} />
+```
+
+## Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `children` | `ReactNode` | Code content (from MDX/rehype-pretty-code) |
+| `code` | `string` | Raw code string (alternative to children) |
+| `className` | `string` | Additional CSS classes |
+
+## Features
+
+- Overflow detection with `ResizeObserver`
+- Right-edge gradient fade when content overflows
+- Always-visible copy button
+- Theme-aware `bg-code` / `text-code-foreground` colors
+- Extracts text content from nested React nodes (handles rehype-pretty-code output)

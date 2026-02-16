@@ -5,9 +5,10 @@ WORKDIR /app
 FROM base AS deps
 ARG NPM_TOKEN
 COPY package.json bun.lock* ./
+# NPM_TOKEN = GitHub classic PAT with read:packages (for @olwiba from GitHub Packages)
 RUN echo '[install.scopes]' > bunfig.toml && \
-    echo "\"@olwiba\" = { url = \"https://npm.olwiba.com/\", token = '${NPM_TOKEN}' }" >> bunfig.toml && \
-    echo "\"@genesis\" = { url = \"https://npm.olwiba.com/\", token = '${NPM_TOKEN}' }" >> bunfig.toml && \
+    echo "\"@olwiba\" = { url = \"https://npm.pkg.github.com/\", token = '${NPM_TOKEN}' }" >> bunfig.toml && \
+    echo "\"@genesis\" = { url = \"https://npm.pkg.github.com/\", token = '${NPM_TOKEN}' }" >> bunfig.toml && \
     bun install --frozen-lockfile
 
 # Build
@@ -26,6 +27,7 @@ ENV NODE_ENV=production
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/content ./content
 COPY --from=builder /app/server.ts ./server.ts
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json

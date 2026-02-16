@@ -9,7 +9,7 @@ function Home() {
   return (
     <div className="flex flex-col flex-1 justify-center items-center px-4 py-16 text-center">
       <h1 className="text-4xl font-bold mb-4">
-        olwiba<span className="text-blue-400">DOCS</span>
+        olwiba<span className="text-primary">DOCS</span>
       </h1>
       <p className="text-muted-foreground text-lg mb-8 max-w-md">
         Fumadocs abstraction for TanStack Start documentation sites. Build beautiful docs with ease.

@@ -1,0 +1,35 @@
+---
+title: CopyButton
+description: Clipboard copy button with animated check icon feedback.
+---
+
+## Overview
+
+The `CopyButton` component copies text to the clipboard and shows a brief animated check icon on success. It's used internally by `CodeFence` but can also be used standalone.
+
+## Import
+
+```tsx
+import { CopyButton } from '@olwiba/docs';
+```
+
+## Usage
+
+```tsx
+<CopyButton text="npm install @olwiba/docs" />
+```
+
+## Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `text` | `string` | The text to copy to clipboard |
+| `className` | `string` | Additional CSS classes |
+
+## Features
+
+- Animated transition between Copy and Check icons
+- Green check icon on successful copy
+- Auto-resets after 2 seconds
+- Ghost variant with hover scale effect
+- Shows on group hover (works inside `CodeFence`)

@@ -5,19 +5,50 @@ description: Pre-built documentation components for TanStack Start sites.
 
 ## Overview
 
-`@olwiba/docs` provides a collection of pre-built components designed specifically for documentation sites built with TanStack Start and Fumadocs.
+`@olwiba/docs` provides a comprehensive set of components for building documentation sites with TanStack Start and Fumadocs.
 
 ## Available Components
 
+### Layout
+
 | Component | Description |
 |-----------|-------------|
-| [DocsSidebar](/docs/components/docs-sidebar) | Navigation sidebar with page tree |
-| [DocsToc](/docs/components/docs-toc) | Table of contents for current page |
+| [DocsSidebar](/docs/components/docs-sidebar) | Navigation sidebar with page tree and sections |
+| [DocsMobileNav](/docs/components/docs-mobile-nav) | Sheet-based mobile sidebar navigation |
+| [DocsToc](/docs/components/docs-toc) | Table of contents with scroll tracking |
+| [DocsProvider](/docs/components/docs-provider) | Wrapper with pre-configured SearchDialog |
+
+### Search
+
+| Component | Description |
+|-----------|-------------|
 | [SearchDialog](/docs/components/search-dialog) | Full-text search dialog |
-| [SearchButton](/docs/components/search-dialog) | Trigger button for search |
-| [ModeSwitcher](/docs/components/docs-sidebar) | Dark/light mode toggle |
-| [Callout](/docs/components/mdx-components) | Highlighted callout boxes |
-| [CopyButton](/docs/components/mdx-components) | Copy to clipboard button |
+| [SearchButton](/docs/components/search-dialog) | Trigger button for search (Cmd/Ctrl+K) |
+
+### Content
+
+| Component | Description |
+|-----------|-------------|
+| [CodeFence](/docs/components/code-fence) | Enhanced code blocks with overflow fade and copy |
+| [CopyButton](/docs/components/copy-button) | Clipboard copy button for code blocks |
+| [Callout](/docs/components/mdx-components) | Info/warning callout boxes |
+| [APIReference](/docs/components/api-reference) | Collapsible API prop tables |
+| [DocsCopyPage](/docs/components/docs-copy-page) | Copy page content with AI assistant links |
+
+### Theme
+
+| Component | Description |
+|-----------|-------------|
+| [ActiveThemeProvider](/docs/components/active-theme) | Theme context provider with cookie persistence |
+| [ThemeSelector](/docs/components/theme-selector) | Theme dropdown selector |
+| [ThemeCodeBlock](/docs/components/theme-code-block) | Theme CSS viewer/copier |
+| [ModeSwitcher](/docs/components/mode-switcher) | Dark/light mode toggle |
+
+### MDX
+
+| Component | Description |
+|-----------|-------------|
+| [mdxComponents](/docs/components/mdx-components) | Pre-styled MDX component mappings |
 
 ## Usage
 
@@ -26,19 +57,25 @@ All components can be imported from the main package:
 ```tsx
 import {
   DocsSidebar,
+  DocsMobileNav,
   DocsToc,
+  DocsCopyPage,
+  CodeFence,
+  CopyButton,
+  APIReference,
   SearchDialog,
   SearchButton,
   ModeSwitcher,
-  Callout,
-  CopyButton,
+  ActiveThemeProvider,
+  ThemeSelector,
+  ThemeCodeBlock,
   mdxComponents,
 } from '@olwiba/docs';
 ```
 
 ## Dependencies
 
-These components depend on `@olwiba/cn` for UI primitives like buttons, dialogs, and the sidebar system. Make sure you have it installed:
+These components depend on `@olwiba/cn` for UI primitives like buttons, dialogs, sheets, selects, and the sidebar system:
 
 ```bash
 bun add @olwiba/cn

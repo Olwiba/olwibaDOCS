@@ -20,6 +20,9 @@
     },
     "./server": {
       "import": "./dist/lib/server.js"
+    },
+    "./themes": {
+      "import": "./dist/lib/themes.js"
     }
   },
   "files": [
@@ -36,7 +39,7 @@
     "sync": "bun run scripts/sync-from-cn.ts",
     "sync:build": "bun run sync && bun run build",
     "prepublishOnly": "bun run build",
-    "release": "npm publish --registry https://npm.olwiba.com/"
+    "release": "npm publish"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -53,7 +56,7 @@
     "react-dom": ">=18.0.0"
   },
   "devDependencies": {
-    "@olwiba/cn": "^0.0.2",
+    "@olwiba/cn": "^0.1.0",
     "react-resizable-panels": "^4.4.1",
     "@tailwindcss/postcss": "^4.1.18",
     "@tanstack/react-router": "^1.151.6",
@@ -82,5 +85,8 @@
     "url": "https://github.com/Olwiba/olwibaDOCS"
   },
   "author": "Olwiba",
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
 }

@@ -1,0 +1,45 @@
+---
+title: DocsMobileNav
+description: Sheet-based mobile sidebar navigation with portal trigger pattern.
+---
+
+## Overview
+
+The `DocsMobileNav` component provides a slide-out sheet for mobile navigation. It uses a portal pattern to render the trigger button inside the site header, keeping the navigation accessible from the top of the page.
+
+## Import
+
+```tsx
+import { DocsMobileNav } from '@olwiba/docs';
+```
+
+## Usage
+
+### 1. Add the trigger container in your header
+
+```tsx title="SiteHeader.tsx"
+<div id="docs-mobile-nav-trigger" className="empty:hidden lg:hidden" />
+```
+
+### 2. Add DocsMobileNav in your docs route
+
+```tsx title="routes/docs/$.tsx"
+<DocsMobileNav tree={data.pageTree} sections={sidebarSections} />
+```
+
+The component automatically portals the trigger button into the `#docs-mobile-nav-trigger` element.
+
+## Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `tree` | `PageTree.Root` | The Fumadocs page tree structure |
+| `sections` | `{ name: string; href: string }[]` | Optional section links (defaults to Get Started, Components, Themes) |
+
+## Features
+
+- Portal-based trigger renders in the site header
+- Automatically closes on route change
+- Section links with active state
+- Filters out index pages from the tree
+- Uses `@olwiba/cn` Sheet and ScrollArea components

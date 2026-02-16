@@ -1,11 +1,11 @@
 ---
 title: Getting Started
-description: Get started with @olwiba/docs - a Fumadocs abstraction for TanStack Start documentation sites.
+description: Get started with @olwiba/docs - a full-featured documentation template for TanStack Start, powered by Fumadocs.
 ---
 
 ## Introduction
 
-`@olwiba/docs` provides pre-built documentation components and utilities for creating beautiful documentation sites with TanStack Start and Fumadocs.
+`@olwiba/docs` provides everything you need to build beautiful documentation sites with TanStack Start and Fumadocs. It includes a blueprint-pattern layout, 7 color themes with runtime switching, mobile navigation, copy-page-for-AI functionality, enhanced code blocks, and API reference components.
 
 ## Installation
 
@@ -19,7 +19,7 @@ bun add @olwiba/docs @olwiba/cn fumadocs-core fumadocs-ui fumadocs-mdx
 
 Create a `source.config.ts` in your project root:
 
-```ts
+```ts title="source.config.ts"
 import { defineConfig, defineDocs } from 'fumadocs-mdx/config';
 import rehypePrettyCode from 'rehype-pretty-code';
 
@@ -48,9 +48,7 @@ export default defineConfig({
 
 ### 2. Create Source Loader
 
-Create `lib/source.ts`:
-
-```ts
+```ts title="lib/source.ts"
 import { createSource } from '@olwiba/docs/source';
 import { docs } from 'fumadocs-mdx:collections/server';
 
@@ -62,7 +60,7 @@ export const source = createSource({
 
 ### 3. Update Vite Config
 
-```ts
+```ts title="vite.config.ts"
 import mdx from 'fumadocs-mdx/vite';
 
 export default defineConfig({
@@ -73,11 +71,64 @@ export default defineConfig({
 });
 ```
 
-### 4. Use Components
+### 4. Root Layout with ActiveThemeProvider
 
-```tsx
-import { DocsSidebar, DocsToc, SearchDialog, mdxComponents } from '@olwiba/docs';
-import { SidebarProvider, Button } from '@olwiba/cn';
+```tsx title="routes/__root.tsx"
+import { ActiveThemeProvider } from '@olwiba/docs';
+import { RootProvider } from 'fumadocs-ui/provider/tanstack';
+import { SearchDialog } from '@olwiba/docs';
+
+function RootDocument({ children }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ActiveThemeProvider>
+          <RootProvider search={{ SearchDialog }}>
+            {children}
+          </RootProvider>
+        </ActiveThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+### 5. Docs Route
+
+```tsx title="routes/docs/$.tsx"
+import { DocsSidebar, DocsMobileNav, DocsToc, DocsCopyPage, mdxComponents } from '@olwiba/docs';
+import { SidebarProvider } from '@olwiba/cn';
+
+function Page() {
+  return (
+    <SidebarProvider>
+      <DocsSidebar tree={pageTree} sections={sections} />
+      <DocsMobileNav tree={pageTree} />
+      <main>
+        <DocsCopyPage page={rawContent} url={url} />
+        <MDX components={{ ...defaultMdxComponents, ...mdxComponents }} />
+        <DocsToc toc={toc} />
+      </main>
+    </SidebarProvider>
+  );
+}
+```
+
+### 6. Search API
+
+```ts title="routes/api/search/index.ts"
+import { createFromSource } from 'fumadocs-core/search/server';
+import { source } from '~/lib/source';
+
+const search = createFromSource(source, { language: 'english' });
+
+export const Route = createFileRoute('/api/search/')({
+  server: {
+    handlers: {
+      GET: async ({ request }) => search.GET(request),
+    },
+  },
+});
 ```
 
 ## Requirements
@@ -89,5 +140,5 @@ import { SidebarProvider, Button } from '@olwiba/cn';
 
 ## Next Steps
 
-- Browse the [Components](/docs/components) to see what's available
-- Check out individual component documentation for usage examples
+- Explore the [Themes](/docs/themes) page to customize your color scheme
+- Browse the [Components](/docs/components) to see everything available

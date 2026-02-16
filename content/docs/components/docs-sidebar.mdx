@@ -1,11 +1,11 @@
 ---
 title: DocsSidebar
-description: Navigation sidebar component for documentation pages.
+description: Navigation sidebar component with page tree, sections, and scroll area.
 ---
 
 ## Overview
 
-The `DocsSidebar` component renders a navigation sidebar based on your Fumadocs page tree. It automatically highlights the current page and organizes content into sections.
+The `DocsSidebar` component renders a sticky navigation sidebar based on your Fumadocs page tree. It supports top-level section links, auto-highlights the current page, filters out index pages, and includes gradient fades at the top and bottom.
 
 ## Import
 
@@ -16,13 +16,19 @@ import { DocsSidebar } from '@olwiba/docs';
 ## Usage
 
 ```tsx
-import { DocsSidebar } from '@olwiba/docs';
+import { DocsSidebar, type SidebarSection } from '@olwiba/docs';
 import { SidebarProvider } from '@olwiba/cn';
+
+const sections: SidebarSection[] = [
+  { name: 'Get Started', href: '/docs' },
+  { name: 'Components', href: '/docs/components' },
+  { name: 'Themes', href: '/docs/themes' },
+];
 
 function DocsPage({ pageTree }) {
   return (
     <SidebarProvider>
-      <DocsSidebar tree={pageTree} />
+      <DocsSidebar tree={pageTree} sections={sections} />
       {/* Page content */}
     </SidebarProvider>
   );
@@ -34,28 +40,17 @@ function DocsPage({ pageTree }) {
 | Prop | Type | Description |
 |------|------|-------------|
 | `tree` | `PageTree.Root` | The Fumadocs page tree structure |
-| `...props` | `SidebarProps` | All other props are passed to the underlying Sidebar component |
+| `sections` | `SidebarSection[]` | Top-level navigation sections shown above the page tree |
+| `...props` | `SidebarProps` | All other props passed to the underlying Sidebar component |
 
-## Page Tree
+## Features
 
-The page tree is typically obtained from your Fumadocs source loader:
+- Sticky positioning below the header
+- ScrollArea with gradient fades at top and bottom
+- Filters out `index.mdx` pages from the navigation tree
+- Section links with active state highlighting
+- 220px width on mobile, 240px on desktop
 
-```tsx
-const serverLoader = createServerFn()
-  .handler(async ({ data: slugs }) => {
-    const page = source.getPage(slugs);
-    const pageTree = source.getPageTree();
+## Mobile Navigation
 
-    return {
-      pageTree: await source.serializePageTree(pageTree),
-      // ...other data
-    };
-  });
-```
-
-## Styling
-
-The sidebar is styled to match the olwiba design system. It uses CSS variables for customization:
-
-- `--sidebar-width`: Width of the sidebar (default: 220px on mobile, 240px on desktop)
-- `--header-height`: Height of the site header for proper positioning
+On mobile viewports, the sidebar is hidden. Use [DocsMobileNav](/docs/components/docs-mobile-nav) to provide mobile navigation via a slide-out sheet.

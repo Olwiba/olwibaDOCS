@@ -1,10 +1,11 @@
+// @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 'use client';
 
 import * as React from 'react';
 import { cn } from '../lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@olwiba/cn';
 
-export interface CalloutProps extends React.ComponentProps<typeof Alert> {
+export interface CalloutProps extends React.HTMLAttributes<HTMLDivElement> {
   icon?: React.ReactNode;
   variant?: 'default' | 'info' | 'warning';
 }

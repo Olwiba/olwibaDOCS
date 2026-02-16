@@ -1,14 +1,12 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from '@tanstack/react-router';
 import * as React from 'react';
 import appCss from '~/styles/app.css?url';
-import { DocsProvider } from '@/components/DocsProvider';
+import { RootProvider } from 'fumadocs-ui/provider/tanstack';
+import { SearchDialog } from '@/components/SearchDialog';
+import { ActiveThemeProvider } from '@/components/ActiveTheme';
+import { Theme } from '@/lib/themes';
 import { SiteHeader } from '~/components/SiteHeader';
 import { SiteFooter } from '~/components/SiteFooter';
-
-const searchItems = [
-  { label: 'Get Started', href: '/docs' },
-  { label: 'Components', href: '/docs/components' },
-];
 
 export const Route = createRootRoute({
   head: () => ({
@@ -27,6 +25,12 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootComponent,
+  notFoundComponent: () => (
+    <div className="flex flex-1 flex-col items-center justify-center gap-4 py-16">
+      <h1 className="text-4xl font-bold">404</h1>
+      <p className="text-muted-foreground">Page not found</p>
+    </div>
+  ),
 });
 
 function RootComponent() {
@@ -44,13 +48,23 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="flex min-h-screen flex-col antialiased [--header-height:3.5rem] [--footer-height:3.5rem]">
-        <DocsProvider searchItems={searchItems}>
-          <SiteHeader />
-          <div className="mx-auto w-full max-w-[1400px] flex-1 border-r border-l border-dashed">
-            {children}
-          </div>
-          <SiteFooter />
-        </DocsProvider>
+        <ActiveThemeProvider initialTheme={Theme.Blue}>
+          <RootProvider
+            search={{
+              SearchDialog,
+            }}
+          >
+            <SiteHeader />
+            <div className="flex flex-1 justify-center">
+              <div className="w-4 shrink-0 border-dashed blueprint-pattern lg:w-12 lg:border-l" aria-hidden="true" />
+              <div className="relative z-10 w-full max-w-[1400px] flex-1 border-l border-r border-dashed bg-background">
+                {children}
+              </div>
+              <div className="w-4 shrink-0 border-dashed blueprint-pattern lg:w-12 lg:border-r" aria-hidden="true" />
+            </div>
+            <SiteFooter />
+          </RootProvider>
+        </ActiveThemeProvider>
         <Scripts />
       </body>
     </html>

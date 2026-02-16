@@ -1,0 +1,30 @@
+---
+title: ThemeCodeBlock
+description: Select and copy full theme CSS variables for any theme.
+---
+
+## Overview
+
+The `ThemeCodeBlock` component displays the complete CSS variable block for a selected theme in a scrollable, copyable code block. Users can pick any theme from the dropdown and copy the CSS to paste into their own project.
+
+## Import
+
+```tsx
+import { ThemeCodeBlock } from '@olwiba/docs';
+```
+
+## Usage
+
+```mdx
+<ThemeCodeBlock />
+```
+
+It's registered in `mdxComponents`, so it works directly in MDX content.
+
+## Features
+
+- Theme dropdown syncs with the active theme
+- Shows complete `:root` and `.dark` CSS variables
+- Scrollable code block (max 400px height)
+- Copy button via CodeFence
+- Requires `ActiveThemeProvider` ancestor

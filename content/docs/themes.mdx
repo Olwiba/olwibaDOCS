@@ -1,0 +1,83 @@
+---
+title: Themes
+description: 7 built-in color themes with runtime switching and cookie persistence.
+---
+
+## Theme Selector
+
+Switch between themes using the dropdown below. Your selection is saved automatically.
+
+<div className="my-6 flex items-center gap-4">
+  <ThemeSelector />
+</div>
+
+## Available Themes
+
+| Theme | Description |
+|-------|-------------|
+| Default | Neutral monochrome, classic light/dark |
+| Emerald | Green-tinted primary (default) |
+| Blue | Vibrant blue primary |
+| Purple | Rich purple primary |
+| Rose | Warm rose/red primary |
+| Orange | Energetic orange primary |
+| Slate | Cool blue-grey primary |
+
+## Installation
+
+### 1. Add CSS Variables
+
+Your `app.css` needs to include the `surface`, `code`, and `blueprint-fg` CSS variables. See the [Getting Started](/docs) page for the full CSS setup.
+
+### 2. Wrap with ActiveThemeProvider
+
+```tsx
+import { ActiveThemeProvider } from '@olwiba/docs';
+
+function RootLayout({ children }) {
+  return (
+    <ActiveThemeProvider>
+      {children}
+    </ActiveThemeProvider>
+  );
+}
+```
+
+### 3. Add ThemeSelector
+
+Place the `ThemeSelector` component anywhere you want users to switch themes:
+
+```tsx
+import { ThemeSelector } from '@olwiba/docs';
+
+<ThemeSelector />
+```
+
+## Copy Theme CSS
+
+Use the block below to select and copy the full CSS variables for any theme into your own project:
+
+<ThemeCodeBlock />
+
+## Custom Themes
+
+You can create your own theme by overriding the CSS variables. The key variables are:
+
+| Variable | Description |
+|----------|-------------|
+| `--primary` | Main accent color |
+| `--primary-foreground` | Text on primary backgrounds |
+| `--ring` | Focus ring color (usually matches primary) |
+| `--background` | Page background |
+| `--foreground` | Default text color |
+| `--muted` | Muted background |
+| `--muted-foreground` | Muted text |
+| `--accent` | Accent background (hover states) |
+| `--border` | Border color |
+| `--surface` | Surface background (cards, code blocks) |
+| `--code` | Code block background |
+| `--code-foreground` | Code block text |
+| `--code-highlight` | Highlighted code line background |
+| `--blueprint-fg` | Blueprint pattern color |
+
+All colors use the `oklch()` color space for perceptual uniformity.

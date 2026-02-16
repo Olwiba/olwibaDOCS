@@ -1,6 +1,6 @@
 ---
 title: MDX Components
-description: Pre-styled MDX component mappings for documentation.
+description: Pre-styled MDX component mappings including CodeFence, APIReference, ThemeSelector, and more.
 ---
 
 ## Overview
@@ -35,7 +35,7 @@ import { mdxComponents } from '@olwiba/docs';
 
 ### Typography
 
-- `h1`, `h2`, `h3`, `h4` - Styled headings with proper spacing
+- `h1`, `h2`, `h3`, `h4` - Styled headings with proper spacing and scroll margins
 - `p` - Paragraphs with comfortable line height
 - `a` - Links with underline styling
 - `strong` - Bold text
@@ -49,12 +49,12 @@ import { mdxComponents } from '@olwiba/docs';
 
 ### Code
 
-- `pre` - Code blocks with copy button
-- `code` - Inline code with background
+- `pre` - Renders via [CodeFence](/docs/components/code-fence) with copy button and overflow fade
+- `code` - Inline code with muted background
 
 ### Tables
 
-- `table`, `tr`, `th`, `td` - Styled tables with borders
+- `table`, `tr`, `th`, `td` - Styled tables with borders and scroll wrapper
 
 ### Special Components
 
@@ -63,27 +63,9 @@ import { mdxComponents } from '@olwiba/docs';
 - `Callout` - Highlighted information boxes
 - `Button` - Interactive buttons
 - `Accordion` - Collapsible content sections
-
-## Callout Component
-
-```tsx
-import { Callout } from '@olwiba/docs';
-
-<Callout type="info">
-  This is an informational callout.
-</Callout>
-
-<Callout type="warning">
-  This is a warning callout.
-</Callout>
-```
-
-## CopyButton Component
-
-```tsx
-import { CopyButton } from '@olwiba/docs';
-
-<CopyButton text="Text to copy" />
-```
-
-The `CopyButton` is automatically included in code blocks rendered by the `pre` component.
+- `Alert` - Alert messages
+- [CodeFence](/docs/components/code-fence) - Enhanced code blocks (also used as `pre`)
+- [APIReference](/docs/components/api-reference) - Collapsible prop tables
+- [ThemeSelector](/docs/components/theme-selector) - Theme switcher dropdown
+- [ThemeCodeBlock](/docs/components/theme-code-block) - Theme CSS copier
+- `Link` - TanStack Router Link with underline styling

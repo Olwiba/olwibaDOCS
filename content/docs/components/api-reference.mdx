@@ -1,0 +1,55 @@
+---
+title: APIReference
+description: Collapsible API prop tables for component documentation.
+---
+
+## Overview
+
+The `APIReference` component renders a collapsible section that displays a component's props in a table format. Useful for documenting component APIs inline in your MDX content.
+
+## Import
+
+```tsx
+import { APIReference } from '@olwiba/docs';
+```
+
+## Usage
+
+In MDX:
+
+```mdx
+<APIReference
+  name="DocsSidebar"
+  extends="Sidebar"
+  props={[
+    { name: "tree", type: "PageTree.Root", default: "-" },
+    { name: "sections", type: "SidebarSection[]", default: "[]" },
+  ]}
+/>
+```
+
+## Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `name` | `string` | Component name (displayed as `<Name>`) |
+| `extends` | `string` | Parent component name (optional) |
+| `props` | `PropDef[]` | Array of prop definitions |
+
+### PropDef
+
+```ts
+interface PropDef {
+  name: string;
+  type: string;
+  default?: string;
+}
+```
+
+## Features
+
+- Click to expand/collapse
+- Chevron rotation animation
+- Displays extends relationship
+- Falls back to "No additional props" message when props array is empty
+- Registered in `mdxComponents` for direct use in MDX

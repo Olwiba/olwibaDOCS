@@ -1,0 +1,43 @@
+---
+title: DocsCopyPage
+description: Copy page content to clipboard with AI assistant quick links.
+---
+
+## Overview
+
+The `DocsCopyPage` component lets users copy the full raw content of the current documentation page. It also provides quick links to open the page in AI assistants like Claude, ChatGPT, and v0.
+
+## Import
+
+```tsx
+import { DocsCopyPage } from '@olwiba/docs';
+```
+
+## Usage
+
+```tsx
+<DocsCopyPage
+  page={rawContent}
+  url={typeof window !== 'undefined' ? window.location.href : '/docs'}
+/>
+```
+
+The `rawContent` is typically obtained from the server loader via `page.data.getText('raw')`.
+
+## Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `page` | `string` | The raw markdown/MDX content of the page |
+| `url` | `string` | The current page URL (used for AI assistant links) |
+
+## Features
+
+- One-click copy of full page content
+- Dropdown menu with AI assistant links:
+  - View as Markdown
+  - Open in v0
+  - Open in ChatGPT
+  - Open in Claude
+- Responsive: dropdown on desktop, popover on mobile
+- Uses `@olwiba/cn` DropdownMenu, Popover, and Separator components

@@ -15,17 +15,20 @@ import {
   TabsTrigger,
 } from '@olwiba/cn';
 import { cn } from './utils';
-import { CopyButton } from '../components/CopyButton';
+import { CodeFence } from '../components/CodeFence';
 import { Callout } from '../components/Callout';
+import { APIReference } from '../components/APIReference';
+import { ThemeSelector } from '../components/ThemeSelector';
+import { ThemeCodeBlock } from '../components/ThemeCodeBlock';
 
 /**
  * Default MDX component mappings for olwibaDOCS.
- * 
+ *
  * Usage:
  * ```tsx
  * import { mdxComponents } from '@olwiba/docs/mdx';
  * import defaultMdxComponents from 'fumadocs-ui/mdx';
- * 
+ *
  * <MDX components={{ ...defaultMdxComponents, ...mdxComponents }} />
  * ```
  */
@@ -140,36 +143,9 @@ export const mdxComponents = {
       {...props}
     />
   ),
-  pre: ({ className, children, ...props }: React.ComponentProps<'pre'>) => {
-    const codeContent = React.Children.toArray(children).find(
-      (child) => React.isValidElement(child) && child.type === 'code'
-    );
-    const textContent =
-      React.isValidElement(codeContent) &&
-      typeof codeContent.props.children === 'string'
-        ? codeContent.props.children
-        : '';
-
-    return (
-      <div className="group relative my-4 rounded-lg border bg-muted/50">
-        <pre
-          className={cn(
-            'no-scrollbar min-w-0 overflow-x-auto px-4 py-3.5 outline-none has-[[data-highlighted-line]]:px-0 has-[[data-line-numbers]]:px-0',
-            className
-          )}
-          {...props}
-        >
-          {children}
-        </pre>
-        {textContent && (
-          <CopyButton
-            text={textContent}
-            className="absolute right-2 top-2"
-          />
-        )}
-      </div>
-    );
-  },
+  pre: ({ className, children, ...props }: React.ComponentProps<'pre'>) => (
+    <CodeFence className={className}>{children}</CodeFence>
+  ),
   code: ({ className, children, ...props }: React.ComponentProps<'code'>) => {
     if (typeof children === 'string') {
       return (
@@ -240,6 +216,10 @@ export const mdxComponents = {
   Alert,
   AlertTitle,
   AlertDescription,
+  APIReference,
+  CodeFence,
+  ThemeSelector,
+  ThemeCodeBlock,
   Link: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
     <Link
       className={cn('font-medium underline underline-offset-4', className)}

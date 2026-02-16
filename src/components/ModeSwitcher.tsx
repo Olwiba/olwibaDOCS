@@ -1,3 +1,4 @@
+// @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 'use client';
 
 import * as React from 'react';

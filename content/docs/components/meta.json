@@ -1,3 +1,19 @@
 {
-  "pages": ["index", "docs-sidebar", "docs-toc", "search-dialog", "mdx-components"]
+  "pages": [
+    "index",
+    "docs-sidebar",
+    "docs-mobile-nav",
+    "docs-toc",
+    "docs-provider",
+    "search-dialog",
+    "code-fence",
+    "copy-button",
+    "docs-copy-page",
+    "api-reference",
+    "active-theme",
+    "theme-selector",
+    "theme-code-block",
+    "mode-switcher",
+    "mdx-components"
+  ]
 }

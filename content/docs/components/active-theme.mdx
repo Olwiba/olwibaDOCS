@@ -1,0 +1,66 @@
+---
+title: ActiveThemeProvider
+description: Theme context provider with cookie persistence and runtime CSS injection.
+---
+
+## Overview
+
+`ActiveThemeProvider` manages the active color theme across your documentation site. It persists the user's choice via cookies, injects theme CSS variables at runtime, and provides a React context for theme switching.
+
+## Import
+
+```tsx
+import { ActiveThemeProvider, useThemeConfig } from '@olwiba/docs';
+```
+
+## Usage
+
+### Provider
+
+Wrap your app with `ActiveThemeProvider` (typically in the root layout):
+
+```tsx
+import { ActiveThemeProvider } from '@olwiba/docs';
+
+function RootDocument({ children }) {
+  return (
+    <ActiveThemeProvider>
+      {children}
+    </ActiveThemeProvider>
+  );
+}
+```
+
+### useThemeConfig Hook
+
+Access and change the active theme from any component:
+
+```tsx
+import { useThemeConfig } from '@olwiba/docs';
+import { Theme } from '@olwiba/docs';
+
+function MyComponent() {
+  const { activeTheme, setActiveTheme } = useThemeConfig();
+
+  return (
+    <button onClick={() => setActiveTheme(Theme.Blue)}>
+      Current: {activeTheme}
+    </button>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `children` | `ReactNode` | Child components |
+| `initialTheme` | `Theme` | Initial theme (defaults to Emerald) |
+
+## How It Works
+
+1. On mount, reads the `active_theme` cookie
+2. Injects a `<style>` tag with the theme's CSS variables (overriding `:root` and `.dark`)
+3. Adds a `theme-{name}` class to `<body>`
+4. On theme change, updates cookie, class, and style tag
+5. Cleans up the injected style tag on unmount

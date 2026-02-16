@@ -1,113 +1,211 @@
 #!/usr/bin/env bun
 /**
- * Syncs doc components from olwibaCN to olwibaDOCS
- * 
+ * Syncs doc components from olwibaCN to olwibaDOCS.
+ *
+ * olwibaCN is the workshop — components are built there with direct access
+ * to UI primitives via `@/components/ui/*`. This script copies them into
+ * olwibaDOCS and rewrites imports so they reference the published `@olwiba/cn`
+ * package and correct relative paths for the flat `src/components/` layout.
+ *
  * Run: bun run scripts/sync-from-cn.ts
  */
 
-import { readdir, copyFile, readFile, writeFile, mkdir } from 'fs/promises';
+import { readFile, writeFile, mkdir } from 'fs/promises';
 import { join, dirname } from 'path';
 import { existsSync } from 'fs';
 
 const CN_ROOT = 'C:/Workspace/olwibaCN';
 const DOCS_ROOT = 'C:/Workspace/olwibaDOCS';
 
-// Components to sync from olwibaCN/src/components/docs/ to olwibaDOCS/src/components/docs/
-const DOC_COMPONENTS = [
-  'DocsToc.tsx',
-  'DocsSidebar.tsx',
-  'DocsCopyPage.tsx',
-  'Callout.tsx',
-  'SearchDialog.tsx',
-  'SearchButton.tsx',
-  'CopyButton.tsx',
-  'CopyCommandButton.tsx',
-  'CodeBlock.tsx',
-  'ComponentPreview.tsx',
-  'InstallationTabs.tsx',
-  // Add more as needed
+const GENERATED_BANNER = '// @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.\n';
+
+// ─── File mappings ───────────────────────────────────────────────────────────
+// CN source path (relative to CN_ROOT) → DOCS dest path (relative to DOCS_ROOT)
+
+const SYNC_MAP: Array<{ src: string; dest: string }> = [
+  // Doc components (CN: src/components/docs/ → DOCS: src/components/)
+  { src: 'src/components/docs/APIReference.tsx', dest: 'src/components/APIReference.tsx' },
+  { src: 'src/components/docs/Callout.tsx', dest: 'src/components/Callout.tsx' },
+  { src: 'src/components/docs/CodeFence.tsx', dest: 'src/components/CodeFence.tsx' },
+  { src: 'src/components/docs/CopyButton.tsx', dest: 'src/components/CopyButton.tsx' },
+  { src: 'src/components/docs/DocsCopyPage.tsx', dest: 'src/components/DocsCopyPage.tsx' },
+  { src: 'src/components/docs/DocsMobileNav.tsx', dest: 'src/components/DocsMobileNav.tsx' },
+  { src: 'src/components/docs/DocsSidebar.tsx', dest: 'src/components/DocsSidebar.tsx' },
+  { src: 'src/components/docs/DocsToc.tsx', dest: 'src/components/DocsToc.tsx' },
+  { src: 'src/components/docs/SearchButton.tsx', dest: 'src/components/SearchButton.tsx' },
+  { src: 'src/components/docs/SearchDialog.tsx', dest: 'src/components/SearchDialog.tsx' },
+  { src: 'src/components/docs/ThemeCodeBlock.tsx', dest: 'src/components/ThemeCodeBlock.tsx' },
+
+  // Site-level components (CN: src/components/ → DOCS: src/components/)
+  { src: 'src/components/active-theme.tsx', dest: 'src/components/ActiveTheme.tsx' },
+  { src: 'src/components/ModeSwitcher.tsx', dest: 'src/components/ModeSwitcher.tsx' },
+  { src: 'src/components/ThemeSelector.tsx', dest: 'src/components/ThemeSelector.tsx' },
+
+  // Hooks
+  { src: 'src/hooks/use-copy-to-clipboard.ts', dest: 'src/hooks/use-copy-to-clipboard.ts' },
 ];
 
-// Site-level components (not in docs/) - sync separately if needed
-const SITE_COMPONENTS = [
-  'ModeSwitcher.tsx',
-  'SiteHeader.tsx',
-  'SiteFooter.tsx',
-];
+// ─── Import transforms ──────────────────────────────────────────────────────
+// DOCS components live in src/components/ (flat), so relative paths go up 1 level.
 
-// Hooks to sync
-const HOOKS = [
-  'use-copy-to-clipboard.ts',
-];
+function transformImports(content: string, destPath: string): string {
+  let result = content;
 
-// Transform imports from @/ to relative or @olwiba/cn
-// Note: docs components are in src/components/docs/, so paths go up 2 levels
-function transformImports(content: string, filePath: string): string {
-  return content
-    // Change @/components/ui/* imports to @olwiba/cn (no subpaths - CN doesn't export them)
-    .replace(/from ['"]@\/components\/ui\/[^'"]+['"]/g, "from '@olwiba/cn'")
-    .replace(/from ['"]@\/components\/ui['"]/g, "from '@olwiba/cn'")
-    // Change @/lib/utils to ../../lib/utils (2 levels up from components/docs/)
-    .replace(/@\/lib\/utils/g, '../../lib/utils')
-    // Change @/hooks/* to ../../hooks/*
-    .replace(/@\/hooks\//g, '../../hooks/');
+  // Merge all @/components/ui/* imports into @olwiba/cn
+  // Handles both single-line and multi-line import blocks
+  result = result.replace(
+    /import\s+\{[^}]*\}\s+from\s+['"]@\/components\/ui\/[^'"]+['"]\s*;?\n?/g,
+    (match) => {
+      // Extract the imported names
+      const names = match.match(/\{([^}]*)\}/)?.[1]?.trim();
+      if (!names) return '';
+      return `import { ${names} } from '@olwiba/cn';\n`;
+    }
+  );
+
+  // @/components/ui (barrel) → @olwiba/cn
+  result = result.replace(
+    /from\s+['"]@\/components\/ui['"]/g,
+    "from '@olwiba/cn'"
+  );
+
+  // @/lib/utils → ../lib/utils (1 level up from src/components/)
+  result = result.replace(/@\/lib\/utils/g, '../lib/utils');
+
+  // @/lib/* → ../lib/* (for themes etc.)
+  result = result.replace(/@\/lib\//g, '../lib/');
+
+  // @/hooks/* → ../hooks/*
+  result = result.replace(/@\/hooks\//g, '../hooks/');
+
+  // @/components/active-theme → ./ActiveTheme (same directory in DOCS)
+  result = result.replace(
+    /['"]@\/components\/active-theme['"]/g,
+    "'./ActiveTheme'"
+  );
+
+  // ./CodeFence (relative within docs/) stays ./ (same directory in DOCS)
+  // No change needed — both are flat in src/components/
+
+  return result;
+}
+
+/**
+ * Consolidate multiple @olwiba/cn imports into a single import statement.
+ * After individual transforms, we may end up with:
+ *   import { A } from '@olwiba/cn';
+ *   import { B } from '@olwiba/cn';
+ * This merges them into:
+ *   import { A, B } from '@olwiba/cn';
+ */
+function consolidateCnImports(content: string): string {
+  const cnImportRegex = /import\s*(?:type\s*)?\{([^}]*)\}\s*from\s*['"]@olwiba\/cn['"]\s*;?\s*\n/g;
+  const regularNames: string[] = [];
+  const typeNames: string[] = [];
+
+  let match;
+  while ((match = cnImportRegex.exec(content)) !== null) {
+    const line = content.slice(match.index, match.index + match[0].length);
+    const isTypeImport = /^import\s+type\s/.test(line);
+    const names = match[1]
+      .split(',')
+      .map((n) => n.trim())
+      .filter(Boolean);
+
+    if (isTypeImport) {
+      typeNames.push(...names);
+    } else {
+      // Check for inline `type` keywords
+      for (const name of names) {
+        if (name.startsWith('type ')) {
+          typeNames.push(name.replace('type ', ''));
+        } else {
+          regularNames.push(name);
+        }
+      }
+    }
+  }
+
+  // If 0 or 1 imports, nothing to consolidate
+  const allMatches = content.match(cnImportRegex);
+  if (!allMatches || allMatches.length <= 1) return content;
+
+  // Remove all @olwiba/cn imports
+  let result = content.replace(cnImportRegex, '');
+
+  // Build consolidated import
+  const allNames = [...new Set(regularNames)];
+  if (typeNames.length > 0) {
+    const uniqueTypes = [...new Set(typeNames)].map((n) => `type ${n}`);
+    allNames.push(...uniqueTypes);
+  }
+
+  if (allNames.length > 0) {
+    const consolidated = `import {\n  ${allNames.join(',\n  ')},\n} from '@olwiba/cn';\n`;
+    // Insert after the last non-import line before the first code
+    const firstImportIdx = result.search(/^import\s/m);
+    if (firstImportIdx >= 0) {
+      // Find the end of the import block
+      const lines = result.split('\n');
+      let lastImportLine = 0;
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].startsWith('import ') || lines[i].startsWith('} from ') || /^\s+/.test(lines[i]) && i > 0 && lines[i - 1].includes('import')) {
+          lastImportLine = i;
+        }
+      }
+      lines.splice(lastImportLine + 1, 0, consolidated);
+      result = lines.join('\n');
+    } else {
+      result = consolidated + result;
+    }
+  }
+
+  return result;
 }
 
 async function syncFile(srcPath: string, destPath: string) {
   const content = await readFile(srcPath, 'utf-8');
-  const transformed = transformImports(content, destPath);
-  
+  let transformed = transformImports(content, destPath);
+  transformed = consolidateCnImports(transformed);
+  transformed = GENERATED_BANNER + transformed;
+
   // Ensure directory exists
   const dir = dirname(destPath);
   if (!existsSync(dir)) {
     await mkdir(dir, { recursive: true });
   }
-  
+
   await writeFile(destPath, transformed);
-  console.log(`✓ Synced: ${srcPath} → ${destPath}`);
+  console.log(`  ✓ ${srcPath} → ${destPath}`);
 }
 
 async function main() {
   console.log('Syncing doc components from olwibaCN to olwibaDOCS...\n');
 
-  // Sync docs components
-  for (const file of DOC_COMPONENTS) {
-    const src = join(CN_ROOT, 'src/components/docs', file);
-    const dest = join(DOCS_ROOT, 'src/components/docs', file);
-    
-    if (existsSync(src)) {
-      await syncFile(src, dest);
+  let synced = 0;
+  let skipped = 0;
+  const missing: string[] = [];
+
+  for (const { src, dest } of SYNC_MAP) {
+    const srcPath = join(CN_ROOT, src);
+    const destPath = join(DOCS_ROOT, dest);
+
+    if (existsSync(srcPath)) {
+      await syncFile(srcPath, destPath);
+      synced++;
     } else {
-      console.log(`⚠ Not found: ${src}`);
+      console.log(`  ⚠ Not found: ${src}`);
+      missing.push(src);
+      skipped++;
     }
   }
 
-  // Sync site components (optional - uncomment if needed)
-  // for (const file of SITE_COMPONENTS) {
-  //   const src = join(CN_ROOT, 'src/components', file);
-  //   const dest = join(DOCS_ROOT, 'src/components', file);
-  //   
-  //   if (existsSync(src)) {
-  //     await syncFile(src, dest);
-  //   } else {
-  //     console.log(`⚠ Not found: ${src}`);
-  //   }
-  // }
-
-  // Sync hooks
-  for (const file of HOOKS) {
-    const src = join(CN_ROOT, 'src/hooks', file);
-    const dest = join(DOCS_ROOT, 'src/hooks', file);
-    
-    if (existsSync(src)) {
-      await syncFile(src, dest);
-    } else {
-      console.log(`⚠ Not found: ${src}`);
-    }
+  console.log(`\n✅ Synced ${synced} files${skipped ? `, ${skipped} missing` : ''}`);
+  if (missing.length) {
+    console.log('\nMissing files:');
+    missing.forEach((f) => console.log(`  - ${f}`));
   }
-
-  console.log('\n✅ Sync complete!');
-  console.log('Run `bun run build` to rebuild, then publish.');
+  console.log('\nNext: run `bun run types:check` to verify.');
 }
 
 main().catch(console.error);

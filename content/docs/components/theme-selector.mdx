@@ -1,0 +1,35 @@
+---
+title: ThemeSelector
+description: Dropdown select component for switching between color themes.
+---
+
+## Overview
+
+The `ThemeSelector` renders a dropdown with all 7 available themes, each shown with a color swatch. Selecting a theme immediately applies it via the `ActiveThemeProvider`.
+
+## Import
+
+```tsx
+import { ThemeSelector } from '@olwiba/docs';
+```
+
+## Usage
+
+```tsx
+import { ThemeSelector } from '@olwiba/docs';
+
+<ThemeSelector />
+```
+
+Place it anywhere inside an `ActiveThemeProvider`. It's also registered in `mdxComponents`, so you can use it directly in MDX:
+
+```mdx
+<ThemeSelector />
+```
+
+## Features
+
+- 7 built-in themes with color swatches
+- Immediate theme application on selection
+- Uses `@olwiba/cn` Select component
+- Requires `ActiveThemeProvider` ancestor

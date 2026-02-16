@@ -1,3 +1,4 @@
+// @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 import { useState, useCallback } from "react";
 
 export function useCopyToClipboard(timeout = 2000) {

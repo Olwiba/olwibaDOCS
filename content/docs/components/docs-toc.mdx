@@ -1,6 +1,6 @@
 ---
 title: DocsToc
-description: Table of contents component for documentation pages.
+description: Table of contents component with scroll tracking.
 ---
 
 ## Overview
@@ -45,7 +45,7 @@ interface TocItem {
 
 ## Extracting TOC from MDX
 
-The TOC is typically extracted during the server-side loading of your MDX content:
+The TOC is typically extracted during server-side loading:
 
 ```tsx
 const serverLoader = createServerFn()
@@ -58,7 +58,6 @@ const serverLoader = createServerFn()
         url: item.url,
         depth: item.depth,
       })),
-      // ...other data
     };
   });
 ```

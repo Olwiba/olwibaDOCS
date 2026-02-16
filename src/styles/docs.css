@@ -1,9 +1,9 @@
 /**
  * olwibaDOCS styles
- * 
+ *
  * Import this in your app:
  * @import '@olwiba/docs/styles';
- * 
+ *
  * Or in CSS:
  * @import '@olwiba/docs/dist/styles/docs.css';
  */
@@ -30,6 +30,18 @@
 
 /* Steps component styling */
 @layer components {
+  .blueprint-pattern {
+    background-image: repeating-linear-gradient(
+      315deg,
+      var(--blueprint-fg) 0,
+      var(--blueprint-fg) 1px,
+      transparent 0,
+      transparent 50%
+    );
+    background-size: 10px 10px;
+    background-attachment: fixed;
+  }
+
   .steps {
     &:first-child {
       @apply !mt-0;
@@ -48,18 +60,11 @@
     }
   }
 
-  /* Code block styling with rehype-pretty-code */
+  /* rehype-pretty-code figure - CodeFence handles the styling */
   [data-rehype-pretty-code-figure] {
-    background-color: var(--color-code);
-    color: var(--color-code-foreground);
-    border-radius: var(--radius-lg);
-    border-width: 0px;
-    border-color: var(--border);
-    margin-top: calc(var(--spacing) * 6);
-    overflow: hidden;
+    position: relative;
     font-size: var(--text-sm);
     outline: none;
-    position: relative;
   }
 
   [data-rehype-pretty-code-title] {
@@ -118,22 +123,3 @@
     }
   }
 }
-
-/* Additional code-related CSS variables (add to your theme) */
-/*
-:root {
-  --surface: oklch(0.98 0 0);
-  --surface-foreground: var(--foreground);
-  --code: var(--surface);
-  --code-foreground: var(--surface-foreground);
-  --code-highlight: oklch(0.96 0 0);
-}
-
-.dark {
-  --surface: oklch(0.2 0 0);
-  --surface-foreground: oklch(0.708 0 0);
-  --code: var(--surface);
-  --code-foreground: var(--surface-foreground);
-  --code-highlight: oklch(0.27 0 0);
-}
-*/

@@ -8,14 +8,34 @@ import * as React from 'react';
 import { Suspense } from 'react';
 import { mdxComponents } from '@/lib/mdx-components';
 import { DocsSidebar, type SidebarSection } from '@/components/DocsSidebar';
+import { DocsMobileNav } from '@/components/DocsMobileNav';
 import { DocsToc, type TocItem } from '@/components/DocsToc';
+import { DocsCopyPage } from '@/components/DocsCopyPage';
 import { SidebarProvider, Button } from '@olwiba/cn';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { findNeighbour } from 'fumadocs-core/page-tree';
+import type { SerializedPageTree } from 'fumadocs-core/source/client';
+
+interface PageLoaderData {
+  path: string;
+  url: string;
+  pageTree: SerializedPageTree;
+  frontmatter: {
+    title: string;
+    description: string | undefined;
+  };
+  toc: TocItem[];
+  rawContent: string;
+  neighbours: {
+    previous: { url: string; name: string } | null;
+    next: { url: string; name: string } | null;
+  };
+}
 
 const sidebarSections: SidebarSection[] = [
   { name: 'Get Started', href: '/docs' },
   { name: 'Components', href: '/docs/components' },
+  { name: 'Themes', href: '/docs/themes' },
 ];
 
 function extractTextFromReactNode(node: React.ReactNode): string {
@@ -24,7 +44,8 @@ function extractTextFromReactNode(node: React.ReactNode): string {
   if (typeof node === 'number') return String(node);
   if (Array.isArray(node)) return node.map(extractTextFromReactNode).join('');
   if (typeof node === 'object' && 'props' in node) {
-    return extractTextFromReactNode((node as React.ReactElement).props.children);
+    const el = node as React.ReactElement & { props: { children?: React.ReactNode } };
+    return extractTextFromReactNode(el.props.children);
   }
   return '';
 }
@@ -33,7 +54,7 @@ export const Route = createFileRoute('/docs/$')({
   component: Page,
   loader: async ({ params }) => {
     const slugs = params._splat?.split('/') ?? [];
-    const data = await serverLoader({ data: slugs });
+    const data = (await serverLoader({ data: slugs })) as PageLoaderData;
     await clientLoader.preload(data.path);
     return data;
   },
@@ -66,8 +87,8 @@ const serverLoader = createServerFn({
       })) as TocItem[],
       rawContent,
       neighbours: {
-        previous: neighbours.previous ? { url: neighbours.previous.url, name: neighbours.previous.name } : null,
-        next: neighbours.next ? { url: neighbours.next.url, name: neighbours.next.name } : null,
+        previous: neighbours.previous ? { url: neighbours.previous.url, name: extractTextFromReactNode(neighbours.previous.name) } : null,
+        next: neighbours.next ? { url: neighbours.next.url, name: extractTextFromReactNode(neighbours.next.name) } : null,
       },
     };
   });
@@ -88,24 +109,30 @@ const clientLoader = browserCollections.docs.createClientLoader({
 });
 
 function Page() {
-  const data = useFumadocsLoader(Route.useLoaderData());
-  const loaderData = Route.useLoaderData();
+  const loaderData = Route.useLoaderData() as PageLoaderData;
+  const data = useFumadocsLoader(loaderData);
 
   return (
     <div className="flex flex-1 flex-col px-2">
-      <SidebarProvider className="min-h-min flex-1 items-start px-0 [--sidebar-width:220px] [--top-spacing:0] lg:[--sidebar-width:240px] lg:[--top-spacing:calc(var(--spacing)*4)]">
+      <SidebarProvider className="min-h-min flex-1 items-start px-0 [--sidebar-width:220px] [--top-spacing:1.5rem] lg:[--sidebar-width:240px] lg:[--top-spacing:2rem]">
         <DocsSidebar tree={data.pageTree} sections={sidebarSections} />
-        <div className="h-full w-full lg:ml-[var(--sidebar-width)]">
+        <div className="hidden lg:block w-4 self-stretch border-x border-dashed blueprint-pattern" aria-hidden="true" />
+        <div className="flex-1 min-w-0">
+          <DocsMobileNav tree={data.pageTree} sections={sidebarSections} />
           <div className="flex items-stretch xl:w-full">
             <div className="flex min-w-0 flex-1 flex-col">
               <div className="h-[var(--top-spacing)] shrink-0" />
-              <div className="flex w-full min-w-0 max-w-2xl flex-1 flex-col gap-8 px-4 py-6 text-neutral-800 md:px-6 lg:py-8 dark:text-neutral-300">
+              <div className="flex w-full min-w-0 max-w-2xl flex-1 flex-col gap-8 px-4 pb-6 text-neutral-800 md:px-6 lg:pb-8 dark:text-neutral-300">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-start justify-between">
                     <h1 className="scroll-m-20 font-semibold text-4xl tracking-tight sm:text-3xl xl:text-4xl">
                       {loaderData.frontmatter.title}
                     </h1>
                     <div className="flex items-center gap-2">
+                      <DocsCopyPage
+                        page={loaderData.rawContent}
+                        url={typeof window !== 'undefined' ? window.location.href : loaderData.url}
+                      />
                       {loaderData.neighbours.previous && (
                         <Button asChild size="icon" variant="secondary" className="size-8">
                           <Link to={loaderData.neighbours.previous.url}>
@@ -131,7 +158,7 @@ function Page() {
                   )}
                 </div>
                 <Suspense fallback={<div className="animate-pulse h-64 bg-muted rounded-lg" />}>
-                  {clientLoader.useContent(data.path, {})}
+                  {clientLoader.useContent(data.path, undefined)}
                 </Suspense>
               </div>
               <div className="hidden h-16 w-full max-w-2xl items-center gap-2 px-4 sm:flex md:px-6">
@@ -152,14 +179,17 @@ function Page() {
               </div>
             </div>
             {loaderData.toc?.length > 0 && (
-              <div className="ml-auto hidden w-72 shrink-0 flex-col py-4 lg:py-6 xl:flex">
+              <>
+              <div className="hidden xl:block w-4 self-stretch border-x border-dashed blueprint-pattern" aria-hidden="true" />
+              <div className="hidden w-72 shrink-0 flex-col pb-4 lg:pb-6 xl:flex">
                 <div className="h-[var(--top-spacing)] shrink-0" />
-                <div className="sticky top-[calc(var(--header-height)+1px)] z-30 max-h-[calc(100svh-var(--header-height)-1px)] overflow-hidden overscroll-none">
-                  <div className="no-scrollbar overflow-y-auto px-8 py-2">
+                <div className="sticky top-[calc(var(--header-height)+13px)] z-30 max-h-[calc(100svh-var(--header-height)-1px)] overflow-hidden overscroll-none">
+                  <div className="no-scrollbar overflow-y-auto px-8 pb-2">
                     <DocsToc toc={loaderData.toc} />
                   </div>
                 </div>
               </div>
+              </>
             )}
           </div>
         </div>

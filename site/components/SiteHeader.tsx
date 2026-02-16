@@ -11,11 +11,13 @@ const navItems = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 flex h-14 shrink-0 items-center gap-2 border-b border-dashed bg-background/95 backdrop-blur-sm">
-      <div className="flex h-full w-full max-w-[1400px] items-center gap-2 border-r border-l border-dashed px-4 md:mx-auto md:gap-5 md:px-6">
+    <header className="sticky top-0 z-50 flex h-14 shrink-0 justify-center border-b bg-background/95 backdrop-blur-sm">
+      <div className="h-full w-4 shrink-0 border-dashed lg:w-12 lg:border-l" aria-hidden="true" />
+      <div className="flex h-full w-full max-w-[1400px] items-center gap-2 border-l border-r border-dashed px-4 md:gap-5 md:px-6">
+        <div id="docs-mobile-nav-trigger" className="empty:hidden lg:hidden" />
         <Link className="flex items-center gap-2" to="/">
           <span className="font-bold text-lg">
-            olwiba<span className="text-blue-400">DOCS</span>
+            olwiba<span className="text-primary">DOCS</span>
           </span>
         </Link>
 
@@ -38,7 +40,7 @@ export function SiteHeader() {
               href="https://github.com/olwiba/olwibaDOCS"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-md opacity-50"
+              className="flex items-center gap-2 px-1.5 py-1 text-sm rounded-md opacity-50 sm:px-3 sm:py-1.5"
             >
               <svg className="size-4 fill-current" viewBox="0 0 24 24">
                 <title>GitHub</title>
@@ -46,13 +48,14 @@ export function SiteHeader() {
               </svg>
               <span className="hidden sm:inline">GitHub</span>
             </a>
-            <span className="absolute -right-2 -top-2 rotate-12 bg-blue-500 px-1.5 pt-0.5 pb-1 text-[8px] font-bold text-white rounded-xs">
+            <span className="absolute -right-1 -top-1.5 rotate-12 bg-primary px-1 pb-0.5 text-[6px] font-bold text-primary-foreground rounded-xs sm:-right-2 sm:-top-2 sm:px-1.5 sm:pt-0.5 sm:pb-1 sm:text-[8px]">
               soon
             </span>
           </div>
           <ModeSwitcher />
         </div>
       </div>
+      <div className="h-full w-4 shrink-0 border-dashed lg:w-12 lg:border-r" aria-hidden="true" />
     </header>
   );
 }

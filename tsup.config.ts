@@ -6,6 +6,7 @@ export default defineConfig({
     'src/lib/source.ts',
     'src/lib/mdx-components.tsx',
     'src/lib/server.ts',
+    'src/lib/themes.ts',
   ],
   format: ['esm'],
   dts: false, // TODO: Re-enable when @olwiba/cn has type declarations
