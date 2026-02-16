@@ -36,6 +36,11 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
   { src: 'src/components/docs/SearchDialog.tsx', dest: 'src/components/SearchDialog.tsx' },
   { src: 'src/components/docs/ThemeCodeBlock.tsx', dest: 'src/components/ThemeCodeBlock.tsx' },
 
+  // Shared layout components (CN: src/components/docs/ → DOCS: src/components/)
+  { src: 'src/components/docs/DocsHeader.tsx', dest: 'src/components/DocsHeader.tsx' },
+  { src: 'src/components/docs/DocsFooter.tsx', dest: 'src/components/DocsFooter.tsx' },
+  { src: 'src/components/docs/DocsLayout.tsx', dest: 'src/components/DocsLayout.tsx' },
+
   // Site-level components (CN: src/components/ → DOCS: src/components/)
   { src: 'src/components/active-theme.tsx', dest: 'src/components/ActiveTheme.tsx' },
   { src: 'src/components/ModeSwitcher.tsx', dest: 'src/components/ModeSwitcher.tsx' },
@@ -82,6 +87,12 @@ function transformImports(content: string, destPath: string): string {
   result = result.replace(
     /['"]@\/components\/active-theme['"]/g,
     "'./ActiveTheme'"
+  );
+
+  // @/components/ModeSwitcher → ./ModeSwitcher (same directory in DOCS)
+  result = result.replace(
+    /['"]@\/components\/ModeSwitcher['"]/g,
+    "'./ModeSwitcher'"
   );
 
   // ./CodeFence (relative within docs/) stays ./ (same directory in DOCS)

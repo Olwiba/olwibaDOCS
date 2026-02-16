@@ -8,6 +8,9 @@ export { DocsMobileNav, type DocsMobileNavProps } from './components/DocsMobileN
 export { DocsCopyPage } from './components/DocsCopyPage';
 export { DocsToc, type DocsTocProps, type TocItem } from './components/DocsToc';
 export { APIReference } from './components/APIReference';
+export { DocsHeader, type DocsHeaderProps } from './components/DocsHeader';
+export { DocsFooter, type DocsFooterProps } from './components/DocsFooter';
+export { DocsLayout, type DocsLayoutProps, type PageLoaderData, extractTextFromReactNode } from './components/DocsLayout';
 export { ModeSwitcher, type ModeSwitcherProps } from './components/ModeSwitcher';
 export { SearchButton, type SearchButtonProps } from './components/SearchButton';
 export {
