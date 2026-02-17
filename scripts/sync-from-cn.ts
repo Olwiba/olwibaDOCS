@@ -49,13 +49,18 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
 
   // Hooks
   { src: 'src/hooks/use-copy-to-clipboard.ts', dest: 'src/hooks/use-copy-to-clipboard.ts' },
+
+  // Site routes (CN: src/routes/ → DOCS: site/routes/)
+  { src: 'src/routes/api/search/index.ts', dest: 'site/routes/api/search/index.ts' },
 ];
 
 // ─── Import transforms ──────────────────────────────────────────────────────
 // DOCS components live in src/components/ (flat), so relative paths go up 1 level.
+// Files destined for site/ use the ~ alias (~/lib/) instead of relative paths.
 
 function transformImports(content: string, destPath: string): string {
   let result = content;
+  const isSiteFile = destPath.replace(/\\/g, '/').includes('/site/');
 
   // Merge all @/components/ui/* imports into @olwiba/cn
   // Handles both single-line and multi-line import blocks
@@ -81,14 +86,16 @@ function transformImports(content: string, destPath: string): string {
     "'@olwiba/cn'"
   );
 
-  // @/lib/utils → ../lib/utils (1 level up from src/components/)
-  result = result.replace(/@\/lib\/utils/g, '../lib/utils');
-
-  // @/lib/* → ../lib/* (for themes etc.)
-  result = result.replace(/@\/lib\//g, '../lib/');
-
-  // @/hooks/* → ../hooks/*
-  result = result.replace(/@\/hooks\//g, '../hooks/');
+  if (isSiteFile) {
+    // site/ files use the ~ alias (~ maps to ./site/ in tsconfig paths)
+    result = result.replace(/@\/lib\//g, '~/lib/');
+    result = result.replace(/@\/hooks\//g, '~/hooks/');
+  } else {
+    // src/ files use relative paths (1 level up from src/components/)
+    result = result.replace(/@\/lib\/utils/g, '../lib/utils');
+    result = result.replace(/@\/lib\//g, '../lib/');
+    result = result.replace(/@\/hooks\//g, '../hooks/');
+  }
 
   // @/components/active-theme → ./ActiveTheme (same directory in DOCS)
   result = result.replace(
