@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+### Added
+
+- **`DocsFooter`** — accepts optional `changelogUrl` prop; renders a changelog link in the bottom-right when provided. URL is no longer hardcoded, so each consumer can point to their own repo.
+
 ## 0.1.0
 
 ### Added
