@@ -10,7 +10,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   Popover,
-  PopoverAnchor,
   PopoverContent,
   PopoverTrigger,
   Separator,
@@ -97,20 +96,19 @@ export function DocsCopyPage({ page, url }: { page: string; url: string }) {
 
   const trigger = (
     <Button
-      className="peer -ml-0.5 size-8 shadow-none md:size-7 md:text-[0.8rem]"
+      className="group/chevron peer -ml-0.5 size-8 shadow-none"
       size="sm"
       variant="secondary"
     >
-      <ChevronDown className="rotate-180 sm:rotate-0" />
+      <ChevronDown className="transition-transform duration-200 group-data-[state=open]/chevron:rotate-180" />
     </Button>
   );
 
   return (
     <Popover>
       <div className="group/buttons relative flex rounded-lg bg-secondary *:[[data-slot=button]]:focus-visible:relative *:[[data-slot=button]]:focus-visible:z-10">
-        <PopoverAnchor />
         <Button
-          className="h-8 shadow-none md:h-7 md:text-[0.8rem]"
+          className="h-8 shadow-none"
           onClick={() => copyToClipboard(page)}
           size="sm"
           variant="secondary"
@@ -131,20 +129,20 @@ export function DocsCopyPage({ page, url }: { page: string; url: string }) {
           </DropdownMenuContent>
         </DropdownMenu>
         <Separator
-          className="!bg-foreground/10 !h-8 sm:!h-7 absolute top-0 right-8 z-0 peer-focus-visible:opacity-0 sm:right-7"
+          className="!bg-foreground/10 !h-8 absolute top-0 right-8 z-0 peer-focus-visible:opacity-0"
           orientation="vertical"
         />
         <PopoverTrigger asChild className="flex sm:hidden">
           {trigger}
         </PopoverTrigger>
         <PopoverContent
-          align="start"
+          align="end"
           className="!origin-center w-52 rounded-lg bg-background/70 p-1 shadow-sm backdrop-blur-sm dark:bg-background/60"
         >
           {Object.entries(menuItems).map(([key, value]) => (
             <Button
               asChild
-              className="w-full justify-start font-normal text-base *:[svg]:text-muted-foreground"
+              className="w-full justify-start px-2 font-normal text-base *:[svg]:text-muted-foreground"
               key={key}
               size="lg"
               variant="ghost"

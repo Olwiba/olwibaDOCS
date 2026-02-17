@@ -1,11 +1,13 @@
 ---
 title: ThemeSelector
-description: Dropdown select component for switching between color themes.
+description: Dropdown select for switching between 7 built-in color themes with swatches. Immediately applies the selected theme via ActiveThemeProvider.
 ---
 
-## Overview
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
 
-The `ThemeSelector` renders a dropdown with all 7 available themes, each shown with a color swatch. Selecting a theme immediately applies it via the `ActiveThemeProvider`.
+<ComponentPreview name="theme-selector" />
 
 ## Import
 
@@ -27,9 +29,9 @@ Place it anywhere inside an `ActiveThemeProvider`. It's also registered in `mdxC
 <ThemeSelector />
 ```
 
-## Features
+## API Reference
 
-- 7 built-in themes with color swatches
-- Immediate theme application on selection
-- Uses `@olwiba/cn` Select component
-- Requires `ActiveThemeProvider` ancestor
+<APIReference
+  name="ThemeSelector"
+  props={[]}
+/>

@@ -35,6 +35,7 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
   { src: 'src/components/docs/SearchButton.tsx', dest: 'src/components/SearchButton.tsx' },
   { src: 'src/components/docs/SearchDialog.tsx', dest: 'src/components/SearchDialog.tsx' },
   { src: 'src/components/docs/ThemeCodeBlock.tsx', dest: 'src/components/ThemeCodeBlock.tsx' },
+  { src: 'src/components/docs/CopyCommandButton.tsx', dest: 'src/components/CopyCommandButton.tsx' },
 
   // Shared layout components (CN: src/components/docs/ → DOCS: src/components/)
   { src: 'src/components/docs/DocsHeader.tsx', dest: 'src/components/DocsHeader.tsx' },
@@ -72,6 +73,12 @@ function transformImports(content: string, destPath: string): string {
   result = result.replace(
     /from\s+['"]@\/components\/ui['"]/g,
     "from '@olwiba/cn'"
+  );
+
+  // @/lib/confetti → @olwiba/cn (confetti is exported from the CN package)
+  result = result.replace(
+    /['"]@\/lib\/confetti['"]/g,
+    "'@olwiba/cn'"
   );
 
   // @/lib/utils → ../lib/utils (1 level up from src/components/)

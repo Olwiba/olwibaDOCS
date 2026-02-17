@@ -1,11 +1,13 @@
 ---
 title: DocsMobileNav
-description: Sheet-based mobile sidebar navigation with portal trigger pattern.
+description: Sheet-based mobile sidebar navigation with portal trigger pattern. Renders a slide-out sheet for mobile navigation, portaling the trigger button into the site header.
 ---
 
-## Overview
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
 
-The `DocsMobileNav` component provides a slide-out sheet for mobile navigation. It uses a portal pattern to render the trigger button inside the site header, keeping the navigation accessible from the top of the page.
+<ComponentPreview name="docs-mobile-nav" />
 
 ## Import
 
@@ -29,17 +31,12 @@ import { DocsMobileNav } from '@olwiba/docs';
 
 The component automatically portals the trigger button into the `#docs-mobile-nav-trigger` element.
 
-## Props
+## API Reference
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `tree` | `PageTree.Root` | The Fumadocs page tree structure |
-| `sections` | `{ name: string; href: string }[]` | Optional section links (defaults to Get Started, Components, Themes) |
-
-## Features
-
-- Portal-based trigger renders in the site header
-- Automatically closes on route change
-- Section links with active state
-- Filters out index pages from the tree
-- Uses `@olwiba/cn` Sheet and ScrollArea components
+<APIReference
+  name="DocsMobileNav"
+  props={[
+    { name: "tree", type: "PageTree.Root", default: "-" },
+    { name: "sections", type: '{ name: string; href: string }[]', default: "[]" },
+  ]}
+/>

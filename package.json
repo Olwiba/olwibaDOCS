@@ -44,10 +44,11 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "hono": "^4.7.0",
     "fumadocs-core": "^16.4.7",
     "fumadocs-ui": "^16.4.7",
+    "hono": "^4.7.0",
     "lucide-react": "^0.562.0",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0"
   },
   "peerDependencies": {
@@ -57,7 +58,7 @@
     "react-dom": ">=18.0.0"
   },
   "devDependencies": {
-    "@olwiba/cn": "^0.1.0",
+    "@olwiba/cn": "^0.1.1",
     "react-resizable-panels": "^4.4.1",
     "@tailwindcss/postcss": "^4.1.18",
     "@tanstack/react-router": "^1.151.6",

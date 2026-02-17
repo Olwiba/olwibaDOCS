@@ -1,11 +1,13 @@
 ---
 title: DocsToc
-description: Table of contents component with scroll tracking.
+description: Table of contents with automatic scroll tracking, smooth scroll-to-section on click, and nested heading support (h2–h4).
 ---
 
-## Overview
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
 
-The `DocsToc` component renders a table of contents based on the headings in your MDX content. It highlights the currently visible section as the user scrolls.
+<ComponentPreview name="docs-toc" />
 
 ## Import
 
@@ -27,23 +29,7 @@ function DocsPage({ toc }) {
 }
 ```
 
-## Props
-
-| Prop | Type | Description |
-|------|------|-------------|
-| `toc` | `TocItem[]` | Array of table of contents items |
-
-## TocItem Type
-
-```ts
-interface TocItem {
-  title: string;
-  url: string;
-  depth: number;
-}
-```
-
-## Extracting TOC from MDX
+### Extracting TOC from MDX
 
 The TOC is typically extracted during server-side loading:
 
@@ -62,9 +48,21 @@ const serverLoader = createServerFn()
   });
 ```
 
-## Features
+## API Reference
 
-- Automatic scroll tracking
-- Smooth scroll to section on click
-- Nested heading support (h2, h3, h4)
-- Highlights active section
+<APIReference
+  name="DocsToc"
+  props={[
+    { name: "toc", type: "TocItem[]", default: "-" },
+  ]}
+/>
+
+### TocItem
+
+```ts
+interface TocItem {
+  title: string;
+  url: string;
+  depth: number;
+}
+```

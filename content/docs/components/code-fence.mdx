@@ -1,11 +1,13 @@
 ---
 title: CodeFence
-description: Enhanced code blocks with overflow detection, fade effect, and copy button.
+description: Enhanced code blocks with overflow detection, gradient fade effect, persistent copy button, and theme-aware background colors using the --code CSS variable.
 ---
 
-## Overview
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
 
-The `CodeFence` component wraps code blocks with a styled container that includes overflow detection with a gradient fade effect, a persistent copy button, and theme-aware background colors using the `--code` CSS variable.
+<ComponentPreview name="code-fence" />
 
 ## Import
 
@@ -32,18 +34,13 @@ import { mdxComponents } from '@olwiba/docs';
 <MDX components={{ ...defaultMdxComponents, ...mdxComponents }} />
 ```
 
-## Props
+## API Reference
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `children` | `ReactNode` | Code content (from MDX/rehype-pretty-code) |
-| `code` | `string` | Raw code string (alternative to children) |
-| `className` | `string` | Additional CSS classes |
-
-## Features
-
-- Overflow detection with `ResizeObserver`
-- Right-edge gradient fade when content overflows
-- Always-visible copy button
-- Theme-aware `bg-code` / `text-code-foreground` colors
-- Extracts text content from nested React nodes (handles rehype-pretty-code output)
+<APIReference
+  name="CodeFence"
+  props={[
+    { name: "children", type: "ReactNode", default: "-" },
+    { name: "code", type: "string", default: "-" },
+    { name: "className", type: "string", default: "-" },
+  ]}
+/>

@@ -1,0 +1,47 @@
+---
+title: DocsHeader
+description: Sticky site header with logo, navigation links, GitHub badge, search button, mode switcher, and mobile nav trigger portal.
+---
+
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
+
+<ComponentPreview name="docs-header" />
+
+## Import
+
+```tsx
+import { DocsHeader } from '@olwiba/docs';
+```
+
+## Usage
+
+```tsx
+import { DocsHeader } from '@olwiba/docs';
+
+function App() {
+  return (
+    <DocsHeader
+      logo="MyDocs"
+      navItems={[
+        { label: 'Docs', href: '/docs' },
+        { label: 'Blog', href: '/blog' },
+      ]}
+      githubUrl="https://github.com/example/repo"
+    />
+  );
+}
+```
+
+## API Reference
+
+<APIReference
+  name="DocsHeader"
+  props={[
+    { name: "logo", type: "ReactNode", default: "-" },
+    { name: "navItems", type: "{ label: string; href: string }[]", default: "-" },
+    { name: "githubUrl", type: "string", default: "-" },
+    { name: "githubBadge", type: "string", default: "-" },
+  ]}
+/>

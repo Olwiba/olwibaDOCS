@@ -1,11 +1,13 @@
 ---
 title: MDX Components
-description: Pre-styled MDX component mappings including CodeFence, APIReference, ThemeSelector, and more.
+description: Pre-styled MDX component mappings including CodeFence, APIReference, ThemeSelector, Tabs, Steps, Callout, and more. Provides consistent styling for all documentation content.
 ---
 
-## Overview
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
 
-`@olwiba/docs` exports a set of pre-styled MDX components that you can use to render your documentation content with consistent styling.
+<ComponentPreview name="mdx-components" />
 
 ## Import
 
@@ -35,37 +37,37 @@ import { mdxComponents } from '@olwiba/docs';
 
 ### Typography
 
-- `h1`, `h2`, `h3`, `h4` - Styled headings with proper spacing and scroll margins
-- `p` - Paragraphs with comfortable line height
-- `a` - Links with underline styling
-- `strong` - Bold text
-- `blockquote` - Styled block quotes
+- `h1`, `h2`, `h3`, `h4` — Styled headings with proper spacing and scroll margins
+- `p` — Paragraphs with comfortable line height
+- `a` — Links with underline styling
+- `strong` — Bold text
+- `blockquote` — Styled block quotes
 
 ### Lists
 
-- `ul` - Unordered lists
-- `ol` - Ordered lists
-- `li` - List items
+- `ul` — Unordered lists
+- `ol` — Ordered lists
+- `li` — List items
 
 ### Code
 
-- `pre` - Renders via [CodeFence](/docs/components/code-fence) with copy button and overflow fade
-- `code` - Inline code with muted background
+- `pre` — Renders via [CodeFence](/docs/components/code-fence) with copy button and overflow fade
+- `code` — Inline code with muted background
 
 ### Tables
 
-- `table`, `tr`, `th`, `td` - Styled tables with borders and scroll wrapper
+- `table`, `tr`, `th`, `td` — Styled tables with borders and scroll wrapper
 
 ### Special Components
 
-- `Steps` / `Step` - Numbered step-by-step instructions
-- `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` - Tabbed content
-- `Callout` - Highlighted information boxes
-- `Button` - Interactive buttons
-- `Accordion` - Collapsible content sections
-- `Alert` - Alert messages
-- [CodeFence](/docs/components/code-fence) - Enhanced code blocks (also used as `pre`)
-- [APIReference](/docs/components/api-reference) - Collapsible prop tables
-- [ThemeSelector](/docs/components/theme-selector) - Theme switcher dropdown
-- [ThemeCodeBlock](/docs/components/theme-code-block) - Theme CSS copier
-- `Link` - TanStack Router Link with underline styling
+- `Steps` / `Step` — Numbered step-by-step instructions
+- `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` — Tabbed content
+- `Callout` — Highlighted information boxes
+- `Button` — Interactive buttons
+- `Accordion` — Collapsible content sections
+- `Alert` — Alert messages
+- [CodeFence](/docs/components/code-fence) — Enhanced code blocks (also used as `pre`)
+- [APIReference](/docs/components/api-reference) — Collapsible prop tables
+- [ThemeSelector](/docs/components/theme-selector) — Theme switcher dropdown
+- [ThemeCodeBlock](/docs/components/theme-code-block) — Theme CSS copier
+- `Link` — TanStack Router Link with underline styling

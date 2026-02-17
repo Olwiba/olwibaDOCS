@@ -356,6 +356,7 @@ export function DocsToc({
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const svgPathRef = useRef<SVGPathElement>(null);
+  const isTransitioning = useRef(false);
   const itemIds = useMemo(
     () => toc.map((item) => item.url.replace("#", "")),
     [toc]
@@ -370,6 +371,16 @@ export function DocsToc({
   );
 
   useScrollToActive(containerRef, activeHeading);
+
+  // Suppress transition on page change to prevent the indicator from animating
+  // from the old page's position to the new one
+  useEffect(() => {
+    isTransitioning.current = true;
+    const raf = requestAnimationFrame(() => {
+      isTransitioning.current = false;
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [itemIds]);
 
   // Convert pixel-based scroll progress to path-length-based dash values
   const total = totalLength.current;
@@ -396,7 +407,7 @@ export function DocsToc({
         <DropdownMenuContent
           align="start"
           className="no-scrollbar max-h-[70svh]"
-          onCloseAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e: Event) => e.preventDefault()}
         >
           {toc.map((item) => (
             <DropdownMenuItem
@@ -445,7 +456,7 @@ export function DocsToc({
               strokeWidth="1"
               strokeDasharray={`${segLen} ${total - segLen}`}
               strokeDashoffset={-startLen}
-              style={{ transition: "stroke-dashoffset 100ms ease-out, stroke-dasharray 100ms ease-out" }}
+              style={isTransitioning.current ? undefined : { transition: "stroke-dashoffset 100ms ease-out, stroke-dasharray 100ms ease-out" }}
             />
           )}
         </svg>

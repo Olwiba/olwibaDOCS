@@ -51,7 +51,7 @@ export interface DocsLayoutProps {
 
 export function DocsLayout({ loaderData, pageTree, sections, children }: DocsLayoutProps) {
   return (
-    <div className="flex flex-1 flex-col px-2">
+    <div className="flex flex-1 flex-col lg:px-2">
       <SidebarProvider className="min-h-min flex-1 items-start px-0 [--sidebar-width:220px] [--top-spacing:1.5rem] lg:[--sidebar-width:240px] lg:[--top-spacing:2rem]">
         <DocsSidebar tree={pageTree} sections={sections} />
         <div className="hidden lg:block w-4 self-stretch border-x border-dashed blueprint-pattern" aria-hidden="true" />
@@ -60,33 +60,35 @@ export function DocsLayout({ loaderData, pageTree, sections, children }: DocsLay
           <div className="flex items-stretch xl:w-full">
             <div className="flex min-w-0 flex-1 flex-col">
               <div className="h-[var(--top-spacing)] shrink-0" />
-              <div className="flex w-full min-w-0 max-w-2xl flex-1 flex-col gap-8 px-4 pb-6 text-neutral-800 md:px-6 lg:pb-8 dark:text-neutral-300">
+              <div className="flex w-full min-w-0 flex-1 flex-col gap-8 px-4 pb-6 text-neutral-800 md:px-6 lg:pb-8 dark:text-neutral-300">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-start justify-between">
                     <h1 className="scroll-m-20 font-semibold text-4xl tracking-tight sm:text-3xl xl:text-4xl">
                       {loaderData.frontmatter.title}
                     </h1>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col-reverse items-end gap-2 sm:flex-row sm:items-center">
                       <DocsCopyPage
                         page={loaderData.rawContent}
                         url={typeof window !== 'undefined' ? window.location.href : loaderData.url}
                       />
-                      {loaderData.neighbours.previous && (
-                        <Button asChild size="icon" variant="secondary" className="size-8">
-                          <Link to={loaderData.neighbours.previous.url}>
-                            <ArrowLeft className="size-4" />
-                            <span className="sr-only">Previous</span>
-                          </Link>
-                        </Button>
-                      )}
-                      {loaderData.neighbours.next && (
-                        <Button asChild size="icon" variant="secondary" className="size-8">
-                          <Link to={loaderData.neighbours.next.url}>
-                            <ArrowRight className="size-4" />
-                            <span className="sr-only">Next</span>
-                          </Link>
-                        </Button>
-                      )}
+                      <div className="flex items-center gap-2">
+                        {loaderData.neighbours.previous && (
+                          <Button asChild size="icon" variant="secondary" className="size-8">
+                            <Link to={loaderData.neighbours.previous.url}>
+                              <ArrowLeft className="size-4" />
+                              <span className="sr-only">Previous</span>
+                            </Link>
+                          </Button>
+                        )}
+                        {loaderData.neighbours.next && (
+                          <Button asChild size="icon" variant="secondary" className="size-8">
+                            <Link to={loaderData.neighbours.next.url}>
+                              <ArrowRight className="size-4" />
+                              <span className="sr-only">Next</span>
+                            </Link>
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                   {loaderData.frontmatter.description && (
@@ -102,7 +104,7 @@ export function DocsLayout({ loaderData, pageTree, sections, children }: DocsLay
                 )}
                 {children}
               </div>
-              <div className="hidden h-16 w-full max-w-2xl items-center gap-2 px-4 sm:flex md:px-6">
+              <div className="hidden h-16 w-full items-center gap-2 px-4 sm:flex md:px-6">
                 {loaderData.neighbours.previous && (
                   <Button asChild size="sm" variant="secondary">
                     <Link to={loaderData.neighbours.previous.url}>

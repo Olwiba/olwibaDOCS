@@ -3,9 +3,9 @@ import { serveStatic } from 'hono/bun'
 
 const app = new Hono()
 
-// Serve static assets from dist/client
-app.use('/assets/*', serveStatic({ root: './dist/client' }))
-app.use('/favicon.ico', serveStatic({ root: './dist/client' }))
+// Serve static files from dist/client (mimics Next.js public/ behavior)
+// Files are checked first, falls through to SSR if not found
+app.use('/*', serveStatic({ root: './dist/client' }))
 
 // Let TanStack Start handle everything else (SSR, server functions)
 app.all('*', async (c) => {

@@ -1,11 +1,13 @@
 ---
 title: SearchDialog
-description: Full-text search dialog and trigger button for documentation sites.
+description: Full-text search dialog with keyboard navigation (Cmd/Ctrl+K) and a companion SearchButton trigger. Integrates with Fumadocs search functionality.
 ---
 
-## Overview
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
 
-The `SearchDialog` component provides a full-text search experience for your documentation. It integrates with Fumadocs' search functionality and supports keyboard navigation.
+<ComponentPreview name="search-button" />
 
 ## Import
 
@@ -52,7 +54,7 @@ function Header() {
 }
 ```
 
-## Search API
+### Search API
 
 You need to set up a search API endpoint for the dialog to work:
 
@@ -77,9 +79,18 @@ export const Route = createFileRoute('/api/search/')({
 });
 ```
 
-## Keyboard Shortcuts
+## API Reference
 
-- `Cmd/Ctrl + K`: Open search dialog
-- `Escape`: Close dialog
-- `Arrow Up/Down`: Navigate results
-- `Enter`: Go to selected result
+<APIReference
+  name="SearchDialog"
+  props={[
+    { name: "tag", type: "string", default: "-" },
+    { name: "tags", type: "string[]", default: "-" },
+    { name: "footer", type: "ReactNode", default: "-" },
+  ]}
+/>
+
+<APIReference
+  name="SearchButton"
+  props={[]}
+/>

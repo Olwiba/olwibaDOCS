@@ -1,0 +1,45 @@
+---
+title: DocsLayout
+description: Full docs page layout combining sidebar, table of contents, breadcrumbs, page navigation, and content area. Handles responsive behavior and page metadata display.
+---
+
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
+
+## Import
+
+```tsx
+import { DocsLayout } from '@olwiba/docs';
+```
+
+## Usage
+
+```tsx
+import { DocsLayout } from '@olwiba/docs';
+
+function DocsPage({ loaderData, pageTree, children }) {
+  const sections = [
+    { name: 'Get Started', href: '/docs' },
+    { name: 'Components', href: '/docs/components' },
+  ];
+
+  return (
+    <DocsLayout loaderData={loaderData} pageTree={pageTree} sections={sections}>
+      {children}
+    </DocsLayout>
+  );
+}
+```
+
+## API Reference
+
+<APIReference
+  name="DocsLayout"
+  props={[
+    { name: "loaderData", type: "PageLoaderData", default: "-" },
+    { name: "pageTree", type: "PageTree.Root", default: "-" },
+    { name: "sections", type: "SidebarSection[]", default: "-" },
+    { name: "children", type: "ReactNode", default: "-" },
+  ]}
+/>

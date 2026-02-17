@@ -1,11 +1,13 @@
 ---
 title: DocsProvider
-description: Convenience wrapper component that configures Fumadocs RootProvider with SearchDialog.
+description: Convenience wrapper that configures Fumadocs RootProvider with a pre-configured SearchDialog. Use for simpler setup when you don't need the full ActiveThemeProvider + RootProvider pattern.
 ---
 
-## Overview
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
 
-`DocsProvider` wraps the `RootProvider` from `fumadocs-ui/provider/tanstack` with a pre-configured `SearchDialog`. It simplifies setup when you don't need the full `ActiveThemeProvider` + `RootProvider` pattern.
+<ComponentPreview name="docs-provider" />
 
 ## Import
 
@@ -32,13 +34,12 @@ function RootDocument({ children }) {
 }
 ```
 
-## Props
+## API Reference
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `children` | `ReactNode` | Child components |
-| `searchItems` | `SearchDialogItem[]` | Quick links shown in the search dialog when the input is empty |
-
-## When to Use
-
-Use `DocsProvider` for a simpler setup. If you need theme switching with `ActiveThemeProvider`, use the manual `RootProvider` pattern instead as shown in the [Getting Started](/docs) guide.
+<APIReference
+  name="DocsProvider"
+  props={[
+    { name: "children", type: "ReactNode", default: "-" },
+    { name: "searchItems", type: "SearchDialogItem[]", default: "[]" },
+  ]}
+/>

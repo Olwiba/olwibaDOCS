@@ -1,11 +1,13 @@
 ---
 title: ActiveThemeProvider
-description: Theme context provider with cookie persistence and runtime CSS injection.
+description: Theme context provider with cookie persistence and runtime CSS injection. Manages color themes across your site, persists choices via cookies, injects CSS variables at runtime, and provides a React context for theme switching.
 ---
 
-## Overview
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
 
-`ActiveThemeProvider` manages the active color theme across your documentation site. It persists the user's choice via cookies, injects theme CSS variables at runtime, and provides a React context for theme switching.
+<ComponentPreview name="active-theme" />
 
 ## Import
 
@@ -50,17 +52,12 @@ function MyComponent() {
 }
 ```
 
-## Props
+## API Reference
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `children` | `ReactNode` | Child components |
-| `initialTheme` | `Theme` | Initial theme (defaults to Emerald) |
-
-## How It Works
-
-1. On mount, reads the `active_theme` cookie
-2. Injects a `<style>` tag with the theme's CSS variables (overriding `:root` and `.dark`)
-3. Adds a `theme-{name}` class to `<body>`
-4. On theme change, updates cookie, class, and style tag
-5. Cleans up the injected style tag on unmount
+<APIReference
+  name="ActiveThemeProvider"
+  props={[
+    { name: "children", type: "ReactNode", default: "-" },
+    { name: "initialTheme", type: "Theme", default: "Theme.Emerald" },
+  ]}
+/>

@@ -45,11 +45,11 @@ export function createServer(options: ServerOptions = {}) {
 
   const app = new Hono()
 
-  // Serve static assets from dist/client
-  app.use('/assets/*', serveStatic({ root: clientPath }))
-  app.use('/favicon.ico', serveStatic({ root: clientPath }))
+  // Serve static files from dist/client (mimics Next.js public/ behavior)
+  // Files are checked first, falls through to SSR if not found
+  app.use('/*', serveStatic({ root: clientPath }))
 
-  // Serve additional static patterns if provided
+  // Optional extra static patterns (e.g. custom routes)
   for (const pattern of staticPatterns) {
     app.use(pattern, serveStatic({ root: clientPath }))
   }

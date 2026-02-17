@@ -1,11 +1,13 @@
 ---
 title: ModeSwitcher
-description: Dark/light mode toggle button with localStorage persistence.
+description: Dark/light mode toggle button with Sun/Moon icons, localStorage persistence, and ghost variant styling. Defaults to dark mode.
 ---
 
-## Overview
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
 
-The `ModeSwitcher` component provides a simple toggle between dark and light modes. It persists the user's preference in `localStorage` and toggles the `dark` class on the `<html>` element.
+<ComponentPreview name="mode-switcher" />
 
 ## Import
 
@@ -27,10 +29,9 @@ function Header() {
 }
 ```
 
-## Features
+## API Reference
 
-- Sun/Moon icons from Lucide
-- Toggles the `dark` class on `<html>`
-- Persists in `localStorage` under the `theme` key
-- Defaults to dark mode
-- Ghost variant, compact 32px button
+<APIReference
+  name="ModeSwitcher"
+  props={[]}
+/>

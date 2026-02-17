@@ -1,11 +1,13 @@
 ---
 title: APIReference
-description: Collapsible API prop tables for component documentation.
+description: Collapsible API prop tables for component documentation. Renders a click-to-expand section displaying component props in a table format with chevron animation and extends relationship support.
 ---
 
-## Overview
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
 
-The `APIReference` component renders a collapsible section that displays a component's props in a table format. Useful for documenting component APIs inline in your MDX content.
+<ComponentPreview name="api-reference" />
 
 ## Import
 
@@ -14,8 +16,6 @@ import { APIReference } from '@olwiba/docs';
 ```
 
 ## Usage
-
-In MDX:
 
 ```mdx
 <APIReference
@@ -28,13 +28,16 @@ In MDX:
 />
 ```
 
-## Props
+## API Reference
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `name` | `string` | Component name (displayed as `<Name>`) |
-| `extends` | `string` | Parent component name (optional) |
-| `props` | `PropDef[]` | Array of prop definitions |
+<APIReference
+  name="APIReference"
+  props={[
+    { name: "name", type: "string", default: "-" },
+    { name: "extends", type: "string", default: "-" },
+    { name: "props", type: "PropDef[]", default: "[]" },
+  ]}
+/>
 
 ### PropDef
 
@@ -45,11 +48,3 @@ interface PropDef {
   default?: string;
 }
 ```
-
-## Features
-
-- Click to expand/collapse
-- Chevron rotation animation
-- Displays extends relationship
-- Falls back to "No additional props" message when props array is empty
-- Registered in `mdxComponents` for direct use in MDX

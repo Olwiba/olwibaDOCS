@@ -12,6 +12,7 @@ export { DocsHeader, type DocsHeaderProps } from './components/DocsHeader';
 export { DocsFooter, type DocsFooterProps } from './components/DocsFooter';
 export { DocsLayout, type DocsLayoutProps, type PageLoaderData, extractTextFromReactNode } from './components/DocsLayout';
 export { ModeSwitcher, type ModeSwitcherProps } from './components/ModeSwitcher';
+export { CopyCommandButton } from './components/CopyCommandButton';
 export { SearchButton, type SearchButtonProps } from './components/SearchButton';
 export {
   SearchDialog,

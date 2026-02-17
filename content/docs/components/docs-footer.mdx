@@ -1,0 +1,39 @@
+---
+title: DocsFooter
+description: Site footer with default attribution content or custom children. Renders inside a bordered container matching the docs layout width.
+---
+
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
+
+<ComponentPreview name="docs-footer" />
+
+## Import
+
+```tsx
+import { DocsFooter } from '@olwiba/docs';
+```
+
+## Usage
+
+```tsx
+import { DocsFooter } from '@olwiba/docs';
+
+// Default footer
+<DocsFooter />
+
+// Custom content
+<DocsFooter>
+  <p>My custom footer content</p>
+</DocsFooter>
+```
+
+## API Reference
+
+<APIReference
+  name="DocsFooter"
+  props={[
+    { name: "children", type: "ReactNode", default: "Default attribution" },
+  ]}
+/>

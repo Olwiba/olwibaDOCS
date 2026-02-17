@@ -7,6 +7,8 @@ import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import * as React from 'react';
 import { Suspense } from 'react';
 import { mdxComponents } from '@/lib/mdx-components';
+import { ComponentPreview } from '~/components/ComponentPreview';
+import { CopyCommandButton } from '@/components/CopyCommandButton';
 import { type TocItem } from '@/components/DocsToc';
 import { type SidebarSection } from '@/components/DocsSidebar';
 import { DocsLayout, extractTextFromReactNode, type PageLoaderData } from '@/components/DocsLayout';
@@ -69,6 +71,8 @@ const clientLoader = browserCollections.docs.createClientLoader({
           components={{
             ...defaultMdxComponents,
             ...mdxComponents,
+            ComponentPreview,
+            CopyCommandButton,
           }}
         />
       </div>

@@ -1,11 +1,13 @@
 ---
 title: ThemeCodeBlock
-description: Select and copy full theme CSS variables for any theme.
+description: Displays and copies complete CSS variable blocks for any theme. Includes a theme dropdown synced with ActiveThemeProvider, scrollable code view, and one-click copy.
 ---
 
-## Overview
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
 
-The `ThemeCodeBlock` component displays the complete CSS variable block for a selected theme in a scrollable, copyable code block. Users can pick any theme from the dropdown and copy the CSS to paste into their own project.
+<ComponentPreview name="theme-code-block" />
 
 ## Import
 
@@ -19,12 +21,11 @@ import { ThemeCodeBlock } from '@olwiba/docs';
 <ThemeCodeBlock />
 ```
 
-It's registered in `mdxComponents`, so it works directly in MDX content.
+It's registered in `mdxComponents`, so it works directly in MDX content. Requires an `ActiveThemeProvider` ancestor.
 
-## Features
+## API Reference
 
-- Theme dropdown syncs with the active theme
-- Shows complete `:root` and `.dark` CSS variables
-- Scrollable code block (max 400px height)
-- Copy button via CodeFence
-- Requires `ActiveThemeProvider` ancestor
+<APIReference
+  name="ThemeCodeBlock"
+  props={[]}
+/>

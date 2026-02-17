@@ -56,7 +56,7 @@ export function DocsHeader({ logo, navItems, githubUrl, githubBadge }: DocsHeade
                 <span className="hidden sm:inline">GitHub</span>
               </a>
               {githubBadge && (
-                <span className="absolute -right-1 -top-0.5 rotate-12 bg-primary px-1 pb-0.5 text-[6px] font-bold text-primary-foreground rounded-xs sm:-right-1 sm:-top-1 sm:px-1 sm:pt-0.5 sm:pb-1 sm:text-[8px]">
+                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary px-1 pb-0.5 text-[6px] font-bold text-primary-foreground rounded-xs sm:left-auto sm:-right-1 sm:-top-1 sm:translate-x-0 sm:translate-y-0 sm:rotate-12 sm:px-1 sm:pt-0.5 sm:pb-1 sm:text-[8px]">
                   {githubBadge}
                 </span>
               )}

@@ -1,16 +1,19 @@
 ---
 title: DocsSidebar
-description: Navigation sidebar component with page tree, sections, and scroll area.
+description: Sticky navigation sidebar with page tree, section links, active state highlighting, and gradient scroll fades. Hidden on mobile — use DocsMobileNav for mobile navigation.
 ---
 
-## Overview
+<div className="flex flex-col md:flex-row items-center justify-start gap-2 mb-2">
+  <CopyCommandButton command="npm install @olwiba/docs" />
+</div>
 
-The `DocsSidebar` component renders a sticky navigation sidebar based on your Fumadocs page tree. It supports top-level section links, auto-highlights the current page, filters out index pages, and includes gradient fades at the top and bottom.
+<ComponentPreview name="docs-sidebar" />
 
 ## Import
 
 ```tsx
-import { DocsSidebar } from '@olwiba/docs';
+import { DocsSidebar, type SidebarSection } from '@olwiba/docs';
+import { SidebarProvider } from '@olwiba/cn';
 ```
 
 ## Usage
@@ -35,22 +38,13 @@ function DocsPage({ pageTree }) {
 }
 ```
 
-## Props
+## API Reference
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `tree` | `PageTree.Root` | The Fumadocs page tree structure |
-| `sections` | `SidebarSection[]` | Top-level navigation sections shown above the page tree |
-| `...props` | `SidebarProps` | All other props passed to the underlying Sidebar component |
-
-## Features
-
-- Sticky positioning below the header
-- ScrollArea with gradient fades at top and bottom
-- Filters out `index.mdx` pages from the navigation tree
-- Section links with active state highlighting
-- 220px width on mobile, 240px on desktop
-
-## Mobile Navigation
-
-On mobile viewports, the sidebar is hidden. Use [DocsMobileNav](/docs/components/docs-mobile-nav) to provide mobile navigation via a slide-out sheet.
+<APIReference
+  name="DocsSidebar"
+  extends="Sidebar"
+  props={[
+    { name: "tree", type: "PageTree.Root", default: "-" },
+    { name: "sections", type: "SidebarSection[]", default: "[]" },
+  ]}
+/>
