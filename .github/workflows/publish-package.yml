@@ -24,6 +24,9 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: '@olwiba'
 
+      - name: Configure GitHub Packages auth
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+
       - name: Install
         run: bun install --frozen-lockfile
 
