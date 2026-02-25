@@ -35,8 +35,8 @@ jobs:
 
       - name: Resolve package metadata
         run: |
-          echo "PKG_NAME=$(node -p \"require('./package.json').name\")" >> "$GITHUB_ENV"
-          echo "PKG_VERSION=$(node -p \"require('./package.json').version\")" >> "$GITHUB_ENV"
+          echo "PKG_NAME=$(jq -r .name package.json)" >> "$GITHUB_ENV"
+          echo "PKG_VERSION=$(jq -r .version package.json)" >> "$GITHUB_ENV"
 
       - name: Pack
         run: |
