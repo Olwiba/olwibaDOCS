@@ -45,7 +45,7 @@
     "sync": "bun run scripts/sync-from-cn.ts",
     "sync:build": "bun run sync && bun run build",
     "prepublishOnly": "bun run build",
-    "release": "npm publish"
+    "release": "bun run build && npm pack --pack-destination artifacts && npm publish && node scripts/upload-release-asset.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
