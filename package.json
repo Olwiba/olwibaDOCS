@@ -1,6 +1,6 @@
 {
   "name": "@olwiba/docs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "type": "module",
   "sideEffects": false,
@@ -9,20 +9,25 @@
   "module": "./dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./styles": "./src/styles/docs.css",
     "./source": {
-      "import": "./dist/lib/source.js"
+      "import": "./dist/lib/source.js",
+      "types": "./dist/lib/source.d.ts"
     },
     "./mdx": {
-      "import": "./dist/lib/mdx-components.js"
+      "import": "./dist/lib/mdx-components.js",
+      "types": "./dist/lib/mdx-components.d.ts"
     },
     "./server": {
-      "import": "./dist/lib/server.js"
+      "import": "./dist/lib/server.js",
+      "types": "./dist/lib/server.d.ts"
     },
     "./themes": {
-      "import": "./dist/lib/themes.js"
+      "import": "./dist/lib/themes.js",
+      "types": "./dist/lib/themes.d.ts"
     }
   },
   "files": [
@@ -52,13 +57,13 @@
     "tailwind-merge": "^3.4.0"
   },
   "peerDependencies": {
-    "@olwiba/cn": ">=0.0.1",
+    "@olwiba/cn": ">=0.1.2",
     "@tanstack/react-router": ">=1.0.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
   "devDependencies": {
-    "@olwiba/cn": "^0.1.1",
+    "@olwiba/cn": "^0.1.2",
     "react-resizable-panels": "^4.4.1",
     "@tailwindcss/postcss": "^4.1.18",
     "@tanstack/react-router": "^1.151.6",
@@ -90,5 +95,6 @@
   "license": "MIT",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
-  }
+  },
+  "types": "./dist/index.d.ts"
 }

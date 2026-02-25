@@ -9,7 +9,7 @@ export default defineConfig({
     'src/lib/themes.ts',
   ],
   format: ['esm'],
-  dts: false, // TODO: Re-enable when @olwiba/cn has type declarations
+  dts: true,
   splitting: false,
   sourcemap: true,
   clean: true,
@@ -22,3 +22,4 @@ export default defineConfig({
   treeshake: true,
   minify: false,
 });
+

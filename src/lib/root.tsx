@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRootRoute, HeadContent, Outlet, Scripts } from '@tanstack/react-router';
+import { createRootRoute, HeadContent, Outlet, Scripts, type NotFoundRouteProps } from '@tanstack/react-router';
 import { RootProvider } from 'fumadocs-ui/provider/tanstack';
 import { ActiveThemeProvider } from '@/components/ActiveTheme';
 import { SearchDialog } from '@/components/SearchDialog';
@@ -27,7 +27,7 @@ export interface DocsRootConfig {
   footer: React.ComponentType;
   initialTheme?: typeof Theme[keyof typeof Theme];
   cssUrl: string;
-  notFoundComponent?: React.ComponentType;
+  notFoundComponent?: (props: NotFoundRouteProps) => React.ReactNode;
 }
 
 export function createDocsRoot(config: DocsRootConfig) {
@@ -111,3 +111,4 @@ function DefaultNotFound() {
     </div>
   );
 }
+

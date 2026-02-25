@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.2
+
+### Added
+
+- GitHub publish workflow (`.github/workflows/publish-package.yml`) to publish to GitHub Packages and attach `.tgz` package artifacts to workflow runs/releases.
+- Explicit type export mappings for root and subpath exports (`./source`, `./mdx`, `./server`, `./themes`).
+
+### Fixed
+
+- Package type declarations are now emitted (`tsup dts: true`) and published.
+- Declaration build now includes Node typings for server utilities.
+- `createDocsRoot` not-found component typing aligned with TanStack route typing.
 ## 0.1.1
 
 ### Added
@@ -78,3 +90,4 @@
 - Core components: `DocsSidebar`, `DocsToc`, `SearchDialog`, `SearchButton`, `ModeSwitcher`, `Callout`, `CopyButton`
 - MDX components and utilities
 - Source loader utilities for fumadocs integration
+
