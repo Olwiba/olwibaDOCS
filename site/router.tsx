@@ -2,10 +2,7 @@ import { createDocsRouter } from '@olwiba/docs';
 import { routeTree } from './routeTree.gen';
 
 export function getRouter() {
-  return createDocsRouter(routeTree, {
-    defaultPreload: 'intent',
-    scrollRestoration: true,
-  });
+  return createDocsRouter(routeTree);
 }
 
 declare module '@tanstack/react-router' {

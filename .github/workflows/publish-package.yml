@@ -50,9 +50,14 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload workflow artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: npm-package
-          path: artifacts/*.tgz
-
+      - name: Create GitHub Release
+        run: |
+          TAG="v${PKG_VERSION}"
+          TGZ=$(ls artifacts/*.tgz | head -1)
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$TGZ" --repo "$GITHUB_REPOSITORY" --clobber
+          else
+            gh release create "$TAG" "$TGZ" --repo "$GITHUB_REPOSITORY" --title "$TAG" --notes "Release $TAG"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
