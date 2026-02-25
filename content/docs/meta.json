@@ -1,4 +1,4 @@
 {
   "root": true,
-  "pages": ["index", "themes", "components"]
+  "pages": ["index", "components", "builder", "themes", "status"]
 }

@@ -1,0 +1,58 @@
+---
+title: Builder
+description: Visually compose docs pages from components and copy the generated code.
+---
+
+## What is the Builder?
+
+The [Builder](/builder) is a visual drag-and-drop tool built into the olwibaDOCS site. It lets you browse every `@olwiba/docs` component, assemble them into a page layout, and copy the resulting import and JSX code straight into your project.
+
+The Builder is a **site feature** — it is not exported from the `@olwiba/docs` package. You use it here at `docs.olwiba.com/builder` to generate starter code, then paste that code into your own project.
+
+## How to use it
+
+1. **Browse or search** the component list on the left panel. Each card shows the component name and a short description.
+2. **Add a component** by clicking its card, or drag it into the canvas on the right.
+3. **Reorder blocks** by dragging them within the canvas.
+4. **Remove a block** with the trash icon on its header bar.
+5. **Copy the generated code** from the code panel at the bottom of the canvas using the copy button.
+
+Your canvas is automatically saved to `localStorage` and restored on your next visit.
+
+## Generated code
+
+The builder outputs a self-contained component with all necessary imports from `@olwiba/docs`. For example, selecting `DocsHeader`, `DocsSidebar`, and `DocsFooter` produces:
+
+```tsx
+import { DocsFooter } from '@olwiba/docs';
+import { DocsHeader } from '@olwiba/docs';
+import { DocsSidebar } from '@olwiba/docs';
+import { SidebarProvider } from '@olwiba/cn';
+
+export default function DocsPageBuilder() {
+  return (
+    <div className="space-y-6">
+      <DocsHeader
+        logo="MyDocs"
+        navItems={[
+          { label: 'Docs', href: '/docs' },
+          { label: 'Blog', href: '/blog' },
+        ]}
+        githubUrl="https://github.com/example/repo"
+      />
+
+      <SidebarProvider>
+        <DocsSidebar tree={pageTree} sections={sections} />
+      </SidebarProvider>
+
+      <DocsFooter changelogUrl="https://github.com/example/repo/blob/main/CHANGELOG.md" />
+    </div>
+  );
+}
+```
+
+Replace the placeholder props with real values from your project and you have a working starting point.
+
+## Open the Builder
+
+Visit [/builder](/builder) to get started.

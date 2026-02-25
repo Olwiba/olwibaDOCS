@@ -5,6 +5,7 @@ import { DocsHeader } from '@/components/DocsHeader';
 const navItems = [
   { label: 'Docs', href: '/docs' },
   { label: 'Components', href: '/docs/components' },
+  { label: 'Builder', href: '/builder' },
 ];
 
 export function SiteHeader() {

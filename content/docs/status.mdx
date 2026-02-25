@@ -1,0 +1,33 @@
+---
+title: Status Pages
+description: Built-in error and status pages included with createDocsRoot.
+---
+
+## Not Found (404)
+
+`createDocsRoot` includes a default 404 page that renders automatically whenever a route or docs page doesn't exist. It uses `AsciiText` from `@olwiba/cn` to display the status code in the same ASCII art style as your homepage.
+
+<ComponentPreview name="not-found" />
+
+## Customising the not-found page
+
+Pass a `notFoundComponent` to `createDocsRoot` to replace the default:
+
+```tsx title="routes/__root.tsx"
+import { createDocsRoot } from '@olwiba/docs';
+
+function MyNotFound() {
+  return (
+    <div className="flex flex-1 items-center justify-center">
+      <p>Custom not found page</p>
+    </div>
+  );
+}
+
+export const Route = createDocsRoot({
+  // ...
+  notFoundComponent: MyNotFound,
+});
+```
+
+If no `notFoundComponent` is provided the built-in ASCII art 404 page is used.

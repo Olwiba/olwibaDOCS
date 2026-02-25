@@ -21,6 +21,7 @@ const demos: Record<string, React.LazyExoticComponent<React.FC>> = {
   'docs-provider': React.lazy(() => import('~/demos/docs-provider')),
   'active-theme': React.lazy(() => import('~/demos/active-theme')),
   'mdx-components': React.lazy(() => import('~/demos/mdx-components')),
+  'not-found': React.lazy(() => import('~/demos/not-found')),
 };
 
 const ControlsPortalContext = React.createContext<HTMLDivElement | null>(null);

@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.1.3
+
+### Added
+
+- **Builder** — visual drag-and-drop component composer at `/builder`. Browse all `@olwiba/docs` components, click or drag them into a canvas, reorder and remove blocks, then copy the generated imports and JSX. Canvas state persists to `localStorage`.
+- **Builder docs page** (`/docs/builder`) — explains how the Builder works and links to the tool.
+- **Status Pages docs page** (`/docs/status`) — documents the built-in 404 page and how to override it with a custom `notFoundComponent`.
+- **`DocsNotFound`** — exported component rendering the default AsciiText 404 page. Can be used directly as `notFoundComponent` on specific routes.
+- **`createDocsRouter`** — new factory that wraps TanStack Router's `createRouter` with `defaultNotFoundComponent: DocsNotFound` pre-configured, so loader-thrown `notFound()` errors render the styled 404 page automatically.
+
+### Fixed
+
+- Default 404 page upgraded from a plain `<h1>` to the `AsciiText`-based styled page, consistent with the homepage aesthetic.
+- Sidebar no longer renders non-folder page-tree items (e.g. "Getting Started", "Themes") as phantom non-clickable section headers. Only folder nodes (i.e. the Components tree) are rendered from the tree.
+- Removed the "Sections" label from the sidebar nav group — section buttons now render without a heading for a cleaner look.
+
+### Changed
+
+- Builder button removed from the homepage hero — the Builder is discoverable via the header nav and docs.
+- Sidebar section buttons updated to include Builder and Status alongside Get Started, Components, and Themes.
+
 ## 0.1.2
 
 ### Added

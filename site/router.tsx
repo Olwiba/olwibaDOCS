@@ -1,13 +1,11 @@
-import { createRouter } from '@tanstack/react-router';
+import { createDocsRouter } from '@olwiba/docs';
 import { routeTree } from './routeTree.gen';
 
 export function getRouter() {
-  const router = createRouter({
-    routeTree,
+  return createDocsRouter(routeTree, {
     defaultPreload: 'intent',
     scrollRestoration: true,
   });
-  return router;
 }
 
 declare module '@tanstack/react-router' {

@@ -24,7 +24,9 @@ export interface SidebarSection {
 const TOP_LEVEL_SECTIONS: SidebarSection[] = [
   { name: 'Get Started', href: '/docs' },
   { name: 'Components', href: '/docs/components' },
+  { name: 'Builder', href: '/docs/builder' },
   { name: 'Themes', href: '/docs/themes' },
+  { name: 'Status', href: '/docs/status' },
 ];
 
 export interface DocsSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -50,9 +52,6 @@ export function DocsSidebar({ tree, sections, ...props }: DocsSidebarProps) {
           <div className="px-2 pb-12">
             {navSections.length > 0 && (
             <SidebarGroup>
-            <SidebarGroupLabel className="font-medium text-muted-foreground">
-              Sections
-            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {navSections.map(({ name, href }) => (
@@ -76,8 +75,7 @@ export function DocsSidebar({ tree, sections, ...props }: DocsSidebarProps) {
             )}
 
           {tree.children.map((item: Node) => {
-            if (item.$id === 'root:index.mdx') return null;
-            if (item.$id === 'root:themes.mdx') return null;
+            if (item.type !== 'folder') return null;
 
             return (
               <SidebarGroup key={item.$id}>

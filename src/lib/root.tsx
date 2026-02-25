@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createRootRoute, HeadContent, Outlet, Scripts, type NotFoundRouteProps } from '@tanstack/react-router';
+import { AsciiText } from '@olwiba/cn';
 import { RootProvider } from 'fumadocs-ui/provider/tanstack';
 import { ActiveThemeProvider } from '@/components/ActiveTheme';
 import { SearchDialog } from '@/components/SearchDialog';
@@ -99,15 +100,15 @@ export function createDocsRoot(config: DocsRootConfig) {
       ],
     }),
     component: RootComponent,
-    notFoundComponent: notFoundComponent ?? DefaultNotFound,
+    notFoundComponent: notFoundComponent ?? DocsNotFound,
   });
 }
 
-function DefaultNotFound() {
+export function DocsNotFound() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-4 py-16">
-      <h1 className="text-4xl font-bold">404</h1>
-      <p className="text-muted-foreground">Page not found</p>
+    <div className="flex flex-col flex-1 min-h-[calc(100svh-var(--header-height)-var(--footer-height))] justify-center items-center px-4 py-16 text-center">
+      <AsciiText text="404" accent="404" accentColor="var(--primary)" />
+      <p className="text-muted-foreground text-lg max-w-md -mt-4">Page not found.</p>
     </div>
   );
 }

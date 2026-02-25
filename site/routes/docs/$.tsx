@@ -17,7 +17,9 @@ import { findNeighbour } from 'fumadocs-core/page-tree';
 const sidebarSections: SidebarSection[] = [
   { name: 'Get Started', href: '/docs' },
   { name: 'Components', href: '/docs/components' },
+  { name: 'Builder', href: '/docs/builder' },
   { name: 'Themes', href: '/docs/themes' },
+  { name: 'Status', href: '/docs/status' },
 ];
 
 export const Route = createFileRoute('/docs/$')({

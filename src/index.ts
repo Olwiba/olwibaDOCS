@@ -34,7 +34,8 @@ export { useCopyToClipboard } from './hooks/use-copy-to-clipboard';
 export { cn } from './lib/utils';
 export { createSource, loader, lucideIconsPlugin, type LoaderOptions } from './lib/source';
 export { mdxComponents, type MdxComponents } from './lib/mdx-components';
-export { createDocsRoot, type DocsRootConfig, type DocsRootMeta, type DocsRootFavicon } from './lib/root';
+export { createDocsRoot, DocsNotFound, type DocsRootConfig, type DocsRootMeta, type DocsRootFavicon } from './lib/root';
+export { createDocsRouter } from './lib/router';
 
 // Re-export useful fumadocs page-tree types
 export type { Root as PageTreeRoot, Node as PageTreeNode, Item as PageTreeItem, Folder as PageTreeFolder, Separator as PageTreeSeparator } from 'fumadocs-core/page-tree';
