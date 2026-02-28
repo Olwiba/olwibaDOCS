@@ -6,8 +6,8 @@ import appCss from '~/styles/app.css?url';
 
 export const Route = createDocsRoot({
   meta: {
-    title: 'olwibaDOCS - Documentation Components for TanStack Start',
-    description: 'Fumadocs abstraction for TanStack Start documentation sites. Build beautiful docs with ease.',
+    title: 'olwibaDOCS - Documentation Framework for TanStack Start',
+    description: 'Build beautiful, production-ready documentation sites on TanStack Start. Powered by Fumadocs.',
     ogImage: 'https://docs.olwiba.com/og-image.png',
   },
   favicons: [

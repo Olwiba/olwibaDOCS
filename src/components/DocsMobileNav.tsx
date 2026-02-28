@@ -93,9 +93,23 @@ export function DocsMobileNav({ tree, sections }: DocsMobileNavProps) {
 
                 return (
                   <div key={item.$id} className="mb-4">
-                    <p className="mb-2 px-2 text-xs font-medium text-muted-foreground">
-                      {item.name}
-                    </p>
+                    {item.index ? (
+                      <Link
+                        to={item.index.url}
+                        className={cn(
+                          'mb-2 block px-2 text-xs font-medium transition-colors',
+                          pathname === item.index.url
+                            ? 'text-foreground'
+                            : 'text-muted-foreground hover:text-foreground'
+                        )}
+                      >
+                        {item.name}
+                      </Link>
+                    ) : (
+                      <p className="mb-2 px-2 text-xs font-medium text-muted-foreground">
+                        {item.name}
+                      </p>
+                    )}
                     <div className="flex flex-col gap-0.5">
                       {item.children
                         .filter(

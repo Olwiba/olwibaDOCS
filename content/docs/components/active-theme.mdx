@@ -9,21 +9,21 @@ description: Theme context provider with cookie persistence and runtime CSS inje
 
 <ComponentPreview name="active-theme" />
 
-## Import
+## Installation
 
-```tsx
-import { ActiveThemeProvider, useThemeConfig } from '@olwiba/docs';
+```sh
+npm install @olwiba/docs
 ```
 
 ## Usage
 
-### Provider
+```tsx
+import { ActiveThemeProvider, useThemeConfig, Theme } from '@olwiba/docs';
+```
 
 Wrap your app with `ActiveThemeProvider` (typically in the root layout):
 
 ```tsx
-import { ActiveThemeProvider } from '@olwiba/docs';
-
 function RootDocument({ children }) {
   return (
     <ActiveThemeProvider>
@@ -33,14 +33,9 @@ function RootDocument({ children }) {
 }
 ```
 
-### useThemeConfig Hook
-
 Access and change the active theme from any component:
 
 ```tsx
-import { useThemeConfig } from '@olwiba/docs';
-import { Theme } from '@olwiba/docs';
-
 function MyComponent() {
   const { activeTheme, setActiveTheme } = useThemeConfig();
 
@@ -59,5 +54,13 @@ function MyComponent() {
   props={[
     { name: "children", type: "ReactNode", default: "-" },
     { name: "initialTheme", type: "Theme", default: "Theme.Emerald" },
+  ]}
+/>
+
+<APIReference
+  name="useThemeConfig → returns"
+  props={[
+    { name: "activeTheme", type: "Theme", default: "-" },
+    { name: "setActiveTheme", type: "(theme: Theme) => void", default: "-" },
   ]}
 />

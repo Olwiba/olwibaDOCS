@@ -9,29 +9,27 @@ description: Sticky site header with logo, navigation links, GitHub badge, searc
 
 <ComponentPreview name="docs-header" />
 
-## Import
+## Installation
 
-```tsx
-import { DocsHeader } from '@olwiba/docs';
+```sh
+npm install @olwiba/docs
 ```
 
 ## Usage
 
 ```tsx
 import { DocsHeader } from '@olwiba/docs';
+```
 
-function App() {
-  return (
-    <DocsHeader
-      logo="MyDocs"
-      navItems={[
-        { label: 'Docs', href: '/docs' },
-        { label: 'Blog', href: '/blog' },
-      ]}
-      githubUrl="https://github.com/example/repo"
-    />
-  );
-}
+```tsx
+<DocsHeader
+  logo="MyDocs"
+  navItems={[
+    { label: 'Docs', href: '/docs' },
+    { label: 'Blog', href: '/blog' },
+  ]}
+  githubUrl="https://github.com/example/repo"
+/>
 ```
 
 ## API Reference

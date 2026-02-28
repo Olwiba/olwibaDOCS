@@ -9,27 +9,29 @@ description: Sheet-based mobile sidebar navigation with portal trigger pattern. 
 
 <ComponentPreview name="docs-mobile-nav" />
 
-## Import
+## Installation
+
+```sh
+npm install @olwiba/docs
+```
+
+## Usage
 
 ```tsx
 import { DocsMobileNav } from '@olwiba/docs';
 ```
 
-## Usage
-
-### 1. Add the trigger container in your header
+Add the trigger container in your header:
 
 ```tsx title="SiteHeader.tsx"
 <div id="docs-mobile-nav-trigger" className="empty:hidden lg:hidden" />
 ```
 
-### 2. Add DocsMobileNav in your docs route
+Add `DocsMobileNav` in your docs route — it portals the trigger button into `#docs-mobile-nav-trigger`:
 
 ```tsx title="routes/docs/$.tsx"
 <DocsMobileNav tree={data.pageTree} sections={sidebarSections} />
 ```
-
-The component automatically portals the trigger button into the `#docs-mobile-nav-trigger` element.
 
 ## API Reference
 

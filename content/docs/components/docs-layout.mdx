@@ -7,29 +7,27 @@ description: Full docs page layout combining sidebar, table of contents, breadcr
   <CopyCommandButton command="npm install @olwiba/docs" />
 </div>
 
-## Import
+## Installation
 
-```tsx
-import { DocsLayout } from '@olwiba/docs';
+```sh
+npm install @olwiba/docs
 ```
 
 ## Usage
 
 ```tsx
 import { DocsLayout } from '@olwiba/docs';
+```
 
-function DocsPage({ loaderData, pageTree, children }) {
-  const sections = [
-    { name: 'Get Started', href: '/docs' },
-    { name: 'Components', href: '/docs/components' },
-  ];
+```tsx
+const sections = [
+  { name: 'Get Started', href: '/docs' },
+  { name: 'Components', href: '/docs/components' },
+];
 
-  return (
-    <DocsLayout loaderData={loaderData} pageTree={pageTree} sections={sections}>
-      {children}
-    </DocsLayout>
-  );
-}
+<DocsLayout loaderData={loaderData} pageTree={pageTree} sections={sections}>
+  {children}
+</DocsLayout>
 ```
 
 ## API Reference

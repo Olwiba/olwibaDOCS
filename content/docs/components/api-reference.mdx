@@ -9,13 +9,17 @@ description: Collapsible API prop tables for component documentation. Renders a 
 
 <ComponentPreview name="api-reference" />
 
-## Import
+## Installation
+
+```sh
+npm install @olwiba/docs
+```
+
+## Usage
 
 ```tsx
 import { APIReference } from '@olwiba/docs';
 ```
-
-## Usage
 
 ```mdx
 <APIReference
@@ -38,8 +42,6 @@ import { APIReference } from '@olwiba/docs';
     { name: "props", type: "PropDef[]", default: "[]" },
   ]}
 />
-
-### PropDef
 
 ```ts
 interface PropDef {

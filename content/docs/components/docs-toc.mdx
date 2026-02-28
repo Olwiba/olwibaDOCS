@@ -9,27 +9,23 @@ description: Table of contents with automatic scroll tracking, smooth scroll-to-
 
 <ComponentPreview name="docs-toc" />
 
-## Import
+## Installation
 
-```tsx
-import { DocsToc, type TocItem } from '@olwiba/docs';
+```sh
+npm install @olwiba/docs
 ```
 
 ## Usage
 
 ```tsx
-import { DocsToc } from '@olwiba/docs';
-
-function DocsPage({ toc }) {
-  return (
-    <div className="sticky top-16">
-      <DocsToc toc={toc} />
-    </div>
-  );
-}
+import { DocsToc, type TocItem } from '@olwiba/docs';
 ```
 
-### Extracting TOC from MDX
+```tsx
+<div className="sticky top-16">
+  <DocsToc toc={toc} />
+</div>
+```
 
 The TOC is typically extracted during server-side loading:
 
@@ -56,8 +52,6 @@ const serverLoader = createServerFn()
     { name: "toc", type: "TocItem[]", default: "-" },
   ]}
 />
-
-### TocItem
 
 ```ts
 interface TocItem {

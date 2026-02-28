@@ -9,13 +9,17 @@ description: Copy page content to clipboard with AI assistant quick links. Provi
 
 <ComponentPreview name="docs-copy-page" />
 
-## Import
+## Installation
+
+```sh
+npm install @olwiba/docs
+```
+
+## Usage
 
 ```tsx
 import { DocsCopyPage } from '@olwiba/docs';
 ```
-
-## Usage
 
 ```tsx
 <DocsCopyPage
@@ -24,7 +28,7 @@ import { DocsCopyPage } from '@olwiba/docs';
 />
 ```
 
-The `rawContent` is typically obtained from the server loader via `page.data.getText('raw')`.
+`rawContent` is typically obtained from the server loader via `page.data.getText('raw')`.
 
 ## API Reference
 

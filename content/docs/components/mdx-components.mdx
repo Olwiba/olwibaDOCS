@@ -9,7 +9,13 @@ description: Pre-styled MDX component mappings including CodeFence, APIReference
 
 <ComponentPreview name="mdx-components" />
 
-## Import
+## Installation
+
+```sh
+npm install @olwiba/docs
+```
+
+## Usage
 
 ```tsx
 import { mdxComponents } from '@olwiba/docs';
@@ -17,13 +23,10 @@ import { mdxComponents } from '@olwiba/docs';
 import { mdxComponents } from '@olwiba/docs/mdx';
 ```
 
-## Usage
-
-Use the components with fumadocs-ui's default MDX components:
+Spread alongside fumadocs-ui's default MDX components:
 
 ```tsx
 import defaultMdxComponents from 'fumadocs-ui/mdx';
-import { mdxComponents } from '@olwiba/docs';
 
 <MDX
   components={{

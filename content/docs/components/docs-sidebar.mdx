@@ -9,11 +9,10 @@ description: Sticky navigation sidebar with page tree, section links, active sta
 
 <ComponentPreview name="docs-sidebar" />
 
-## Import
+## Installation
 
-```tsx
-import { DocsSidebar, type SidebarSection } from '@olwiba/docs';
-import { SidebarProvider } from '@olwiba/cn';
+```sh
+npm install @olwiba/docs
 ```
 
 ## Usage
@@ -21,21 +20,19 @@ import { SidebarProvider } from '@olwiba/cn';
 ```tsx
 import { DocsSidebar, type SidebarSection } from '@olwiba/docs';
 import { SidebarProvider } from '@olwiba/cn';
+```
 
+```tsx
 const sections: SidebarSection[] = [
   { name: 'Get Started', href: '/docs' },
   { name: 'Components', href: '/docs/components' },
   { name: 'Themes', href: '/docs/themes' },
 ];
 
-function DocsPage({ pageTree }) {
-  return (
-    <SidebarProvider>
-      <DocsSidebar tree={pageTree} sections={sections} />
-      {/* Page content */}
-    </SidebarProvider>
-  );
-}
+<SidebarProvider>
+  <DocsSidebar tree={pageTree} sections={sections} />
+  {/* Page content */}
+</SidebarProvider>
 ```
 
 ## API Reference

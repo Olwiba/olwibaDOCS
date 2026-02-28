@@ -9,42 +9,35 @@ description: Full-text search dialog with keyboard navigation (Cmd/Ctrl+K) and a
 
 <ComponentPreview name="search-button" />
 
-## Import
+## Installation
+
+```sh
+npm install @olwiba/docs
+```
+
+## Usage
 
 ```tsx
 import { SearchDialog, SearchButton } from '@olwiba/docs';
 ```
 
-## Usage
-
-### With RootProvider
-
-The recommended way to use the search dialog is with the `RootProvider` from fumadocs-ui:
+Pass `SearchDialog` to `RootProvider` from fumadocs-ui:
 
 ```tsx
 import { RootProvider } from 'fumadocs-ui/provider/tanstack';
-import { SearchDialog } from '@olwiba/docs';
 
 function RootDocument({ children }) {
   return (
-    <RootProvider
-      search={{
-        SearchDialog,
-      }}
-    >
+    <RootProvider search={{ SearchDialog }}>
       {children}
     </RootProvider>
   );
 }
 ```
 
-### SearchButton
-
-Use the `SearchButton` component to trigger the search dialog:
+Use `SearchButton` to trigger the dialog:
 
 ```tsx
-import { SearchButton } from '@olwiba/docs';
-
 function Header() {
   return (
     <header>
@@ -54,26 +47,19 @@ function Header() {
 }
 ```
 
-### Search API
-
-You need to set up a search API endpoint for the dialog to work:
+Set up a search API endpoint:
 
 ```ts
 // routes/api/search/index.ts
-import { createFileRoute } from '@tanstack/react-router';
 import { createFromSource } from 'fumadocs-core/search/server';
 import { source } from '~/lib/source';
 
-const search = createFromSource(source, {
-  language: 'english',
-});
+const search = createFromSource(source, { language: 'english' });
 
 export const Route = createFileRoute('/api/search/')({
   server: {
     handlers: {
-      GET: async ({ request }) => {
-        return search.GET(request);
-      },
+      GET: async ({ request }) => search.GET(request),
     },
   },
 });
