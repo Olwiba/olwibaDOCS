@@ -68,8 +68,8 @@ export function SearchDialog(props: SearchDialogProps) {
         <SearchDialogHeader>
           <Search className="size-5 text-muted-foreground" />
           <SearchDialogInput />
-          <SearchDialogClose>
-            <kbd className="pointer-events-none h-5 select-none items-center gap-1 border bg-muted px-1.5 font-medium font-mono text-[10px] hidden sm:flex">
+          <SearchDialogClose className="hidden sm:flex">
+            <kbd className="pointer-events-none h-5 select-none items-center gap-1 border bg-muted px-1.5 font-medium font-mono text-[10px] flex">
               ESC
             </kbd>
           </SearchDialogClose>

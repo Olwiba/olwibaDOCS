@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.5
+
+### Fixed
+
+- **`SearchDialog`** — ESC button no longer renders as an empty element on mobile; the entire close button is now hidden on small screens instead of just the text label.
+- **`CopyButton`** — copy tick icon now uses the theme primary color instead of hardcoded green.
+- **`CopyCommandButton`** — copy tick icon now uses the theme primary color.
+- **`DocsCopyPage`** — simplified to a single `DropdownMenu` for all screen sizes, replacing the split desktop `DropdownMenu` / mobile `Popover` approach. Consistent appearance across breakpoints.
+- **`DocsLayout`** — Copy Page button correctly positioned below the title row on mobile (left-aligned), separate from the desktop right-column placement.
+- **`DocsSidebar`** — folder group labels now render as links when the folder has an index page, making category index pages reachable from the sidebar.
+- **`DocsMobileNav`** — folder group titles now render as links with active state when the folder has an index page.
+
 ## 0.1.3
 
 ### Added

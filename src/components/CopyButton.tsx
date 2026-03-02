@@ -35,7 +35,7 @@ export function CopyButton({ text, className }: CopyButtonProps) {
         />
         <Check
           className={cn(
-            "absolute size-3.5 text-green-500 transition-all duration-200",
+            "absolute size-3.5 text-primary transition-all duration-200",
             isCopied
               ? "scale-100 opacity-100 animate-in zoom-in-50"
               : "scale-0 opacity-0"

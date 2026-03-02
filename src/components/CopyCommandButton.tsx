@@ -35,7 +35,7 @@ export function CopyCommandButton({
       variant="outline"
     >
       {isCopied ? (
-        <Check className="size-3 md:size-4" />
+        <Check className="size-3 md:size-4 text-primary" />
       ) : (
         <Terminal className="size-3 md:size-4" />
       )}

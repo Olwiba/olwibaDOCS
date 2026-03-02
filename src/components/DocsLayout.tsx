@@ -66,11 +66,13 @@ export function DocsLayout({ loaderData, pageTree, sections, children }: DocsLay
                     <h1 className="scroll-m-20 font-semibold text-4xl tracking-tight sm:text-3xl xl:text-4xl">
                       {loaderData.frontmatter.title}
                     </h1>
-                    <div className="flex flex-col-reverse items-end gap-2 sm:flex-row sm:items-center">
-                      <DocsCopyPage
-                        page={loaderData.rawContent}
-                        url={typeof window !== 'undefined' ? window.location.href : loaderData.url}
-                      />
+                    <div className="flex items-center gap-2 sm:gap-2">
+                      <div className="hidden sm:block">
+                        <DocsCopyPage
+                          page={loaderData.rawContent}
+                          url={typeof window !== 'undefined' ? window.location.href : loaderData.url}
+                        />
+                      </div>
                       <div className="flex items-center gap-2">
                         {loaderData.neighbours.previous && (
                           <Button asChild size="icon" variant="secondary" className="size-8">
@@ -90,6 +92,12 @@ export function DocsLayout({ loaderData, pageTree, sections, children }: DocsLay
                         )}
                       </div>
                     </div>
+                  </div>
+                  <div className="sm:hidden w-fit">
+                    <DocsCopyPage
+                      page={loaderData.rawContent}
+                      url={typeof window !== 'undefined' ? window.location.href : loaderData.url}
+                    />
                   </div>
                   {loaderData.frontmatter.description && (
                     <p className="text-balance text-muted-foreground">
