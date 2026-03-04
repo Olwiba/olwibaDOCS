@@ -3,12 +3,12 @@ WORKDIR /app
 
 # Install dependencies
 FROM base AS deps
-ARG NPM_TOKEN
+ARG PACKAGES_TOKEN
 COPY package.json bun.lock* ./
-# NPM_TOKEN = GitHub classic PAT with read:packages (for @olwiba from GitHub Packages)
+# PACKAGES_TOKEN = GitHub classic PAT with read:packages (for @olwiba from GitHub Packages)
 RUN echo '[install.scopes]' > bunfig.toml && \
-    echo "\"@olwiba\" = { url = \"https://npm.pkg.github.com/\", token = '${NPM_TOKEN}' }" >> bunfig.toml && \
-    echo "\"@genesis\" = { url = \"https://npm.pkg.github.com/\", token = '${NPM_TOKEN}' }" >> bunfig.toml && \
+    echo "\"@olwiba\" = { url = \"https://npm.pkg.github.com/\", token = '${PACKAGES_TOKEN}' }" >> bunfig.toml && \
+    echo "\"@genesis\" = { url = \"https://npm.pkg.github.com/\", token = '${PACKAGES_TOKEN}' }" >> bunfig.toml && \
     bun install --frozen-lockfile
 
 # Build
