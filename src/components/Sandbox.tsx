@@ -19,7 +19,7 @@ import {
   Tablet,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { sandboxRegistry } from './sandbox-registry';
+import { getSandboxDefinition } from './sandbox-registry';
 import { CodeFence } from './CodeFence';
 import { CopyButton } from './CopyButton';
 import {
@@ -67,7 +67,7 @@ export function Sandbox({
   defaultViewport = 'desktop',
   height = 640,
 }: SandboxProps) {
-  const definition = sandboxRegistry[id];
+  const definition = getSandboxDefinition(id);
 
   const [mode, setMode] = React.useState<SandboxMode>(defaultMode);
   const [viewport, setViewport] = React.useState<SandboxViewport>(

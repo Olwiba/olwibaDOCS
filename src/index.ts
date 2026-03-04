@@ -9,6 +9,12 @@ export { DocsCopyPage } from './components/DocsCopyPage';
 export { DocsToc, type DocsTocProps, type TocItem } from './components/DocsToc';
 export { APIReference } from './components/APIReference';
 export { Sandbox } from './components/Sandbox';
+export {
+  registerSandboxes,
+  getSandboxDefinition,
+  type SandboxDefinition,
+  type SandboxRegistryInput,
+} from './components/sandbox-registry';
 export { DocsHeader, type DocsHeaderProps } from './components/DocsHeader';
 export { DocsFooter, type DocsFooterProps } from './components/DocsFooter';
 export { DocsLayout, type DocsLayoutProps, type PageLoaderData, extractTextFromReactNode } from './components/DocsLayout';

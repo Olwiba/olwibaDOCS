@@ -23,7 +23,11 @@ export type SandboxDefinition = {
   preview: React.LazyExoticComponent<React.FC>;
 };
 
-export const sandboxRegistry: Record<string, SandboxDefinition> = {
+export type SandboxRegistryInput =
+  | SandboxDefinition[]
+  | Record<string, SandboxDefinition>;
+
+const builtInSandboxRegistry: Record<string, SandboxDefinition> = {
   'dashboard-overview': {
     id: 'dashboard-overview',
     title: 'Dashboard Overview',
@@ -156,3 +160,26 @@ export function DashboardOverview() {
     ],
   },
 };
+
+const consumerSandboxRegistry: Record<string, SandboxDefinition> = {};
+
+function entriesFromInput(input: SandboxRegistryInput): Array<[string, SandboxDefinition]> {
+  if (Array.isArray(input)) {
+    return input.map((definition) => [definition.id, definition]);
+  }
+
+  return Object.entries(input);
+}
+
+export function registerSandboxes(input: SandboxRegistryInput) {
+  for (const [id, definition] of entriesFromInput(input)) {
+    consumerSandboxRegistry[id] = {
+      ...definition,
+      id,
+    };
+  }
+}
+
+export function getSandboxDefinition(id: string): SandboxDefinition | undefined {
+  return consumerSandboxRegistry[id] ?? builtInSandboxRegistry[id];
+}

@@ -341,6 +341,22 @@ Includes styled versions of:
 - Callout
 - Button
 
+### Sandbox Registry
+
+Register project-specific sandbox examples once, then reference them in MDX with `<Sandbox id="..." />`:
+
+```tsx
+import { registerSandboxes, type SandboxDefinition } from '@olwiba/docs';
+
+registerSandboxes({
+  'my-block': {
+    id: 'my-block',
+    files: [{ path: 'app/page.tsx', language: 'tsx', code: '...' }],
+    preview: React.lazy(() => import('~/demos/my-block')),
+  } satisfies SandboxDefinition,
+});
+```
+
 ## Hooks
 
 ### useCopyToClipboard

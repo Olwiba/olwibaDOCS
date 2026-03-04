@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.7
+
+### Added
+
+- **Consumer Sandbox registry API** for reusable docs integration across projects:
+  - `registerSandboxes(...)`
+  - `getSandboxDefinition(...)`
+  - `SandboxDefinition` and `SandboxRegistryInput` types
+- `Sandbox` now resolves definitions through registry lookups, allowing consumers (for example `olwibaUI`) to provide their own sandbox IDs and multi-file examples without forking the component.
+
 ## 0.1.6
 
 ### Added
