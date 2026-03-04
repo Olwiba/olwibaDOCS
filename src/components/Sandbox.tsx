@@ -319,7 +319,7 @@ export function Sandbox({
               <Tabs
                 className="m-0"
                 value={mode}
-                onValueChange={(value) => setMode(value as SandboxMode)}
+                onValueChange={(value: string) => setMode(value as SandboxMode)}
               >
                 <TabsList className="h-8">
                   <TabsTrigger className="h-7 px-2 text-xs" value="preview">
