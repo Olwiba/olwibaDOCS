@@ -444,6 +444,18 @@ docker run -p 3000:3000 olwiba-docs
 
 For Coolify deployment, set `NPM_TOKEN` as a **Build Variable**.
 
+## Development Sync Flow
+
+`olwibaCN` is the source of truth for shared docs UI building blocks.
+
+When docs components are added or changed in `olwibaCN`, sync them into `olwibaDOCS`:
+
+```bash
+bun run sync
+```
+
+This runs `scripts/sync-from-cn.ts`, which copies files defined in `SYNC_MAP` and rewrites imports for this repo layout. If you add new synced components (for example `Sandbox` files or demos), update `SYNC_MAP` in the script first.
+
 ## License
 
 MIT

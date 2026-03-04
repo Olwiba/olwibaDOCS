@@ -94,7 +94,29 @@
     padding-bottom: calc(var(--spacing) * 0.5);
     min-height: calc(var(--spacing) * 1);
     width: 100%;
-    display: inline-block;
+    display: block;
+  }
+
+  [data-line-numbers] [data-line] {
+    position: relative;
+    padding-left: calc(var(--spacing) * 12);
+    counter-increment: line;
+  }
+
+  [data-line-numbers] [data-line]::before {
+    content: counter(line);
+    position: absolute;
+    left: 0;
+    width: calc(var(--spacing) * 9);
+    padding-right: calc(var(--spacing) * 2);
+    text-align: right;
+    color: color-mix(in oklab, var(--muted-foreground) 80%, transparent);
+    user-select: none;
+  }
+
+  [data-line]:empty::after {
+    content: ' ';
+    white-space: pre;
   }
 
   [data-line] span {

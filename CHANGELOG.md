@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.1.6
+
+### Added
+
+- **`Sandbox`** — new interactive MDX component for complex examples with:
+  - preview/code mode toggle
+  - folder-based, collapsible file tree
+  - resizable/collapsible file sidebar
+  - desktop/tablet/mobile/custom viewport controls
+  - expandable modal view with ESC-to-close and overlay click close
+  - per-file copy action in the code header
+  - syntax-highlighted code with line numbers
+- **`sandbox-registry`** and demo assets for registry-driven multi-file sandbox examples.
+- `Sandbox` is now included in default `mdxComponents` and exported from package root.
+
+### Changed
+
+- **Sync infrastructure** (`scripts/sync-from-cn.ts`) now includes Sandbox-related files and demo assets from `olwibaCN`.
+- **Code styling** (`src/styles/docs.css`) now includes line-number gutter and empty-line handling for code blocks using line numbers.
+
 ## 0.1.5
 
 ### Fixed

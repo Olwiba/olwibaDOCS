@@ -36,6 +36,8 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
   { src: 'src/components/docs/SearchDialog.tsx', dest: 'src/components/SearchDialog.tsx' },
   { src: 'src/components/docs/ThemeCodeBlock.tsx', dest: 'src/components/ThemeCodeBlock.tsx' },
   { src: 'src/components/docs/CopyCommandButton.tsx', dest: 'src/components/CopyCommandButton.tsx' },
+  { src: 'src/components/docs/Sandbox.tsx', dest: 'src/components/Sandbox.tsx' },
+  { src: 'src/components/docs/sandbox-registry.ts', dest: 'src/components/sandbox-registry.ts' },
 
   // Shared layout components (CN: src/components/docs/ → DOCS: src/components/)
   { src: 'src/components/docs/DocsHeader.tsx', dest: 'src/components/DocsHeader.tsx' },
@@ -49,6 +51,9 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
 
   // Hooks
   { src: 'src/hooks/use-copy-to-clipboard.ts', dest: 'src/hooks/use-copy-to-clipboard.ts' },
+
+  // Sandbox demos
+  { src: 'src/demos/sandbox-dashboard-overview.tsx', dest: 'src/demos/sandbox-dashboard-overview.tsx' },
 
   // Site routes (CN: src/routes/ → DOCS: site/routes/)
   { src: 'src/routes/api/search/index.ts', dest: 'site/routes/api/search/index.ts' },
@@ -108,6 +113,20 @@ function transformImports(content: string, destPath: string): string {
     /['"]@\/components\/ModeSwitcher['"]/g,
     "'./ModeSwitcher'"
   );
+
+  // @/components/docs/* → ./* (same directory in DOCS components)
+  result = result.replace(
+    /['"]@\/components\/docs\/([^'"]+)['"]/g,
+    "'./$1'"
+  );
+
+  // @/demos/* in src/components files points to ../demos/*
+  if (!isSiteFile && destPath.replace(/\\/g, '/').includes('/src/components/')) {
+    result = result.replace(
+      /['"]@\/demos\/([^'"]+)['"]/g,
+      "'../demos/$1'"
+    );
+  }
 
   // ./CodeFence (relative within docs/) stays ./ (same directory in DOCS)
   // No change needed — both are flat in src/components/
@@ -234,4 +253,3 @@ async function main() {
 }
 
 main().catch(console.error);
-

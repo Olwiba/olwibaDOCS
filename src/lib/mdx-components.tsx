@@ -20,6 +20,7 @@ import { Callout } from '../components/Callout';
 import { APIReference } from '../components/APIReference';
 import { ThemeSelector } from '../components/ThemeSelector';
 import { ThemeCodeBlock } from '../components/ThemeCodeBlock';
+import { Sandbox } from '../components/Sandbox';
 
 /**
  * Default MDX component mappings for olwibaDOCS.
@@ -220,6 +221,7 @@ export const mdxComponents = {
   CodeFence,
   ThemeSelector,
   ThemeCodeBlock,
+  Sandbox,
   Link: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
     <Link
       className={cn('font-medium underline underline-offset-4', className)}
