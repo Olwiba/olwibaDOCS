@@ -1,0 +1,45 @@
+---
+title: Sandbox
+description: Interactive multi-file previews for composed examples and advanced UI patterns.
+---
+
+`Sandbox` is an additional docs feature for complex examples that need:
+
+- Live preview and code toggle
+- Multiple source files in a file explorer
+- Desktop, tablet, mobile, and custom preview viewport
+- Install command copy and open-in links
+
+Existing `<ComponentPreview />` behavior remains unchanged and should still be used for simple single-component demos.
+
+<Sandbox id="dashboard-overview" />
+
+## Usage
+
+```mdx
+<Sandbox id="dashboard-overview" />
+```
+
+## Optional Props
+
+```mdx
+<Sandbox
+  id="dashboard-overview"
+  defaultMode="preview"
+  defaultViewport="desktop"
+  height={640}
+/>
+```
+
+For full-page shells or sidebar-heavy layouts, use `shellPreview` to give the preview a more natural viewport and internal scrolling:
+
+```mdx
+<Sandbox id="dashboard-shell" shellPreview />
+```
+
+## Notes
+
+- `id` maps to entries in the sandbox registry.
+- Add new definitions in `src/components/sandbox-registry.ts`.
+- Use this when the docs example spans multiple files or multiple composed components.
+- `shellPreview` is useful for application shells that need a taller, scrollable preview surface.

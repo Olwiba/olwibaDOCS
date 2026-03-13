@@ -11,11 +11,30 @@
  */
 
 import { readFile, writeFile, mkdir } from 'fs/promises';
-import { join, dirname } from 'path';
+import { join, dirname, resolve } from 'path';
 import { existsSync } from 'fs';
+import { fileURLToPath } from 'url';
 
-const CN_ROOT = 'C:/Workspace/olwibaCN';
-const DOCS_ROOT = 'C:/Workspace/olwibaDOCS';
+const SCRIPT_PATH = fileURLToPath(import.meta.url);
+const DOCS_ROOT = resolve(dirname(SCRIPT_PATH), '..');
+
+function resolveRepoRoot(name: string, candidates: string[]) {
+  for (const candidate of candidates) {
+    if (existsSync(join(candidate, 'package.json'))) {
+      return candidate;
+    }
+  }
+
+  throw new Error(
+    `Unable to resolve ${name}. Tried:\n${candidates.map((candidate) => `  - ${candidate}`).join('\n')}`
+  );
+}
+
+const CN_ROOT = resolveRepoRoot('olwibaCN', [
+  resolve(DOCS_ROOT, '..', 'olwibaCN'),
+  'C:/Workspace/Nexus/olwibaCN',
+  'C:/Workspace/olwibaCN',
+]);
 
 const GENERATED_BANNER = '// @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.\n';
 
@@ -225,6 +244,8 @@ async function syncFile(srcPath: string, destPath: string) {
 
 async function main() {
   console.log('Syncing doc components from olwibaCN to olwibaDOCS...\n');
+  console.log(`  source: ${CN_ROOT}`);
+  console.log(`  target: ${DOCS_ROOT}\n`);
 
   let synced = 0;
   let skipped = 0;

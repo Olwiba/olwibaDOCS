@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.8
+
+### Added
+
+- `Sandbox` now supports `shellPreview` for application-shell and sidebar-heavy examples that need a taller, internally scrollable preview surface.
+- Added `Sandbox` component docs page content to the docs package site.
+
+### Fixed
+
+- `scripts/sync-from-cn.ts` now resolves the Nexus sibling-repo layout first, with fallback to the legacy workspace paths, so the CN -> DOCS sync flow works in the new ecosystem setup.
+
 ## 0.1.7
 
 ### Added

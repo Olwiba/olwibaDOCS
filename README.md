@@ -472,6 +472,8 @@ bun run sync
 
 This runs `scripts/sync-from-cn.ts`, which copies files defined in `SYNC_MAP` and rewrites imports for this repo layout. If you add new synced components (for example `Sandbox` files or demos), update `SYNC_MAP` in the script first.
 
+In the Nexus workspace, the sync script resolves the sibling `olwibaCN` repository automatically. It still falls back to the legacy `C:\Workspace\...` layout for older setups.
+
 ## License
 
 MIT

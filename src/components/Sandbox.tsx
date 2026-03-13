@@ -38,6 +38,7 @@ type SandboxProps = {
   defaultMode?: SandboxMode;
   defaultViewport?: SandboxViewport;
   height?: number;
+  shellPreview?: boolean;
 };
 
 type FileNode = {
@@ -65,7 +66,8 @@ export function Sandbox({
   id,
   defaultMode = 'preview',
   defaultViewport = 'desktop',
-  height = 640,
+  height,
+  shellPreview = false,
 }: SandboxProps) {
   const definition = getSandboxDefinition(id);
 
@@ -244,6 +246,7 @@ export function Sandbox({
     viewport === 'custom'
       ? Math.max(360, Math.min(customWidth, maxWidth))
       : Math.min(viewportWidths[viewport], maxWidth);
+  const previewHeight = height ?? (shellPreview ? 560 : undefined);
 
   const toggleFolder = (folderPath: string) => {
     setCollapsedFolders((prev) => {
@@ -397,11 +400,16 @@ export function Sandbox({
               <div
                 className={cn(
                   'relative mx-auto min-h-[320px] overflow-hidden rounded-md border border-fd-border bg-background p-4 transition-[width]',
-                  isResizing && 'select-none'
+                  isResizing && 'select-none',
+                  shellPreview && 'isolate [transform:translateZ(0)] [contain:layout_paint_style]'
                 )}
                 style={{
                   width: `${previewWidth}px`,
-                  height: `${isExpanded ? Math.max(height, 720) : height}px`,
+                  ...(previewHeight
+                    ? {
+                        height: `${isExpanded ? Math.max(previewHeight, 720) : previewHeight}px`,
+                      }
+                    : {}),
                 }}
               >
                 <React.Suspense
@@ -411,7 +419,9 @@ export function Sandbox({
                     </div>
                   }
                 >
-                  <Preview />
+                  <div className={cn('h-full w-full', shellPreview && 'overflow-auto')}>
+                    <Preview />
+                  </div>
                 </React.Suspense>
 
                 {viewport === 'custom' ? (
