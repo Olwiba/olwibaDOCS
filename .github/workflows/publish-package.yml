@@ -1,6 +1,9 @@
 name: Publish Package
 
 on:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 permissions:
@@ -37,6 +40,15 @@ jobs:
         run: |
           echo "PKG_NAME=$(jq -r .name package.json)" >> "$GITHUB_ENV"
           echo "PKG_VERSION=$(jq -r .version package.json)" >> "$GITHUB_ENV"
+
+      - name: Verify tag matches package version
+        if: github.event_name == 'push'
+        run: |
+          EXPECTED_TAG="v${PKG_VERSION}"
+          if [ "${GITHUB_REF_NAME}" != "$EXPECTED_TAG" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match package version ${PKG_VERSION}"
+            exit 1
+          fi
 
       - name: Pack
         run: |

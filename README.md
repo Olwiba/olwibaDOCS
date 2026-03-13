@@ -474,6 +474,19 @@ This runs `scripts/sync-from-cn.ts`, which copies files defined in `SYNC_MAP` an
 
 In the Nexus workspace, the sync script resolves the sibling `olwibaCN` repository automatically. It still falls back to the legacy `C:\Workspace\...` layout for older setups.
 
+## Release Flow
+
+`olwibaDOCS` releases are tag-driven.
+
+1. Make and verify the upstream docs changes.
+2. If the change began in `olwibaCN`, run `bun run sync` here after CN validation.
+3. Update `CHANGELOG.md` and bump `package.json`.
+4. Commit and push `master`.
+5. Create a matching version tag, for example `v0.1.8`.
+6. Push the tag: `git push origin v0.1.8`.
+
+The `publish-package` GitHub Actions workflow runs automatically on `v*` tags and checks that the tag matches the package version before publishing. `workflow_dispatch` remains available as a manual fallback.
+
 ## License
 
 MIT
