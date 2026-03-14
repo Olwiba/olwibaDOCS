@@ -487,6 +487,8 @@ In the Nexus workspace, the sync script resolves the sibling `olwibaCN` reposito
 
 The `publish-package` GitHub Actions workflow runs automatically on `v*` tags and checks that the tag matches the package version before publishing. `workflow_dispatch` remains available as a manual fallback.
 
+If the `DISCORD_WEBHOOK_URL` GitHub Actions secret is configured, the publish workflow also sends a Discord notification on both success and failure.
+
 ## License
 
 MIT
