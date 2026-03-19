@@ -4,18 +4,23 @@
 import * as React from "react";
 import { Theme, getThemeStyles } from "../lib/themes";
 
-const COOKIE_NAME = "active_theme";
+const STORAGE_KEY = "active_theme";
 const DEFAULT_THEME = Theme.Emerald;
 
-function setThemeCookie(theme: Theme) {
+function clearLegacyThemeCookie() {
   if (typeof window === "undefined") return;
-  document.cookie = `${COOKIE_NAME}=${theme}; path=/; max-age=31536000; SameSite=Lax`;
+  document.cookie = `${STORAGE_KEY}=; path=/; max-age=0; SameSite=Lax`;
 }
 
-function getThemeCookie(): Theme | null {
+function setSessionTheme(theme: Theme) {
+  if (typeof window === "undefined") return;
+  window.sessionStorage.setItem(STORAGE_KEY, theme);
+}
+
+function getSessionTheme(): Theme | null {
   if (typeof window === "undefined") return null;
-  const match = document.cookie.match(new RegExp(`${COOKIE_NAME}=([^;]+)`));
-  return match ? (match[1] as Theme) : null;
+  const theme = window.sessionStorage.getItem(STORAGE_KEY);
+  return theme ? (theme as Theme) : null;
 }
 
 interface ThemeContextType {
@@ -37,18 +42,21 @@ export function ActiveThemeProvider({
   );
   const styleRef = React.useRef<HTMLStyleElement | null>(null);
 
-  // Load theme from cookie on mount (only when no explicit initialTheme)
+  // Keep demo theme for the current browser session only.
   React.useEffect(() => {
     if (initialTheme) return;
-    const savedTheme = getThemeCookie();
-    if (savedTheme && savedTheme !== activeTheme) {
-      setActiveThemeState(savedTheme);
+    clearLegacyThemeCookie();
+    const savedTheme = getSessionTheme();
+    if (savedTheme) {
+      setActiveThemeState((currentTheme) =>
+        currentTheme === savedTheme ? currentTheme : savedTheme
+      );
     }
-  }, []);
+  }, [initialTheme]);
 
   // Apply theme styles
   React.useEffect(() => {
-    setThemeCookie(activeTheme);
+    setSessionTheme(activeTheme);
 
     // Update theme class on body
     const themeClasses = Array.from(document.body.classList).filter((c) =>

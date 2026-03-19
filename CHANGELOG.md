@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.9
+
+### Fixed
+
+- `ActiveThemeProvider` now keeps the docs theme selection in `sessionStorage` instead of a long-lived cookie, and clears the legacy `active_theme` cookie when no explicit initial theme is provided.
+
 ## 0.1.8
 
 ### Added
