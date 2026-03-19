@@ -1,5 +1,5 @@
 import { DocsFooter } from '@/components/DocsFooter';
 
 export function SiteFooter() {
-  return <DocsFooter changelogUrl="https://github.com/olwiba/olwibaDOCS/blob/main/changelog.md" />;
+  return <DocsFooter changelogUrl="https://github.com/Olwiba/olwibaDOCS/blob/master/CHANGELOG.md" />;
 }
