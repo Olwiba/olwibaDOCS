@@ -86,7 +86,9 @@ export function CodeFence({
         ],
       });
       const match = html.match(/<code>([\s\S]*)<\/code>/);
-      setHighlightedHtml(match ? match[1] : null);
+      // Strip newlines between line spans — pre/white-space:pre would render them
+      // as blank lines since each [data-line] span is display:block.
+      setHighlightedHtml(match ? match[1].replace(/\n/g, '') : null);
     });
 
     return () => {
@@ -132,7 +134,6 @@ export function CodeFence({
                     {plainLines.map((line, index) => (
                       <span data-line="" key={index}>
                         {line}
-                        {index < plainLines.length - 1 ? "\n" : ""}
                       </span>
                     ))}
                   </code>

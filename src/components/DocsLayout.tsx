@@ -132,10 +132,10 @@ export function DocsLayout({ loaderData, pageTree, sections, children }: DocsLay
             {loaderData.toc?.length > 0 && (
               <>
               <div className="hidden xl:block w-4 self-stretch border-x border-dashed blueprint-pattern" aria-hidden="true" />
-              <div className="hidden w-72 shrink-0 flex-col pb-4 lg:pb-6 xl:flex">
+              <div className="hidden w-fit shrink-0 flex-col pb-4 lg:pb-6 xl:flex">
                 <div className="h-[var(--top-spacing)] shrink-0" />
                 <div className="sticky top-[calc(var(--header-height)+13px)] z-30 max-h-[calc(100svh-var(--header-height)-1px)] overflow-hidden overscroll-none">
-                  <div className="no-scrollbar overflow-y-auto px-8 pb-2">
+                  <div className="no-scrollbar overflow-y-auto px-2 pb-2">
                     <DocsToc toc={loaderData.toc} />
                   </div>
                 </div>

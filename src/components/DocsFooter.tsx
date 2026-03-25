@@ -10,7 +10,7 @@ export function DocsFooter({ children, changelogUrl }: DocsFooterProps) {
   return (
     <footer className="flex h-14 shrink-0 justify-center border-t">
       <div className="h-full w-4 shrink-0 border-dashed lg:w-12 lg:border-l" aria-hidden="true" />
-      <div className="flex h-full w-full max-w-[1400px] items-center gap-1 border-l border-r border-dashed px-4 lg:gap-2 lg:px-6">
+      <div className="flex h-full w-full max-w-[1600px] items-center gap-1 border-l border-r border-dashed px-4 lg:gap-2 lg:px-6">
         {children ?? (
           <>
             <p className="text-muted-foreground text-xs md:text-sm">

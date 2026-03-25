@@ -17,7 +17,7 @@ export function DocsHeader({ logo, navItems, githubUrl, githubBadge }: DocsHeade
   return (
     <header className="sticky top-0 z-50 flex h-14 shrink-0 justify-center border-b bg-background/95 backdrop-blur-sm">
       <div className="h-full w-4 shrink-0 border-dashed lg:w-12 lg:border-l" aria-hidden="true" />
-      <div className="flex h-full w-full max-w-[1400px] items-center gap-2 border-l border-r border-dashed px-4 md:gap-5 md:px-6">
+      <div className="flex h-full w-full max-w-[1600px] items-center gap-2 border-l border-r border-dashed px-4 md:gap-5 md:px-6">
         <div id="docs-mobile-nav-trigger" className="empty:hidden lg:hidden" />
         <Link className="flex items-center gap-2" to="/">
           <span className="font-bold text-lg">

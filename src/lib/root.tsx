@@ -62,7 +62,7 @@ export function createDocsRoot(config: DocsRootConfig) {
               <Header />
               <div className="flex flex-1 justify-center overflow-x-clip">
                 <div className="w-4 shrink-0 border-dashed blueprint-pattern lg:w-12 lg:border-l" aria-hidden="true" />
-                <div className="relative z-10 min-w-0 max-w-[1400px] flex-1 border-l border-r border-dashed bg-background">
+                <div className="relative z-10 min-w-0 max-w-[1600px] flex-1 border-l border-r border-dashed bg-background">
                   {children}
                 </div>
                 <div className="w-4 shrink-0 border-dashed blueprint-pattern lg:w-12 lg:border-r" aria-hidden="true" />
