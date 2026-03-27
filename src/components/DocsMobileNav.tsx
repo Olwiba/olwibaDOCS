@@ -18,8 +18,6 @@ import {
 
 const TOP_LEVEL_SECTIONS = [
   { name: 'Get Started', href: '/docs' },
-  { name: 'Components', href: '/docs/components' },
-  { name: 'Themes', href: '/docs/themes' },
 ];
 
 export interface DocsMobileNavProps {
@@ -88,7 +86,27 @@ export function DocsMobileNav({ tree, sections }: DocsMobileNavProps) {
 
               {tree.children.map((item: Node) => {
                 if (item.$id === 'root:index.mdx') return null;
-                if (item.$id === 'root:themes.mdx') return null;
+                // Skip pages whose URL is already in navSections
+                if (item.type === 'page' && navSections.some((s) => s.href === (item as Item).url)) return null;
+
+                if (item.type === 'page') {
+                  const page = item as Item;
+                  return (
+                    <Link
+                      key={page.url}
+                      to={page.url}
+                      className={cn(
+                        'mb-1 block rounded-md px-2 py-1.5 text-[0.8rem] font-medium',
+                        page.url === pathname
+                          ? 'border border-accent bg-accent'
+                          : 'border border-transparent text-muted-foreground hover:bg-accent/50'
+                      )}
+                    >
+                      {page.name}
+                    </Link>
+                  );
+                }
+
                 if (item.type !== 'folder') return null;
 
                 return (
