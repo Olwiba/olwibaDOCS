@@ -35,9 +35,10 @@ export interface DocsSidebarProps extends React.ComponentProps<'div'> {
   tree: Root;
   sections?: SidebarSection[];
   folderIcons?: Record<string, React.ComponentType<{ className?: string }>>;
+  defaultOpenFolders?: boolean;
 }
 
-export function DocsSidebar({ tree, sections, folderIcons, ...props }: DocsSidebarProps) {
+export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, ...props }: DocsSidebarProps) {
   const location = useLocation();
   const pathname = location.pathname;
   const navSections = sections ?? TOP_LEVEL_SECTIONS;
@@ -112,7 +113,7 @@ export function DocsSidebar({ tree, sections, folderIcons, ...props }: DocsSideb
                       });
 
                       return (
-                        <Collapsible key={item.$id} defaultOpen={isExpanded} className="group/collapsible">
+                        <Collapsible key={item.$id} defaultOpen={defaultOpenFolders ?? isExpanded} className="group/collapsible">
                           <SidebarMenuItem>
                             <CollapsibleTrigger asChild>
                               <SidebarMenuButton asChild isActive={pathname === item.index?.url} className={cn(!isExpanded && pathname !== item.index?.url && 'text-muted-foreground')}>
