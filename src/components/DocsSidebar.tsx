@@ -139,7 +139,7 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
                             <CollapsibleContent>
                               <SidebarMenuSub>
                                 {pages.map((page) => {
-                                  const isComplete = !completedItems || completedItems.includes(page.name);
+                                  const isComplete = !completedItems || completedItems.includes(page.url);
                                   return (
                                     <SidebarMenuSubItem key={page.url}>
                                       <SidebarMenuSubButton asChild isActive={page.url === pathname}>
