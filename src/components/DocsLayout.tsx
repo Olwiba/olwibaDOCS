@@ -47,14 +47,15 @@ export interface DocsLayoutProps {
   pageTree: Root;
   sections?: SidebarSection[];
   defaultOpenFolders?: boolean;
+  completedItems?: string[];
   children: React.ReactNode;
 }
 
-export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders, children }: DocsLayoutProps) {
+export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders, completedItems, children }: DocsLayoutProps) {
   return (
     <div className="flex flex-1 flex-col lg:px-2">
       <SidebarProvider className="min-h-min flex-1 items-start px-0 [--sidebar-width:220px] [--top-spacing:1.5rem] lg:[--sidebar-width:240px] lg:[--top-spacing:2rem]">
-        <DocsSidebar tree={pageTree} sections={sections} defaultOpenFolders={defaultOpenFolders} />
+        <DocsSidebar tree={pageTree} sections={sections} defaultOpenFolders={defaultOpenFolders} completedItems={completedItems} />
         <div className="hidden lg:block w-4 self-stretch border-x border-dashed blueprint-pattern" aria-hidden="true" />
         <div className="flex-1 min-w-0">
           <DocsMobileNav tree={pageTree} sections={sections} />

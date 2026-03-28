@@ -36,9 +36,10 @@ export interface DocsSidebarProps extends React.ComponentProps<'div'> {
   sections?: SidebarSection[];
   folderIcons?: Record<string, React.ComponentType<{ className?: string }>>;
   defaultOpenFolders?: boolean;
+  completedItems?: string[];
 }
 
-export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, ...props }: DocsSidebarProps) {
+export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, completedItems, ...props }: DocsSidebarProps) {
   const location = useLocation();
   const pathname = location.pathname;
   const navSections = sections ?? TOP_LEVEL_SECTIONS;
@@ -137,13 +138,19 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, .
                             </div>
                             <CollapsibleContent>
                               <SidebarMenuSub>
-                                {pages.map((page) => (
-                                  <SidebarMenuSubItem key={page.url}>
-                                    <SidebarMenuSubButton asChild isActive={page.url === pathname}>
-                                      <Link to={page.url}>{page.name}</Link>
-                                    </SidebarMenuSubButton>
-                                  </SidebarMenuSubItem>
-                                ))}
+                                {pages.map((page) => {
+                                  const isComplete = !completedItems || completedItems.includes(page.name);
+                                  return (
+                                    <SidebarMenuSubItem key={page.url}>
+                                      <SidebarMenuSubButton asChild isActive={page.url === pathname}>
+                                        <Link to={page.url}>
+                                          {page.name}
+                                          {!isComplete && <span className="ml-1 text-muted-foreground/50">*</span>}
+                                        </Link>
+                                      </SidebarMenuSubButton>
+                                    </SidebarMenuSubItem>
+                                  );
+                                })}
                               </SidebarMenuSub>
                             </CollapsibleContent>
                           </SidebarMenuItem>
