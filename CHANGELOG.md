@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.10
+
+### Fixed
+
+- **`Sandbox` `shellPreview` frame** — Removed `contain`/isolate hacks that fought embedded layouts. Shell previews now use `p-0`, a flex column, and `min-h-0` so app chrome (e.g. `SidebarProvider` + contained sidebars) fills the preview height instead of sizing to the browser viewport.
+
 ## 0.1.9
 
 ### Fixed

@@ -399,9 +399,9 @@ export function Sandbox({
             <div className="mx-auto min-w-[360px]" ref={containerRef}>
               <div
                 className={cn(
-                  'relative mx-auto min-h-[320px] overflow-hidden rounded-md border border-fd-border bg-background p-4 transition-[width]',
-                  isResizing && 'select-none',
-                  shellPreview && 'isolate [transform:translateZ(0)] [contain:layout_paint_style]'
+                  'relative mx-auto min-h-[320px] overflow-hidden rounded-md border border-fd-border bg-background transition-[width]',
+                  shellPreview ? 'p-0' : 'p-4',
+                  isResizing && 'select-none'
                 )}
                 style={{
                   width: `${previewWidth}px`,
@@ -419,7 +419,14 @@ export function Sandbox({
                     </div>
                   }
                 >
-                  <div className={cn('h-full w-full', shellPreview && 'overflow-auto')}>
+                  <div
+                    className={cn(
+                      'w-full',
+                      shellPreview
+                        ? 'flex h-full min-h-0 flex-col overflow-hidden'
+                        : 'h-full w-full'
+                    )}
+                  >
                     <Preview />
                   </div>
                 </React.Suspense>
