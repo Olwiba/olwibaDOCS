@@ -101,7 +101,9 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
                     }
 
                     if (item.type === 'folder') {
-                      const FolderIcon = folderIcons?.[item.name];
+                      const folderName =
+                        typeof item.name === 'string' ? item.name : 'folder';
+                      const FolderIcon = folderIcons?.[folderName];
                       const folderPrefix = item.index?.url;
                       const isExpanded = folderPrefix
                         ? pathname.startsWith(folderPrefix)
@@ -118,7 +120,7 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
                           <SidebarMenuItem>
                             <CollapsibleTrigger asChild>
                               <SidebarMenuButton asChild isActive={pathname === item.index?.url} className={cn(!isExpanded && pathname !== item.index?.url && 'text-muted-foreground')}>
-                                <Link to={item.index?.url ?? `/docs/${item.name.toLowerCase()}`}>
+                                <Link to={item.index?.url ?? `/docs/${folderName.toLowerCase()}`}>
                                   <ChevronRight className="size-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                                   {FolderIcon && <FolderIcon className="size-4 shrink-0" />}
                                   {item.name}

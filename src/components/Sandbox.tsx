@@ -3,6 +3,7 @@
 
 import * as React from 'react';
 import { createPortal } from 'react-dom';
+import { createRoot, type Root } from 'react-dom/client';
 import {
   ChevronDown,
   ChevronRight,
@@ -61,6 +62,132 @@ const viewportWidths: Record<Exclude<SandboxViewport, 'custom'>, number> = {
   tablet: 768,
   mobile: 390,
 };
+
+const IFRAME_PREVIEW_DOC = '<!doctype html><html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><style>html,body,#sandbox-root{height:100%;min-height:100%;margin:0}#sandbox-root{display:flex;flex-direction:column}</style></head><body><div id="sandbox-root"></div></body></html>';
+
+function IframePreview({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const iframeRef = React.useRef<HTMLIFrameElement | null>(null);
+  const [mountNode, setMountNode] = React.useState<HTMLElement | null>(null);
+  const [mountFailed, setMountFailed] = React.useState(false);
+  const reactRootRef = React.useRef<Root | null>(null);
+
+  const setupIframeDocument = React.useCallback(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return false;
+    const doc = iframe.contentDocument;
+    if (!doc) return false;
+
+    const root = doc.getElementById('sandbox-root');
+    if (!root) return false;
+
+    root.style.height = '100%';
+    root.style.minHeight = '100%';
+    root.style.display = 'flex';
+    root.style.flexDirection = 'column';
+    setMountNode(root as HTMLElement);
+    setMountFailed(false);
+
+    const html = doc.documentElement;
+    const body = doc.body;
+    const sourceHtml = document.documentElement;
+    const sourceBody = document.body;
+
+    html.className = sourceHtml.className;
+    body.className = sourceBody.className;
+
+    const htmlStyle = sourceHtml.getAttribute('style');
+    const bodyStyle = sourceBody.getAttribute('style');
+    if (htmlStyle) html.setAttribute('style', htmlStyle);
+    else html.removeAttribute('style');
+    if (bodyStyle) body.setAttribute('style', bodyStyle);
+    else body.removeAttribute('style');
+
+    html.style.height = '100%';
+    body.style.height = '100%';
+    body.style.margin = '0';
+    body.style.minHeight = '100%';
+
+    if (!doc.head.querySelector('base')) {
+      const base = doc.createElement('base');
+      base.href = document.baseURI;
+      doc.head.appendChild(base);
+    }
+
+    if (!doc.head.querySelector('[data-sandbox-styles="true"]')) {
+      const marker = doc.createElement('meta');
+      marker.setAttribute('data-sandbox-styles', 'true');
+      doc.head.appendChild(marker);
+      const styleNodes = Array.from(
+        document.querySelectorAll('link[rel="stylesheet"], style')
+      );
+      for (const node of styleNodes) {
+        doc.head.appendChild(node.cloneNode(true));
+      }
+    }
+
+    return true;
+  }, []);
+
+  React.useEffect(() => {
+    let retries = 0;
+    const maxRetries = 40;
+    const timer = window.setInterval(() => {
+      if (setupIframeDocument()) {
+        window.clearInterval(timer);
+        return;
+      }
+      retries += 1;
+      if (retries >= maxRetries) {
+        window.clearInterval(timer);
+        setMountFailed(true);
+      }
+    }, 50);
+    return () => window.clearInterval(timer);
+  }, [setupIframeDocument]);
+
+  React.useEffect(() => {
+    if (!mountNode) return;
+    if (!reactRootRef.current) {
+      reactRootRef.current = createRoot(mountNode);
+    }
+    reactRootRef.current.render(<>{children}</>);
+    return () => {
+      reactRootRef.current?.render(<></>);
+    };
+  }, [children, mountNode]);
+
+  React.useEffect(
+    () => () => {
+      reactRootRef.current?.unmount();
+      reactRootRef.current = null;
+    },
+    []
+  );
+
+  return (
+    <div className={cn('h-full w-full', className)}>
+      <iframe
+        ref={iframeRef}
+        className="h-full w-full border-0 bg-transparent"
+        onLoad={setupIframeDocument}
+        sandbox="allow-same-origin allow-scripts"
+        srcDoc={IFRAME_PREVIEW_DOC}
+        title="Sandbox preview"
+      />
+      {!mountNode && mountFailed ? (
+        <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
+          Preview failed to mount inside iframe.
+        </div>
+      ) : null}
+    </div>
+  );
+}
 
 export function Sandbox({
   id,
@@ -246,7 +373,7 @@ export function Sandbox({
     viewport === 'custom'
       ? Math.max(360, Math.min(customWidth, maxWidth))
       : Math.min(viewportWidths[viewport], maxWidth);
-  const previewHeight = height ?? (shellPreview ? 560 : undefined);
+  const previewHeight = height ?? (shellPreview ? 640 : undefined);
 
   const toggleFolder = (folderPath: string) => {
     setCollapsedFolders((prev) => {
@@ -412,24 +539,22 @@ export function Sandbox({
                     : {}),
                 }}
               >
-                <React.Suspense
-                  fallback={
-                    <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                      Loading preview...
-                    </div>
-                  }
+                <IframePreview
+                  className={cn(
+                    'w-full',
+                    shellPreview ? 'h-full min-h-0 overflow-hidden' : 'h-full'
+                  )}
                 >
-                  <div
-                    className={cn(
-                      'w-full',
-                      shellPreview
-                        ? 'flex h-full min-h-0 flex-col overflow-hidden'
-                        : 'h-full w-full'
-                    )}
+                  <React.Suspense
+                    fallback={
+                      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                        Loading preview...
+                      </div>
+                    }
                   >
                     <Preview />
-                  </div>
-                </React.Suspense>
+                  </React.Suspense>
+                </IframePreview>
 
                 {viewport === 'custom' ? (
                   <button
