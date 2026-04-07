@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.12
+
+### Changed
+
+- Synced latest dev banner runtime from `olwibaCN`, including segmented color rendering, white-by-default segment colors, and responsive width fallback behavior.
+- Docs dev server banner config now defines a compact fallback variant (`oDOCS`) so narrow terminals degrade cleanly before plain-text fallback.
+
 ## 0.1.10
 
 ### Fixed
