@@ -7,6 +7,7 @@ export default defineConfig({
     'src/lib/mdx-components.tsx',
     'src/lib/server.ts',
     'src/lib/themes.ts',
+    'src/lib/dev-banner.ts',
   ],
   format: ['esm'],
   dts: true,

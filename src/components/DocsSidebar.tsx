@@ -101,8 +101,7 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
                     }
 
                     if (item.type === 'folder') {
-                      const folderName =
-                        typeof item.name === 'string' ? item.name : 'folder';
+                      const folderName = typeof item.name === 'string' ? item.name : 'folder';
                       const FolderIcon = folderIcons?.[folderName];
                       const folderPrefix = item.index?.url;
                       const isExpanded = folderPrefix
@@ -123,7 +122,7 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
                                 <Link to={item.index?.url ?? `/docs/${folderName.toLowerCase()}`}>
                                   <ChevronRight className="size-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                                   {FolderIcon && <FolderIcon className="size-4 shrink-0" />}
-                                  {item.name}
+                                  {folderName}
                                   <span className="ml-auto text-xs tabular-nums text-muted-foreground/60">{pages.length}</span>
                                 </Link>
                               </SidebarMenuButton>

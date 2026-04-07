@@ -71,6 +71,10 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
   // Hooks
   { src: 'src/hooks/use-copy-to-clipboard.ts', dest: 'src/hooks/use-copy-to-clipboard.ts' },
 
+  // Dev tooling (shared banner utils from CN source-of-truth)
+  { src: 'scripts/dos-rebel-font.ts', dest: 'src/lib/dos-rebel-font.ts' },
+  { src: 'scripts/dev-banner.ts', dest: 'src/lib/dev-banner.ts' },
+
   // Sandbox demos
   { src: 'src/demos/sandbox-dashboard-overview.tsx', dest: 'src/demos/sandbox-dashboard-overview.tsx' },
 
@@ -230,7 +234,9 @@ async function syncFile(srcPath: string, destPath: string) {
   const content = await readFile(srcPath, 'utf-8');
   let transformed = transformImports(content, destPath);
   transformed = consolidateCnImports(transformed);
-  transformed = GENERATED_BANNER + transformed;
+  if (/\.(ts|tsx|js|jsx)$/.test(destPath)) {
+    transformed = GENERATED_BANNER + transformed;
+  }
 
   // Ensure directory exists
   const dir = dirname(destPath);
