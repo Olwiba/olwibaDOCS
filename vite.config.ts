@@ -31,6 +31,10 @@ export default defineConfig({
         { text: 'olwiba' },
         { text: 'DOCS', colorHex: '#f59e0b' },
       ],
+      compactSegments: [
+        { text: 'o' },
+        { text: 'DOCS', colorHex: '#f59e0b' },
+      ],
     }),
     mdx(await import('./source.config')),
     tsConfigPaths({

@@ -12,6 +12,7 @@ export type BannerSegment = {
 
 type BannerOptions = {
   segments: BannerSegment[]
+  compactSegments?: BannerSegment[]
 }
 
 type LegacyBannerOptions = {
@@ -32,39 +33,49 @@ function hexToAnsi24(hex: string) {
   return `\x1b[38;2;${r};${g};${b}m`
 }
 
+function visibleLen(value: string) {
+  return value.length
+}
+
 function normalizeSegments(
   input: string | BannerOptions | LegacyBannerOptions
-): BannerSegment[] {
+): { segments: BannerSegment[]; compactSegments?: BannerSegment[] } {
   if (typeof input === "string") {
-    return [{ text: input, colorHex: WHITE_HEX }]
+    return { segments: [{ text: input, colorHex: WHITE_HEX }] }
   }
 
   if ("segments" in input) {
-    return input.segments
+    const normalize = (segments: BannerSegment[]) =>
+      segments
       .filter((segment) => segment.text.trim().length > 0)
       .map((segment) => ({
         text: segment.text,
         colorHex: segment.colorHex ?? WHITE_HEX,
       }))
+    const segments = normalize(input.segments)
+    const compactSegments =
+      input.compactSegments && input.compactSegments.length > 0
+        ? normalize(input.compactSegments)
+        : undefined
+    return { segments, compactSegments }
   }
 
   const suffix = input.suffix ?? ""
   if (!suffix) {
-    return [{ text: input.baseText, colorHex: input.colorHex ?? DEFAULT_HEX }]
+    return {
+      segments: [{ text: input.baseText, colorHex: input.colorHex ?? DEFAULT_HEX }],
+    }
   }
 
-  return [
-    { text: input.baseText, colorHex: input.baseColorHex ?? WHITE_HEX },
-    { text: suffix, colorHex: input.colorHex ?? DEFAULT_HEX },
-  ]
+  return {
+    segments: [
+      { text: input.baseText, colorHex: input.baseColorHex ?? WHITE_HEX },
+      { text: suffix, colorHex: input.colorHex ?? DEFAULT_HEX },
+    ],
+  }
 }
 
-export async function printBanner(input: string | BannerSegment[] | BannerOptions) {
-  const segments = Array.isArray(input) ? input : normalizeSegments(input)
-  if (!segments.length) return
-
-  process.stdout.write(`${RESET}\n`)
-
+async function renderSegmentedFiglet(segments: BannerSegment[]) {
   const cumulativeTexts: string[] = []
   let textSoFar = ""
   for (const segment of segments) {
@@ -75,22 +86,29 @@ export async function printBanner(input: string | BannerSegment[] | BannerOption
   const renderedByBoundary = await Promise.all(
     cumulativeTexts.map((text) => renderDosRebel(text))
   )
-  const fullLines = renderedByBoundary[renderedByBoundary.length - 1] ?? []
+  const lines = renderedByBoundary[renderedByBoundary.length - 1] ?? []
   const boundaryLines = renderedByBoundary.slice(0, -1)
   const ansiBySegment = segments.map(
     (segment) => hexToAnsi24(segment.colorHex ?? WHITE_HEX) ?? "\x1b[97m"
   )
+  const widestLine = lines.reduce((max, line) => Math.max(max, visibleLen(line)), 0)
 
-  for (let i = 0; i < fullLines.length; i++) {
-    const full = fullLines[i] ?? ""
+  return { lines, boundaryLines, ansiBySegment, widestLine }
+}
+
+function printColoredFiglet(
+  lines: string[],
+  boundaryLines: string[][],
+  ansiBySegment: string[]
+) {
+  for (let i = 0; i < lines.length; i++) {
+    const full = lines[i] ?? ""
     let cursor = 0
     let out = ""
 
-    for (let segmentIndex = 0; segmentIndex < segments.length; segmentIndex += 1) {
+    for (let segmentIndex = 0; segmentIndex < ansiBySegment.length; segmentIndex += 1) {
       const boundaryLine =
-        segmentIndex < boundaryLines.length
-          ? boundaryLines[segmentIndex]?.[i] ?? ""
-          : full
+        segmentIndex < boundaryLines.length ? boundaryLines[segmentIndex]?.[i] ?? "" : full
       const end = Math.min(boundaryLine.length, full.length)
       const chunk = full.slice(cursor, end)
       out += `${ansiBySegment[segmentIndex]}${chunk}`
@@ -101,11 +119,49 @@ export async function printBanner(input: string | BannerSegment[] | BannerOption
   }
 }
 
+export async function printBanner(input: string | BannerSegment[] | BannerOptions) {
+  const normalized = Array.isArray(input)
+    ? { segments: input, compactSegments: undefined }
+    : normalizeSegments(input)
+  const segments = normalized.segments
+  const compactSegments = normalized.compactSegments
+  if (!segments.length) return
+
+  process.stdout.write(`${RESET}\n`)
+  const terminalColumns = process.stdout.columns ?? 0
+  const primary = await renderSegmentedFiglet(segments)
+
+  if (terminalColumns === 0 || primary.widestLine <= terminalColumns) {
+    printColoredFiglet(primary.lines, primary.boundaryLines, primary.ansiBySegment)
+    return
+  }
+
+  if (compactSegments && compactSegments.length > 0) {
+    const compactFiglet = await renderSegmentedFiglet(compactSegments)
+    if (compactFiglet.widestLine <= terminalColumns) {
+      printColoredFiglet(
+        compactFiglet.lines,
+        compactFiglet.boundaryLines,
+        compactFiglet.ansiBySegment
+      )
+      return
+    }
+  }
+
+  let plain = ""
+  for (let i = 0; i < segments.length; i++) {
+    const text = segments[i]?.text ?? ""
+    if (!text) continue
+    plain += `${primary.ansiBySegment[i]}${text}`
+  }
+  process.stdout.write(`${plain}${RESET}\n`)
+}
+
 export function createDevBannerPlugin(
   project: string | BannerOptions | LegacyBannerOptions
 ): PluginOption {
   let shown = false
-  const segments = normalizeSegments(project)
+  const { segments, compactSegments } = normalizeSegments(project)
   const bannerText = segments.map((segment) => segment.text).join("")
   return {
     name: `nexus-dev-banner-${bannerText.toLowerCase()}`,
@@ -113,7 +169,7 @@ export function createDevBannerPlugin(
     configureServer(_server: ViteDevServer) {
       if (shown) return
       shown = true
-      void printBanner(segments)
+      void printBanner({ segments, compactSegments })
     },
   }
 }
