@@ -1,3 +1,4 @@
+// @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 import type { PluginOption, ViteDevServer } from "vite"
 import { renderDosRebel } from "./dos-rebel-font"
 

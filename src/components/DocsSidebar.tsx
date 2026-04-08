@@ -46,8 +46,24 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showTopFade, setShowTopFade] = useState(false);
 
-  // URLs covered by navSections — skip matching tree pages to avoid duplicates
-  const sectionHrefs = new Set(navSections.map((s) => s.href));
+  // Match each section to its folder in the tree by checking child URLs.
+  // We intentionally don't use item.index?.url because fumadocs may return
+  // a fallback "/docs/folder" URL for directories it hasn't fully indexed yet.
+  type FolderNode = Node & { type: 'folder'; children: Node[] };
+
+  const folderBySection = new Map<string, FolderNode>();
+  for (const item of tree.children) {
+    if (item.type !== 'folder') continue;
+    for (const section of navSections) {
+      if (section.href === '/docs') continue;
+      const hasMatchingChild = (item as FolderNode).children.some(
+        (c: Node) => c.type === 'page' && (c as Item).url.startsWith(section.href + '/')
+      );
+      if (hasMatchingChild && !folderBySection.has(section.href)) {
+        folderBySection.set(section.href, item as FolderNode);
+      }
+    }
+  }
 
   return (
     <div className="z-30 hidden w-fit self-stretch lg:flex lg:flex-col" {...props}>
@@ -67,63 +83,29 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
               <SidebarGroupContent>
                 <SidebarMenu className="gap-0.5">
 
-                  {/* Static nav section buttons (e.g. "Get Started") */}
                   {navSections.map(({ name, href, icon: Icon }) => {
                     const isActive = href === '/docs' ? pathname === href : pathname.startsWith(href);
-                    return (
-                      <SidebarMenuItem key={name}>
-                        <SidebarMenuButton asChild isActive={isActive} className={cn(!isActive && 'text-muted-foreground')}>
-                          <Link to={href}>
-                            {Icon && <Icon className="size-4" />}
-                            {name}
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    );
-                  })}
+                    const folder = folderBySection.get(href);
 
-                  {/* Tree items — root-level pages as buttons, folders as collapsible */}
-                  {tree.children.map((item: Node) => {
-                    // Skip index — covered by "Get Started" in navSections
-                    if (item.$id === 'root:index.mdx') return null;
-                    // Skip pages whose URL is already covered by a navSection
-                    if (item.type === 'page' && sectionHrefs.has((item as Item).url)) return null;
-
-                    if (item.type === 'page') {
-                      const page = item as Item;
-                      return (
-                        <SidebarMenuItem key={page.url}>
-                          <SidebarMenuButton asChild isActive={page.url === pathname} className={cn(page.url !== pathname && 'text-muted-foreground')}>
-                            <Link to={page.url}>{page.name}</Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      );
-                    }
-
-                    if (item.type === 'folder') {
-                      const folderName = typeof item.name === 'string' ? item.name : 'folder';
-                      const FolderIcon = folderIcons?.[folderName];
-                      const folderPrefix = item.index?.url;
-                      const isExpanded = folderPrefix
-                        ? pathname.startsWith(folderPrefix)
-                        : item.children.some((c: Node) => c.type === 'page' && (c as Item).url === pathname);
-
-                      const pages = item.children.filter((child: Node): child is Item => {
+                    // Section with sub-pages — render as collapsible
+                    if (folder) {
+                      const FolderIcon = Icon ?? folderIcons?.[name];
+                      const pages = folder.children.filter((child: Node): child is Item => {
                         if (child.type !== 'page') return false;
                         if (child.$id?.endsWith('index.mdx')) return false;
                         return true;
                       });
+                      const isExpanded = isActive || (defaultOpenFolders ?? false);
 
                       return (
-                        <Collapsible key={item.$id} defaultOpen={defaultOpenFolders ?? isExpanded} className="group/collapsible">
+                        <Collapsible key={href} defaultOpen={isExpanded} className="group/collapsible">
                           <SidebarMenuItem>
                             <CollapsibleTrigger asChild>
-                              <SidebarMenuButton asChild isActive={pathname === item.index?.url} className={cn(!isExpanded && pathname !== item.index?.url && 'text-muted-foreground')}>
-                                <Link to={item.index?.url ?? `/docs/${folderName.toLowerCase()}`}>
+                              <SidebarMenuButton asChild isActive={isActive} className={cn(!isActive && 'text-muted-foreground')}>
+                                <Link to={href}>
                                   <ChevronRight className="size-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                                   {FolderIcon && <FolderIcon className="size-4 shrink-0" />}
-                                  {folderName}
-                                  <span className="ml-auto text-xs tabular-nums text-muted-foreground/60">{pages.length}</span>
+                                  {name}
                                 </Link>
                               </SidebarMenuButton>
                             </CollapsibleTrigger>
@@ -159,7 +141,17 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
                       );
                     }
 
-                    return null;
+                    // Section with no sub-pages — flat button
+                    return (
+                      <SidebarMenuItem key={href}>
+                        <SidebarMenuButton asChild isActive={isActive} className={cn(!isActive && 'text-muted-foreground')}>
+                          <Link to={href}>
+                            {Icon && <Icon className="size-4" />}
+                            {name}
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
                   })}
 
                 </SidebarMenu>
