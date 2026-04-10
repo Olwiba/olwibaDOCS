@@ -37,6 +37,9 @@ export { themes, Theme, getThemeStyles, getThemeCode } from './lib/themes';
 // Hooks
 export { useCopyToClipboard } from './hooks/use-copy-to-clipboard';
 
+export { UIModeDropdown, type UIModeDropdownProps, type UIModeOption } from './components/UIModeDropdown';
+export { getUIMode, setUIMode, subscribeUIMode } from './lib/ui-mode-store';
+
 // Lib
 export { cn } from './lib/utils';
 export { createSource, loader, lucideIconsPlugin, type LoaderOptions } from './lib/source';

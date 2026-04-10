@@ -11,9 +11,10 @@ export interface DocsHeaderProps {
   navItems?: Array<{ label: string; href: string }>;
   githubUrl?: string;
   githubBadge?: string;
+  rightSlot?: React.ReactNode;
 }
 
-export function DocsHeader({ logo, navItems, githubUrl, githubBadge }: DocsHeaderProps) {
+export function DocsHeader({ logo, navItems, githubUrl, githubBadge, rightSlot }: DocsHeaderProps) {
   return (
     <header className="sticky top-0 z-50 flex h-14 shrink-0 justify-center border-b bg-background/95 backdrop-blur-sm">
       <div className="h-full w-4 shrink-0 border-dashed lg:w-12 lg:border-l" aria-hidden="true" />
@@ -62,6 +63,7 @@ export function DocsHeader({ logo, navItems, githubUrl, githubBadge }: DocsHeade
               )}
             </div>
           )}
+          {rightSlot}
           <ModeSwitcher />
         </div>
       </div>

@@ -72,7 +72,9 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
   { src: 'src/hooks/use-copy-to-clipboard.ts', dest: 'src/hooks/use-copy-to-clipboard.ts' },
 
   // Dev tooling (shared banner utils from CN source-of-truth)
-  { src: 'scripts/dos-rebel-font.ts', dest: 'src/lib/dos-rebel-font.ts' },
+  // Note: dos-rebel-font.ts is NOT synced — DOCS version has the font bundled inline
+  // to avoid a network fetch at startup. Run scripts/bundle-font.ts from Nexus root
+  // to regenerate it if the font file changes.
   { src: 'scripts/dev-banner.ts', dest: 'src/lib/dev-banner.ts' },
 
   // Sandbox demos
