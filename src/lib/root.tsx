@@ -29,6 +29,18 @@ export interface DocsRootConfig {
   initialTheme?: typeof Theme[keyof typeof Theme];
   cssUrl: string;
   notFoundComponent?: (props: NotFoundRouteProps) => React.ReactNode;
+  /** Optional wrapper rendered around the full page body — use this to inject a root-level provider (e.g. OlwibaUIProvider). */
+  wrapper?: React.ComponentType<{ children: React.ReactNode }>;
+}
+
+function MaybeWrap({
+  wrapper: W,
+  children,
+}: {
+  wrapper?: React.ComponentType<{ children: React.ReactNode }>;
+  children: React.ReactNode;
+}) {
+  return W ? <W>{children}</W> : <>{children}</>;
 }
 
 export function createDocsRoot(config: DocsRootConfig) {
@@ -40,6 +52,7 @@ export function createDocsRoot(config: DocsRootConfig) {
     initialTheme,
     cssUrl,
     notFoundComponent,
+    wrapper: Wrapper,
   } = config;
 
   function RootComponent() {
@@ -59,15 +72,17 @@ export function createDocsRoot(config: DocsRootConfig) {
         <body className="flex min-h-screen flex-col antialiased [--header-height:3.5rem] [--footer-height:3.5rem]">
           <ActiveThemeProvider initialTheme={initialTheme}>
             <RootProvider search={{ SearchDialog }}>
-              <Header />
-              <div className="flex flex-1 justify-center overflow-x-clip">
-                <div className="w-4 shrink-0 border-dashed blueprint-pattern lg:w-12 lg:border-l" aria-hidden="true" />
-                <div className="relative z-10 min-w-0 max-w-[1600px] flex-1 border-l border-r border-dashed bg-background">
-                  {children}
+              <MaybeWrap wrapper={Wrapper}>
+                <Header />
+                <div className="flex flex-1 justify-center overflow-x-clip">
+                  <div className="w-4 shrink-0 border-dashed blueprint-pattern lg:w-12 lg:border-l" aria-hidden="true" />
+                  <div className="relative z-10 min-w-0 max-w-[1600px] flex-1 border-l border-r border-dashed bg-background">
+                    {children}
+                  </div>
+                  <div className="w-4 shrink-0 border-dashed blueprint-pattern lg:w-12 lg:border-r" aria-hidden="true" />
                 </div>
-                <div className="w-4 shrink-0 border-dashed blueprint-pattern lg:w-12 lg:border-r" aria-hidden="true" />
-              </div>
-              <Footer />
+                <Footer />
+              </MaybeWrap>
             </RootProvider>
           </ActiveThemeProvider>
           <Scripts />
