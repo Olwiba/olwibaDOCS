@@ -63,7 +63,7 @@ const viewportWidths: Record<Exclude<SandboxViewport, 'custom'>, number> = {
   mobile: 390,
 };
 
-const IFRAME_PREVIEW_DOC = '<!doctype html><html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><style>html,body,#sandbox-root{height:100%;min-height:100%;margin:0}#sandbox-root{display:flex;flex-direction:column}</style></head><body><div id="sandbox-root"></div></body></html>';
+const IFRAME_PREVIEW_DOC = '<!doctype html><html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><style>html,body,#sandbox-root{height:100%;min-height:100%;margin:0}#sandbox-root{display:flex;flex-direction:column}#sandbox-root>*{flex:1;min-height:0}</style></head><body><div id="sandbox-root"></div></body></html>';
 
 function IframePreview({
   children,
