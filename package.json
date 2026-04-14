@@ -4,7 +4,7 @@
   "private": false,
   "type": "module",
   "sideEffects": false,
-  "description": "olwibaDOCS - Fumadocs abstraction for TanStack Start documentation sites",
+  "description": "Documentation layouts, search, MDX helpers, and TanStack Start docs utilities built on @olwiba/cn",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "exports": {

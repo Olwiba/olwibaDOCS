@@ -1,69 +1,106 @@
-# olwibaDOCS
+# @olwiba/docs
 
-> Olwiba's take on Fumadocs - A documentation framework abstraction for TanStack Start.
+> Documentation layouts, search, MDX helpers, and TanStack Start docs utilities built on `@olwiba/cn`.
 
-Part of the [Genesis ecosystem](https://github.com/Olwiba/genesis).
+## What This Is
+
+`@olwiba/docs` is the published docs-shell package in the Nexus ecosystem.
+
+Use it for:
+- docs layouts and navigation
+- search UI and docs page chrome
+- MDX component mappings and sandbox helpers
+- TanStack Start docs-site setup utilities
+- shared docs theming and development helpers
+
+Consumers should import shared docs-shell primitives from `@olwiba/docs`, not from `@olwiba/cn`.
+
+## Package Chain
+
+```text
+@olwiba/cn   -> shared primitives and low-level UI building blocks
+@olwiba/docs -> published docs shell, search, and MDX utilities
+@olwiba/ui   -> app-level shells and higher-level product UI
+```
+
+Canonical docs-shell flow:
+- shared docs behavior starts in `olwibaCN/src/components/docs/*`
+- `olwibaDOCS` syncs and publishes the consumer-facing docs contract
+- downstream repos import docs shell components from `@olwiba/docs`
 
 ## Installation
 
 ```bash
-# Using bun (recommended)
-bun add @olwiba/docs
-
-# Using npm
-npm install @olwiba/docs
+bun add @olwiba/docs @olwiba/cn
 ```
 
-### Peer Dependencies
+Peer dependencies:
+- `@olwiba/cn`
+- `@tanstack/react-router`
+- `react`
+- `react-dom`
 
-This package requires:
-
-- `@olwiba/cn` - UI primitives (Button, Alert, Tabs, etc.)
-- `@tanstack/react-router` - Routing
-- `react` & `react-dom`
-
-Additionally, for MDX processing you'll need:
+For MDX processing you will typically also need:
 
 ```bash
 bun add fumadocs-mdx rehype-pretty-code shiki
 ```
 
-## Quick Start
+Import the package stylesheet in your app CSS:
 
-### 1. Configure Fumadocs MDX
-
-Create `source.config.ts` in your project root:
-
-```ts
-import { defineConfig, defineDocs } from 'fumadocs-mdx/config';
-import rehypePrettyCode from 'rehype-pretty-code';
-
-export const docs = defineDocs({
-  dir: 'content/docs',
-});
-
-export default defineConfig({
-  mdxOptions: {
-    rehypePlugins: (plugins) => {
-      plugins.shift();
-      plugins.push([
-        rehypePrettyCode,
-        {
-          theme: {
-            dark: 'github-dark',
-            light: 'github-light-default',
-          },
-        },
-      ]);
-      return plugins;
-    },
-  },
-});
+```css
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+@import '@olwiba/docs/styles';
 ```
 
-### 2. Create Source Loader
+## Recommended Consumption Paths
 
-Create `src/lib/source.ts`:
+### Root package exports
+
+Import these from `@olwiba/docs`:
+- `DocsProvider`
+- `DocsLayout`
+- `DocsHeader`
+- `DocsFooter`
+- `DocsSidebar`
+- `DocsMobileNav`
+- `DocsToc`
+- `DocsCopyPage`
+- `SearchButton`
+- `SearchDialog`
+- `CopyButton`
+- `CopyCommandButton`
+- `Callout`
+- `CodeFence`
+- `APIReference`
+- `Sandbox`
+- `registerSandboxes`
+- `createDocsRoot`
+- `createDocsRouter`
+- `DocsNotFound`
+- `ActiveThemeProvider`
+- `ThemeSelector`
+- `ThemeCodeBlock`
+- `UIModeDropdown`
+- `themes`
+- `Theme`
+- `getThemeStyles`
+- `getThemeCode`
+- `useCopyToClipboard`
+
+### Subpath exports
+
+Use subpaths when the import intent should be explicit:
+- `@olwiba/docs/source` -> `createSource`, `loader`, `lucideIconsPlugin`
+- `@olwiba/docs/mdx` -> `mdxComponents`
+- `@olwiba/docs/server` -> `createServer`
+- `@olwiba/docs/themes` -> theme helpers
+- `@olwiba/docs/dev-banner` -> `createDevBannerPlugin`, `printBanner`
+
+## Quick Start
+
+### 1. Create the source loader
 
 ```ts
 import { docs } from 'fumadocs-mdx:collections/server';
@@ -75,250 +112,134 @@ export const source = createSource({
 });
 ```
 
-### 3. Create Search API Route
-
-Create `src/routes/api/search/index.ts`:
-
-```ts
-import { createFileRoute } from '@tanstack/react-router';
-import { createFromSource } from 'fumadocs-core/search/server';
-import { source } from '@/lib/source';
-
-const search = createFromSource(source, {
-  language: 'english',
-});
-
-export const Route = createFileRoute('/api/search/')({
-  server: {
-    handlers: {
-      GET: async ({ request }) => {
-        return search.GET(request);
-      },
-    },
-  },
-});
-```
-
-### 4. Set Up Root Layout
+### 2. Provide docs search at the app root
 
 ```tsx
-import { RootProvider } from 'fumadocs-ui/provider/tanstack';
-import { SearchDialog } from '@olwiba/docs';
+import { DocsProvider } from '@olwiba/docs';
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+export function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <RootProvider
-          search={{
-            SearchDialog: (props) => (
-              <SearchDialog
-                quickLinks={[
-                  { label: 'Components', href: '/docs/components' },
-                ]}
-                {...props}
-              />
-            ),
-          }}
+        <DocsProvider
+          searchItems={[
+            { label: 'Components', href: '/docs/components' },
+          ]}
         >
           {children}
-        </RootProvider>
+        </DocsProvider>
       </body>
     </html>
   );
 }
 ```
 
-### 5. Create Docs Route
-
-Create `src/routes/docs/$.tsx`:
+### 3. Render a docs page shell
 
 ```tsx
-import { createFileRoute, notFound } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
-import { source } from '@/lib/source';
+import { Suspense } from 'react';
+import { createFileRoute } from '@tanstack/react-router';
 import browserCollections from 'fumadocs-mdx:collections/browser';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
-import { Suspense } from 'react';
 import {
-  DocsSidebar,
-  DocsToc,
+  DocsLayout,
   mdxComponents,
-  type TocItem,
 } from '@olwiba/docs';
-import { SidebarProvider } from '@olwiba/cn';
 
 export const Route = createFileRoute('/docs/$')({
   component: Page,
-  loader: async ({ params }) => {
-    const slugs = params._splat?.split('/') ?? [];
-    const data = await serverLoader({ data: slugs });
-    await clientLoader.preload(data.path);
-    return data;
-  },
 });
-
-const serverLoader = createServerFn({ method: 'GET' })
-  .inputValidator((slugs: string[]) => slugs)
-  .handler(async ({ data: slugs }) => {
-    const page = source.getPage(slugs);
-    if (!page) throw notFound();
-
-    return {
-      path: page.path,
-      pageTree: await source.serializePageTree(source.getPageTree()),
-      frontmatter: {
-        title: page.data.title,
-        description: page.data.description,
-      },
-      toc: page.data.toc as TocItem[],
-    };
-  });
 
 const clientLoader = browserCollections.docs.createClientLoader({
   component({ default: MDX }) {
     return (
-      <MDX
-        components={{
-          ...defaultMdxComponents,
-          ...mdxComponents,
-        }}
-      />
+      <MDX components={{ ...defaultMdxComponents, ...mdxComponents }} />
     );
   },
 });
 
 function Page() {
-  const data = useFumadocsLoader(Route.useLoaderData());
   const loaderData = Route.useLoaderData();
+  const data = useFumadocsLoader(loaderData);
 
   return (
-    <SidebarProvider>
-      <DocsSidebar
-        tree={data.pageTree}
-        sections={[
-          { name: 'Get Started', href: '/docs' },
-          { name: 'Components', href: '/docs/components' },
-        ]}
-      />
-      <main>
-        <h1>{loaderData.frontmatter.title}</h1>
-        <Suspense fallback={<div>Loading...</div>}>
-          {clientLoader.useContent(data.path, {})}
-        </Suspense>
-      </main>
-      <DocsToc toc={loaderData.toc} />
-    </SidebarProvider>
+    <DocsLayout
+      loaderData={loaderData}
+      pageTree={data.pageTree}
+      sections={[{ name: 'Get Started', href: '/docs' }]}
+    >
+      <Suspense fallback={<div>Loading...</div>}>
+        {clientLoader.useContent(data.path, {})}
+      </Suspense>
+    </DocsLayout>
   );
 }
 ```
 
-### 6. Import Styles
+### 4. Optional: use the packaged production server helper
 
-In your main CSS file:
+```ts
+import { createServer } from '@olwiba/docs/server';
 
-```css
-@import 'fumadocs-ui/css/neutral.css';
-@import 'fumadocs-ui/css/preset.css';
-@import '@olwiba/docs/dist/styles/docs.css';
+export default createServer();
 ```
 
-## Components
+`createServer` wraps the TanStack Start SSR handler with a Hono static-file server for `dist/client`.
 
-### DocsSidebar
+## Export Surface
 
-Navigation sidebar for documentation pages.
+### Docs shell components
 
-```tsx
-import { DocsSidebar } from '@olwiba/docs';
+- `DocsProvider`
+- `DocsLayout`
+- `DocsHeader`
+- `DocsFooter`
+- `DocsSidebar`
+- `DocsMobileNav`
+- `DocsToc`
+- `DocsCopyPage`
+- `SearchButton`
+- `SearchDialog`
+- `CopyButton`
+- `CopyCommandButton`
 
-<DocsSidebar
-  tree={pageTree}
-  sections={[
-    { name: 'Get Started', href: '/docs' },
-    { name: 'Components', href: '/docs/components' },
-  ]}
-  baseUrl="/docs"
-/>
-```
+### MDX and docs content helpers
 
-### DocsToc
+- `Callout`
+- `CodeFence`
+- `APIReference`
+- `Sandbox`
+- `registerSandboxes`
+- `getSandboxDefinition`
+- `mdxComponents`
 
-Table of contents with scroll tracking.
+### App/root integration helpers
 
-```tsx
-import { DocsToc } from '@olwiba/docs';
+- `createDocsRoot`
+- `createDocsRouter`
+- `DocsNotFound`
+- `createSource`
+- `createServer`
 
-// List variant (sidebar)
-<DocsToc toc={toc} variant="list" />
+### Theme and mode helpers
 
-// Dropdown variant (mobile)
-<DocsToc toc={toc} variant="dropdown" />
-```
-
-### SearchButton
-
-Trigger button for the search dialog.
-
-```tsx
-import { SearchButton } from '@olwiba/docs';
-
-<SearchButton
-  placeholder="Search documentation..."
-  shortPlaceholder="Search..."
-/>
-```
-
-### SearchDialog
-
-Full search dialog with Fumadocs integration.
-
-```tsx
-import { SearchDialog } from '@olwiba/docs';
-
-<SearchDialog
-  quickLinks={[
-    { label: 'Components', href: '/docs/components' },
-  ]}
-/>
-```
-
-### Callout
-
-Styled callout/admonition component.
-
-```tsx
-import { Callout } from '@olwiba/docs';
-
-<Callout title="Note" variant="info">
-  This is an informational callout.
-</Callout>
-```
-
-### ModeSwitcher
-
-Dark/light mode toggle.
-
-```tsx
-import { ModeSwitcher } from '@olwiba/docs';
-
-<ModeSwitcher defaultTheme="dark" />
-```
-
-### CopyButton
-
-Copy-to-clipboard button for code blocks.
-
-```tsx
-import { CopyButton } from '@olwiba/docs';
-
-<CopyButton text={codeString} />
-```
+- `ActiveThemeProvider`
+- `useThemeConfig`
+- `ThemeSelector`
+- `ThemeCodeBlock`
+- `UIModeDropdown`
+- `themes`
+- `Theme`
+- `getThemeStyles`
+- `getThemeCode`
+- `getUIMode`
+- `setUIMode`
+- `subscribeUIMode`
 
 ## MDX Components
 
-Import the pre-configured MDX components:
+Import the pre-configured MDX component map from `@olwiba/docs/mdx`:
 
 ```tsx
 import { mdxComponents } from '@olwiba/docs/mdx';
@@ -327,21 +248,16 @@ import defaultMdxComponents from 'fumadocs-ui/mdx';
 <MDX components={{ ...defaultMdxComponents, ...mdxComponents }} />
 ```
 
-Includes styled versions of:
-- Headings (h1-h4)
-- Links
-- Lists (ul, ol, li)
-- Tables
-- Code blocks with copy button
-- Blockquotes
-- Steps component
-- Tabs (Tabs, TabsList, TabsTrigger, TabsContent)
-- Accordion
-- Alert
-- Callout
-- Button
+The mapping includes:
+- headings, links, lists, tables, and code fences
+- `Callout`
+- `APIReference`
+- `ThemeSelector`
+- `ThemeCodeBlock`
+- `Sandbox`
+- tabs and accordion components from `@olwiba/cn`
 
-### Sandbox Registry
+## Sandbox Registry
 
 Register project-specific sandbox examples once, then reference them in MDX with `<Sandbox id="..." />`:
 
@@ -351,114 +267,26 @@ import { registerSandboxes, type SandboxDefinition } from '@olwiba/docs';
 registerSandboxes({
   'my-block': {
     id: 'my-block',
+    title: 'My Block',
     files: [{ path: 'app/page.tsx', language: 'tsx', code: '...' }],
     preview: React.lazy(() => import('~/demos/my-block')),
   } satisfies SandboxDefinition,
 });
 ```
 
-## Hooks
-
-### useCopyToClipboard
-
-```tsx
-import { useCopyToClipboard } from '@olwiba/docs';
-
-const { copyToClipboard, isCopied } = useCopyToClipboard(2000);
-
-await copyToClipboard('text to copy');
-```
-
-## Source Utilities
-
-### createSource
-
-Creates a Fumadocs source loader with olwiba defaults.
-
-```tsx
-import { createSource } from '@olwiba/docs/source';
-import { docs } from 'fumadocs-mdx:collections/server';
-
-export const source = createSource({
-  source: docs.toFumadocsSource(),
-  baseUrl: '/docs',
-});
-```
-
-## TypeScript
-
-Full TypeScript support with exported types:
-
-```tsx
-import type {
-  TocItem,
-  DocsTocProps,
-  DocsSidebarProps,
-  SidebarSection,
-  CalloutProps,
-  SearchDialogProps,
-  PageTree,
-} from '@olwiba/docs';
-```
-
-## Deployment
-
-### Why Hono?
-
-TanStack Start v1 (post-vinxi migration) compiles to `dist/server/server.js` which is a **fetch handler only** - not a standalone server. It handles SSR and server functions but doesn't serve static files (JS, CSS, images).
-
-We use [Hono](https://hono.dev/) to:
-1. Serve static assets from `dist/client/assets/`
-2. Pass all other requests to TanStack Start's SSR handler
-
-Hono was chosen because it's lightweight (~14kb), has native Bun support, and works directly with fetch-based handlers.
-
-### Production Server
-
-The `server.ts` file configures the production server:
-
-```ts
-import { Hono } from 'hono'
-import { serveStatic } from 'hono/bun'
-
-const app = new Hono()
-
-// Serve static assets from dist/client
-app.use('/assets/*', serveStatic({ root: './dist/client' }))
-app.use('/favicon.ico', serveStatic({ root: './dist/client' }))
-
-// Let TanStack Start handle everything else (SSR, server functions)
-app.all('*', async (c) => {
-  const handler = await import('./dist/server/server.js')
-  return handler.default.fetch(c.req.raw)
-})
-
-export default {
-  port: Number(process.env.PORT) || 3000,
-  fetch: app.fetch,
-}
-```
-
-### Docker
-
-The included `Dockerfile` builds a production image using Bun:
+## Development
 
 ```bash
-# Build and run locally
-docker build -t olwiba-docs .
-docker run -p 3000:3000 olwiba-docs
+bun install
+bun run dev
+bun run web:dev
+bun run build
 ```
 
-**Build stages:**
-1. **deps** - Installs dependencies with private registry access
-2. **builder** - Runs `web:build` (fumadocs-mdx + vite build)
-3. **runner** - Production image with `dist/`, `server.ts`, and minimal deps
-
-**Environment variables:**
-- `NPM_TOKEN` - Required at build time for private `@olwiba` packages
-- `PORT` - Server port (default: 3000)
-
-For Coolify deployment, set `NPM_TOKEN` as a **Build Variable**.
+What each command does:
+- `bun run dev` -> watches the published package build with `tsup`
+- `bun run web:dev` -> starts the local docs site on port `3001`
+- `bun run build` -> builds the package for publishing
 
 ## Development Sync Flow
 
@@ -470,13 +298,13 @@ When docs components are added or changed in `olwibaCN`, sync them into `olwibaD
 bun run sync
 ```
 
-This runs `scripts/sync-from-cn.ts`, which copies files defined in `SYNC_MAP` and rewrites imports for this repo layout. If you add new synced components (for example `Sandbox` files or demos), update `SYNC_MAP` in the script first.
+This runs `scripts/sync-from-cn.ts`, which copies files defined in `SYNC_MAP` and rewrites imports for this repo layout. If you add new synced components, update `SYNC_MAP` in the script first.
 
 In the Nexus workspace, the sync script resolves the sibling `olwibaCN` repository automatically. It still falls back to the legacy `C:\Workspace\...` layout for older setups.
 
 ## Release Flow
 
-`olwibaDOCS` releases are tag-driven.
+`@olwiba/docs` releases are tag-driven.
 
 1. Make and verify the upstream docs changes.
 2. If the change began in `olwibaCN`, run `bun run sync` here after CN validation.
@@ -488,6 +316,11 @@ In the Nexus workspace, the sync script resolves the sibling `olwibaCN` reposito
 The `publish-package` GitHub Actions workflow runs automatically on `v*` tags and checks that the tag matches the package version before publishing. `workflow_dispatch` remains available as a manual fallback.
 
 If the `DISCORD_WEBHOOK_URL` GitHub Actions secret is configured, the publish workflow also sends a Discord notification on both success and failure.
+
+## Related
+
+- [@olwiba/cn](https://github.com/Olwiba/olwibaCN) - Source-of-truth primitive layer
+- [@olwiba/ui](https://github.com/Olwiba/olwibaUI) - App-level package that consumes `@olwiba/docs` where docs shell behavior is needed
 
 ## License
 
