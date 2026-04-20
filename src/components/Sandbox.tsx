@@ -1,4 +1,5 @@
 // @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
+// fix: auto-size sandbox preview to content height via ResizeObserver
 'use client';
 
 import * as React from 'react';
