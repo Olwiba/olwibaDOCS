@@ -63,19 +63,23 @@ const viewportWidths: Record<Exclude<SandboxViewport, 'custom'>, number> = {
   mobile: 390,
 };
 
-const IFRAME_PREVIEW_DOC = '<!doctype html><html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><style>html,body,#sandbox-root{height:100%;min-height:100%;margin:0}#sandbox-root{display:flex;flex-direction:column}#sandbox-root>*{flex:1;min-height:0}</style></head><body><div id="sandbox-root"></div></body></html>';
+const IFRAME_PREVIEW_DOC = '<!doctype html><html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><style>html,body,#sandbox-root{height:100%;min-height:100%;margin:0}#sandbox-root{display:flex;flex-direction:column}</style></head><body><div id="sandbox-root"></div></body></html>';
 
 function IframePreview({
   children,
   className,
+  onContentHeight,
 }: {
   children: React.ReactNode;
   className?: string;
+  onContentHeight?: (height: number) => void;
 }) {
   const iframeRef = React.useRef<HTMLIFrameElement | null>(null);
   const [mountNode, setMountNode] = React.useState<HTMLElement | null>(null);
   const [mountFailed, setMountFailed] = React.useState(false);
   const reactRootRef = React.useRef<Root | null>(null);
+  const onContentHeightRef = React.useRef(onContentHeight);
+  onContentHeightRef.current = onContentHeight;
 
   const setupIframeDocument = React.useCallback(() => {
     const iframe = iframeRef.current;
@@ -170,6 +174,25 @@ function IframePreview({
     []
   );
 
+  React.useEffect(() => {
+    if (!mountNode || !onContentHeightRef.current) return;
+    // Allow content to determine its own height instead of filling the iframe
+    const doc = mountNode.ownerDocument;
+    if (doc) {
+      doc.documentElement.style.height = 'auto';
+      doc.body.style.height = 'auto';
+      doc.body.style.minHeight = 'unset';
+    }
+    mountNode.style.height = 'auto';
+    mountNode.style.minHeight = 'unset';
+    const observer = new ResizeObserver((entries) => {
+      const h = entries[0]?.contentRect.height;
+      if (h !== undefined) onContentHeightRef.current?.(h);
+    });
+    observer.observe(mountNode);
+    return () => observer.disconnect();
+  }, [mountNode]);
+
   return (
     <div className={cn('h-full w-full', className)}>
       <iframe
@@ -216,6 +239,7 @@ export function Sandbox({
   );
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [isMounted, setIsMounted] = React.useState(false);
+  const [autoContentHeight, setAutoContentHeight] = React.useState(320);
   const codeLayoutRef = React.useRef<HTMLDivElement | null>(null);
 
   const handlePointerMove = React.useCallback((event: PointerEvent) => {
@@ -373,7 +397,8 @@ export function Sandbox({
     viewport === 'custom'
       ? Math.max(360, Math.min(customWidth, maxWidth))
       : Math.min(viewportWidths[viewport], maxWidth);
-  const previewHeight = height ?? (shellPreview ? 640 : undefined);
+  const isAutoHeight = !shellPreview && height === undefined;
+  const previewHeight = height ?? (shellPreview ? 640 : autoContentHeight);
 
   const toggleFolder = (folderPath: string) => {
     setCollapsedFolders((prev) => {
@@ -526,17 +551,14 @@ export function Sandbox({
             <div className="mx-auto min-w-[360px]" ref={containerRef}>
               <div
                 className={cn(
-                  'relative mx-auto min-h-[320px] overflow-hidden rounded-md border border-fd-border bg-background transition-[width]',
+                  'relative mx-auto rounded-md border border-fd-border bg-background transition-[width]',
+                  isAutoHeight ? 'min-h-[80px]' : 'min-h-[320px] overflow-hidden',
                   shellPreview ? 'p-0' : 'p-4',
                   isResizing && 'select-none'
                 )}
                 style={{
                   width: `${previewWidth}px`,
-                  ...(previewHeight
-                    ? {
-                        height: `${isExpanded ? Math.max(previewHeight, 720) : previewHeight}px`,
-                      }
-                    : {}),
+                  height: `${isExpanded ? Math.max(previewHeight, 720) : previewHeight}px`,
                 }}
               >
                 <IframePreview
@@ -544,6 +566,7 @@ export function Sandbox({
                     'w-full',
                     shellPreview ? 'h-full min-h-0 overflow-hidden' : 'h-full'
                   )}
+                  onContentHeight={isAutoHeight ? setAutoContentHeight : undefined}
                 >
                   <React.Suspense
                     fallback={
