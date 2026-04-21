@@ -1,7 +1,7 @@
 // @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { Rocket, ChevronRight } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -18,6 +18,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  Enchanted,
 } from '@olwiba/cn';
 
 
@@ -25,6 +26,7 @@ export interface SidebarSection {
   name: string;
   href: string;
   icon?: React.ComponentType<{ className?: string }>;
+  enchanted?: boolean;
 }
 
 const TOP_LEVEL_SECTIONS: SidebarSection[] = [
@@ -39,12 +41,116 @@ export interface DocsSidebarProps extends React.ComponentProps<'div'> {
   completedItems?: string[];
 }
 
+interface SidebarFolderProps {
+  name: string;
+  href: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  pages: Item[];
+  isActive: boolean;
+  inSection: boolean;
+  defaultOpen: boolean;
+  pathname: string;
+  completedItems?: string[];
+  enchanted?: boolean;
+}
+
+function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSection, defaultOpen, pathname, completedItems, enchanted }: SidebarFolderProps) {
+  const [open, setOpen] = useState(defaultOpen);
+  const HeaderRow = enchanted ? Enchanted : 'div';
+
+  // Open when the user navigates into this section (direct URL, search, etc.).
+  useEffect(() => {
+    if (inSection) setOpen(true);
+  }, [inSection]);
+
+  return (
+    <Collapsible open={open} onOpenChange={setOpen} className="group/collapsible">
+      <SidebarMenuItem>
+        <HeaderRow className="flex w-full items-center">
+          {/* Chevron: toggle only, no navigation */}
+          <CollapsibleTrigger asChild>
+            <button
+              className={cn(
+                'flex h-8 w-6 shrink-0 items-center justify-center rounded-md transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : 'text-muted-foreground',
+              )}
+              onClick={() => console.log('[DocsSidebar] chevron toggled —', name, '| was open:', open)}
+            >
+              <ChevronRight className="size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+            </button>
+          </CollapsibleTrigger>
+
+          {/* Category name: navigate to index + open if closed */}
+          <SidebarMenuButton
+            asChild
+            isActive={isActive}
+            className={cn('flex-1', !isActive && 'text-muted-foreground')}
+          >
+            <Link
+              to={href}
+              onClick={() => {
+                console.log('[DocsSidebar] category name clicked —', name, '| open:', open, '| target:', href);
+                if (!open) setOpen(true);
+              }}
+            >
+              {FolderIcon && <FolderIcon className="size-4 shrink-0" />}
+              {name}
+            </Link>
+          </SidebarMenuButton>
+        </HeaderRow>
+
+        {/* Width ghost: always in DOM so sidebar width is stable on open/close */}
+        <div className="h-0 w-fit overflow-hidden pointer-events-none select-none" aria-hidden="true">
+          <SidebarMenuSub>
+            {pages.map((page) => {
+              const isComplete = !completedItems || completedItems.includes(page.url);
+              return (
+                <SidebarMenuSubItem key={page.url}>
+                  <SidebarMenuSubButton>
+                    {page.name}
+                    {!isComplete && <span className="ml-1">*</span>}
+                  </SidebarMenuSubButton>
+                </SidebarMenuSubItem>
+              );
+            })}
+          </SidebarMenuSub>
+        </div>
+
+        <CollapsibleContent>
+          <SidebarMenuSub>
+            {pages.map((page) => {
+              const isComplete = !completedItems || completedItems.includes(page.url);
+              return (
+                <SidebarMenuSubItem key={page.url}>
+                  <SidebarMenuSubButton asChild isActive={page.url === pathname}>
+                    <Link
+                      to={page.url}
+                      onClick={() => console.log('[DocsSidebar] child link clicked —', page.name, '| target:', page.url, '| pathname:', pathname)}
+                    >
+                      {page.name}
+                      {!isComplete && <span className="ml-1 text-muted-foreground/50">*</span>}
+                    </Link>
+                  </SidebarMenuSubButton>
+                </SidebarMenuSubItem>
+              );
+            })}
+          </SidebarMenuSub>
+        </CollapsibleContent>
+      </SidebarMenuItem>
+    </Collapsible>
+  );
+}
+
 export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, completedItems, ...props }: DocsSidebarProps) {
   const location = useLocation();
   const pathname = location.pathname;
   const navSections = sections ?? TOP_LEVEL_SECTIONS;
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showTopFade, setShowTopFade] = useState(false);
+
+  useEffect(() => {
+    console.log('[DocsSidebar] pathname changed →', pathname);
+  }, [pathname]);
 
   // Match each section to its folder in the tree by checking child URLs.
   // We intentionally don't use item.index?.url because fumadocs may return
@@ -66,7 +172,7 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
   }
 
   return (
-    <div className="z-30 hidden w-fit self-stretch lg:flex lg:flex-col" {...props}>
+    <div className="z-30 hidden w-fit self-stretch lg:flex lg:flex-col transition-[width] duration-150 ease-out" {...props}>
       <div className="h-[var(--top-spacing)] shrink-0" />
       <div className="relative sticky top-[calc(var(--header-height)+13px)] z-30 h-[calc(100svh-var(--header-height)-13px)] overflow-hidden overscroll-none">
         <div
@@ -83,11 +189,12 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
               <SidebarGroupContent>
                 <SidebarMenu className="gap-0.5">
 
-                  {navSections.map(({ name, href, icon: Icon }) => {
-                    const isActive = href === '/docs' ? pathname === href : pathname.startsWith(href);
+                  {navSections.map(({ name, href, icon: Icon, enchanted }) => {
+                    const inSection = href === '/docs' ? pathname === href : pathname.startsWith(href);
+                    const isActive = pathname === href;
                     const folder = folderBySection.get(href);
 
-                    // Section with sub-pages — render as collapsible
+                    // Section with sub-pages — render as split collapsible
                     if (folder) {
                       const FolderIcon = Icon ?? folderIcons?.[name];
                       const pages = folder.children.filter((child: Node): child is Item => {
@@ -95,54 +202,29 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
                         if (child.$id?.endsWith('index.mdx')) return false;
                         return true;
                       });
-                      const isExpanded = isActive || (defaultOpenFolders ?? false);
+                      const isExpanded = inSection || (defaultOpenFolders ?? false);
 
                       return (
-                        <Collapsible key={href} defaultOpen={isExpanded} className="group/collapsible">
-                          <SidebarMenuItem>
-                            <CollapsibleTrigger asChild>
-                              <SidebarMenuButton isActive={isActive} className={cn(!isActive && 'text-muted-foreground')}>
-                                <ChevronRight className="size-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                {FolderIcon && <FolderIcon className="size-4 shrink-0" />}
-                                {name}
-                              </SidebarMenuButton>
-                            </CollapsibleTrigger>
-                            {/* Width ghost: always in DOM so sidebar width is stable on open/close */}
-                            <div className="h-0 w-fit overflow-hidden pointer-events-none select-none" aria-hidden="true">
-                              <SidebarMenuSub>
-                                {pages.map((page) => (
-                                  <SidebarMenuSubItem key={page.url}>
-                                    <SidebarMenuSubButton>{page.name}</SidebarMenuSubButton>
-                                  </SidebarMenuSubItem>
-                                ))}
-                              </SidebarMenuSub>
-                            </div>
-                            <CollapsibleContent>
-                              <SidebarMenuSub>
-                                {pages.map((page) => {
-                                  const isComplete = !completedItems || completedItems.includes(page.url);
-                                  return (
-                                    <SidebarMenuSubItem key={page.url}>
-                                      <SidebarMenuSubButton asChild isActive={page.url === pathname}>
-                                        <Link to={page.url}>
-                                          {page.name}
-                                          {!isComplete && <span className="ml-1 text-muted-foreground/50">*</span>}
-                                        </Link>
-                                      </SidebarMenuSubButton>
-                                    </SidebarMenuSubItem>
-                                  );
-                                })}
-                              </SidebarMenuSub>
-                            </CollapsibleContent>
-                          </SidebarMenuItem>
-                        </Collapsible>
+                        <SidebarFolder
+                          key={href}
+                          name={name}
+                          href={href}
+                          icon={FolderIcon}
+                          pages={pages}
+                          isActive={isActive}
+                          inSection={inSection}
+                          defaultOpen={isExpanded}
+                          pathname={pathname}
+                          completedItems={completedItems}
+                          enchanted={enchanted}
+                        />
                       );
                     }
 
-                    // Section with no sub-pages — flat button
+                    // Section with no sub-pages — flat link (uses prefix match so e.g. /docs stays active on child pages)
                     return (
                       <SidebarMenuItem key={href}>
-                        <SidebarMenuButton asChild isActive={isActive} className={cn(!isActive && 'text-muted-foreground')}>
+                        <SidebarMenuButton asChild isActive={inSection} className={cn(!inSection && 'text-muted-foreground')}>
                           <Link to={href}>
                             {Icon && <Icon className="size-4" />}
                             {name}

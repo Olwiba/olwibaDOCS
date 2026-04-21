@@ -71,6 +71,9 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
   // Hooks
   { src: 'src/hooks/use-copy-to-clipboard.ts', dest: 'src/hooks/use-copy-to-clipboard.ts' },
 
+  // Styles
+  { src: 'src/styles/animations.css', dest: 'src/styles/cn-animations.css' },
+
   // Sandbox demos
   { src: 'src/demos/sandbox-dashboard-overview.tsx', dest: 'src/demos/sandbox-dashboard-overview.tsx' },
 

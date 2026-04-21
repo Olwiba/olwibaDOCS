@@ -8,6 +8,8 @@
  * @import '@olwiba/docs/dist/styles/docs.css';
  */
 
+@import './cn-animations.css';
+
 /* Utility classes */
 @utility no-scrollbar {
   -ms-overflow-style: none;
