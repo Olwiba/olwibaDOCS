@@ -101,12 +101,10 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
                         <Collapsible key={href} defaultOpen={isExpanded} className="group/collapsible">
                           <SidebarMenuItem>
                             <CollapsibleTrigger asChild>
-                              <SidebarMenuButton asChild isActive={isActive} className={cn(!isActive && 'text-muted-foreground')}>
-                                <Link to={href}>
-                                  <ChevronRight className="size-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                  {FolderIcon && <FolderIcon className="size-4 shrink-0" />}
-                                  {name}
-                                </Link>
+                              <SidebarMenuButton isActive={isActive} className={cn(!isActive && 'text-muted-foreground')}>
+                                <ChevronRight className="size-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                {FolderIcon && <FolderIcon className="size-4 shrink-0" />}
+                                {name}
                               </SidebarMenuButton>
                             </CollapsibleTrigger>
                             {/* Width ghost: always in DOM so sidebar width is stable on open/close */}
