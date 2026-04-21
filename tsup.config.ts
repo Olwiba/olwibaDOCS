@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsup';
+import { createTsupBannerHook } from '@olwiba/dx';
 
 export default defineConfig({
   entry: [
@@ -21,5 +22,11 @@ export default defineConfig({
   ],
   treeshake: true,
   minify: false,
+  onSuccess: createTsupBannerHook({
+    segments: [
+      { text: 'olwiba' },
+      { text: 'DOCS', colorHex: '#f59e0b' },
+    ],
+  }),
 });
 
