@@ -46,7 +46,5 @@ export { createSource, loader, lucideIconsPlugin, type LoaderOptions } from './l
 export { mdxComponents, type MdxComponents } from './lib/mdx-components';
 export { createDocsRoot, DocsNotFound, type DocsRootConfig, type DocsRootMeta, type DocsRootFavicon } from './lib/root';
 export { createDocsRouter } from './lib/router';
-export { createDevBannerPlugin, printBanner } from './lib/dev-banner';
-
 // Re-export useful fumadocs page-tree types
 export type { Root as PageTreeRoot, Node as PageTreeNode, Item as PageTreeItem, Folder as PageTreeFolder, Separator as PageTreeSeparator } from 'fumadocs-core/page-tree';

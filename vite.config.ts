@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
 import mdx from 'fumadocs-mdx/vite';
 import { resolve } from 'path';
-import { createDevBannerPlugin } from './src/lib/dev-banner';
+import { createDevBannerPlugin } from '@olwiba/dx';
 
 export default defineConfig({
   server: {

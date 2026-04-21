@@ -28,10 +28,6 @@
     "./themes": {
       "import": "./dist/lib/themes.js",
       "types": "./dist/lib/themes.d.ts"
-    },
-    "./dev-banner": {
-      "import": "./dist/lib/dev-banner.js",
-      "types": "./dist/lib/dev-banner.d.ts"
     }
   },
   "files": [
