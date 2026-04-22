@@ -5,6 +5,7 @@ import tsConfigPaths from 'vite-tsconfig-paths';
 import mdx from 'fumadocs-mdx/vite';
 import { resolve } from 'path';
 import { createDevBannerPlugin } from '@olwiba/dx';
+import { projectBanner } from './src/project.config';
 
 export default defineConfig({
   server: {
@@ -26,16 +27,7 @@ export default defineConfig({
     noExternal: ['react-resizable-panels'],
   },
   plugins: [
-    createDevBannerPlugin({
-      segments: [
-        { text: 'olwiba' },
-        { text: 'DOCS', colorHex: '#f59e0b' },
-      ],
-      compactSegments: [
-        { text: 'o' },
-        { text: 'DOCS', colorHex: '#f59e0b' },
-      ],
-    }),
+    createDevBannerPlugin(projectBanner),
     mdx(await import('./source.config')),
     tsConfigPaths({
       projects: ['./tsconfig.json'],

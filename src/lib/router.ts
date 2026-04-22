@@ -8,7 +8,6 @@ export function createDocsRouter(routeTree: any) {
   return createRouter({
     routeTree,
     defaultPreload: 'intent' as const,
-    defaultStaleReloadMode: 'blocking' as const,
     scrollRestoration: true,
     defaultNotFoundComponent: DocsNotFound,
   });
