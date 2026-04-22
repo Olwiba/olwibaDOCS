@@ -3,9 +3,10 @@
 
 import * as React from "react";
 import { Theme, getThemeStyles } from "../lib/themes";
+import { projectConfig } from "@/project.config";
 
 const STORAGE_KEY = "active_theme";
-const DEFAULT_THEME = Theme.Emerald;
+const DEFAULT_THEME = projectConfig.theme.defaultName as Theme;
 
 function clearLegacyThemeCookie() {
   if (typeof window === "undefined") return;

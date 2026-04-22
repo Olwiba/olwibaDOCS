@@ -2,7 +2,7 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-import { Link, useLocation } from '@tanstack/react-router';
+import { useLocation, useRouter } from '@tanstack/react-router';
 import { Rocket, ChevronRight } from 'lucide-react';
 import { cn } from '../lib/utils';
 import type { Root, Node, Item } from 'fumadocs-core/page-tree';
@@ -57,6 +57,7 @@ interface SidebarFolderProps {
 function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSection, defaultOpen, pathname, completedItems, enchanted }: SidebarFolderProps) {
   const [open, setOpen] = useState(defaultOpen);
   const HeaderRow = enchanted ? Enchanted : 'div';
+  const router = useRouter();
 
   // Open when the user navigates into this section (direct URL, search, etc.).
   useEffect(() => {
@@ -74,28 +75,23 @@ function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSectio
                 'flex h-8 w-6 shrink-0 items-center justify-center rounded-md transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
                 isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : 'text-muted-foreground',
               )}
-              onClick={() => console.log('[DocsSidebar] chevron toggled —', name, '| was open:', open)}
             >
               <ChevronRight className="size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
             </button>
           </CollapsibleTrigger>
 
-          {/* Category name: navigate to index + open if closed */}
           <SidebarMenuButton
-            asChild
             isActive={isActive}
             className={cn('flex-1', !isActive && 'text-muted-foreground')}
+            onClick={() => {
+              if (!open) setOpen(true);
+              void router.navigate({ href });
+            }}
           >
-            <Link
-              to={href}
-              onClick={() => {
-                console.log('[DocsSidebar] category name clicked —', name, '| open:', open, '| target:', href);
-                if (!open) setOpen(true);
-              }}
-            >
+            <>
               {FolderIcon && <FolderIcon className="size-4 shrink-0" />}
               {name}
-            </Link>
+            </>
           </SidebarMenuButton>
         </HeaderRow>
 
@@ -122,14 +118,14 @@ function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSectio
               const isComplete = !completedItems || completedItems.includes(page.url);
               return (
                 <SidebarMenuSubItem key={page.url}>
-                  <SidebarMenuSubButton asChild isActive={page.url === pathname}>
-                    <Link
-                      to={page.url}
-                      onClick={() => console.log('[DocsSidebar] child link clicked —', page.name, '| target:', page.url, '| pathname:', pathname)}
-                    >
+                  <SidebarMenuSubButton
+                    isActive={page.url === pathname}
+                    onClick={() => {
+                      void router.navigate({ href: page.url });
+                    }}
+                  >
                       {page.name}
                       {!isComplete && <span className="ml-1 text-muted-foreground/50">*</span>}
-                    </Link>
                   </SidebarMenuSubButton>
                 </SidebarMenuSubItem>
               );
@@ -143,14 +139,11 @@ function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSectio
 
 export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, completedItems, ...props }: DocsSidebarProps) {
   const location = useLocation();
+  const router = useRouter();
   const pathname = location.pathname;
   const navSections = sections ?? TOP_LEVEL_SECTIONS;
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showTopFade, setShowTopFade] = useState(false);
-
-  useEffect(() => {
-    console.log('[DocsSidebar] pathname changed →', pathname);
-  }, [pathname]);
 
   // Match each section to its folder in the tree by checking child URLs.
   // We intentionally don't use item.index?.url because fumadocs may return
@@ -224,11 +217,15 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, c
                     // Section with no sub-pages — flat link (uses prefix match so e.g. /docs stays active on child pages)
                     return (
                       <SidebarMenuItem key={href}>
-                        <SidebarMenuButton asChild isActive={inSection} className={cn(!inSection && 'text-muted-foreground')}>
-                          <Link to={href}>
+                        <SidebarMenuButton
+                          isActive={inSection}
+                          className={cn(!inSection && 'text-muted-foreground')}
+                          onClick={() => {
+                            void router.navigate({ href });
+                          }}
+                        >
                             {Icon && <Icon className="size-4" />}
                             {name}
-                          </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     );
