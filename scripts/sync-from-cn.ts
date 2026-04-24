@@ -79,6 +79,13 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
 
   // Site routes (CN: src/routes/ → DOCS: site/routes/)
   { src: 'src/routes/api/search/index.ts', dest: 'site/routes/api/search/index.ts' },
+
+  // App-level components
+  { src: 'src/components/AsciiText.tsx', dest: 'src/components/AsciiText.tsx' },
+  { src: 'src/components/ui/error-page.tsx', dest: 'src/components/ErrorPage.tsx' },
+
+  // Assets (font used by AsciiText)
+  { src: 'src/assets/dosrebel.flf', dest: 'src/assets/dosrebel.flf' },
 ];
 
 // ─── Import transforms ──────────────────────────────────────────────────────
@@ -129,6 +136,17 @@ function transformImports(content: string, destPath: string): string {
     /['"]@\/components\/active-theme['"]/g,
     "'./ActiveTheme'"
   );
+
+  // @/components/AsciiText → ./AsciiText (same directory in DOCS)
+  result = result.replace(
+    /['"]@\/components\/AsciiText['"]/g,
+    "'./AsciiText'"
+  );
+
+  // @/assets/ → ../assets/ (one level up from src/components/)
+  if (!isSiteFile) {
+    result = result.replace(/@\/assets\//g, '../assets/');
+  }
 
   // @/components/ModeSwitcher → ./ModeSwitcher (same directory in DOCS)
   result = result.replace(
