@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRootRoute, HeadContent, Outlet, Scripts, type NotFoundRouteProps } from '@tanstack/react-router';
-import { AsciiText } from '@olwiba/cn';
 import { RootProvider } from 'fumadocs-ui/provider/tanstack';
+import { ErrorPage } from '@/components/ErrorPage';
 import { ActiveThemeProvider } from '@/components/ActiveTheme';
 import { SearchDialog } from '@/components/SearchDialog';
 import { type Theme } from '@/lib/themes';
@@ -121,9 +121,8 @@ export function createDocsRoot(config: DocsRootConfig) {
 
 export function DocsNotFound() {
   return (
-    <div className="flex flex-col flex-1 min-h-[calc(100svh-var(--header-height)-var(--footer-height))] justify-center items-center px-4 py-16 text-center">
-      <AsciiText text="404" accent="404" accentColor="var(--primary)" />
-      <p className="text-muted-foreground text-lg max-w-md -mt-4">Page not found.</p>
+    <div className="flex flex-1 min-h-[calc(100svh-var(--header-height)-var(--footer-height))] items-center justify-center p-6">
+      <ErrorPage backAction={{ label: 'Go back', onClick: () => window.history.back() }} />
     </div>
   );
 }

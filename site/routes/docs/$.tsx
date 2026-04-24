@@ -1,4 +1,16 @@
-import { createFileRoute, notFound } from '@tanstack/react-router';
+import { createFileRoute, Link, notFound } from '@tanstack/react-router';
+import { ErrorPage } from '@/components/ErrorPage';
+
+function DocsNotFound() {
+  return (
+    <div className="flex flex-1 min-h-[calc(100svh-var(--header-height)-var(--footer-height))] items-center justify-center p-6">
+      <ErrorPage
+        renderLink={({ href, children }) => <Link to={href}>{children}</Link>}
+        backAction={{ label: 'Go back', onClick: () => window.history.back() }}
+      />
+    </div>
+  );
+}
 import { createServerFn } from '@tanstack/react-start';
 import { source } from '~/lib/source';
 import browserCollections from 'fumadocs-mdx:collections/browser';
@@ -23,6 +35,7 @@ const sidebarSections: SidebarSection[] = [
 ];
 
 export const Route = createFileRoute('/docs/$')({
+  notFoundComponent: DocsNotFound,
   component: Page,
   loader: async ({ params }) => {
     const slugs = params._splat?.split('/') ?? [];
