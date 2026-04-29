@@ -23,13 +23,20 @@ function useActiveItem(itemIds: string[]) {
       const scrollTop = window.scrollY;
       const viewportHeight = window.innerHeight;
       const docHeight = document.documentElement.scrollHeight;
-      const triggerPoint = scrollTop + viewportHeight * 0.5;
+
+      // At top of page — first heading wins
+      if (scrollTop <= 2) {
+        setActiveId(itemIds[0]);
+        return;
+      }
 
       // At bottom of page — last heading wins
       if (scrollTop + viewportHeight >= docHeight - 2) {
         setActiveId(itemIds[itemIds.length - 1]);
         return;
       }
+
+      const triggerPoint = scrollTop + viewportHeight * 0.5;
 
       // Find the last heading above the trigger point
       let active: string | null = null;
@@ -191,9 +198,10 @@ function useScrollToActive(
     const isBelow = activeRect.bottom > containerRect.bottom;
 
     if (isAbove || isBelow) {
-      activeElement.scrollIntoView({
+      const centerOffset = container.clientHeight / 2 - activeElement.offsetHeight / 2;
+      container.scrollTo({
+        top: activeElement.offsetTop - centerOffset,
         behavior: "smooth",
-        block: "center",
       });
     }
   }, [activeId, containerRef]);

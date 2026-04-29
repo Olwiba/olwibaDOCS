@@ -24,7 +24,7 @@ Consumers should import shared docs-shell primitives from `@olwiba/docs`, not fr
 ```
 
 Canonical docs-shell flow:
-- shared docs behavior starts in `olwibaCN/src/components/docs/*`
+- shared docs behavior starts in `olwibaCN/src/docs/components/*`
 - `olwibaDOCS` syncs and publishes the consumer-facing docs contract
 - downstream repos import docs shell components from `@olwiba/docs`
 

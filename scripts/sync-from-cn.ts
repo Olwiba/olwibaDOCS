@@ -42,26 +42,26 @@ const GENERATED_BANNER = '// @generated — synced from olwibaCN by sync-from-cn
 // CN source path (relative to CN_ROOT) → DOCS dest path (relative to DOCS_ROOT)
 
 const SYNC_MAP: Array<{ src: string; dest: string }> = [
-  // Doc components (CN: src/components/docs/ → DOCS: src/components/)
-  { src: 'src/components/docs/APIReference.tsx', dest: 'src/components/APIReference.tsx' },
-  { src: 'src/components/docs/Callout.tsx', dest: 'src/components/Callout.tsx' },
-  { src: 'src/components/docs/CodeFence.tsx', dest: 'src/components/CodeFence.tsx' },
-  { src: 'src/components/docs/CopyButton.tsx', dest: 'src/components/CopyButton.tsx' },
-  { src: 'src/components/docs/DocsCopyPage.tsx', dest: 'src/components/DocsCopyPage.tsx' },
-  { src: 'src/components/docs/DocsMobileNav.tsx', dest: 'src/components/DocsMobileNav.tsx' },
-  { src: 'src/components/docs/DocsSidebar.tsx', dest: 'src/components/DocsSidebar.tsx' },
-  { src: 'src/components/docs/DocsToc.tsx', dest: 'src/components/DocsToc.tsx' },
-  { src: 'src/components/docs/SearchButton.tsx', dest: 'src/components/SearchButton.tsx' },
-  { src: 'src/components/docs/SearchDialog.tsx', dest: 'src/components/SearchDialog.tsx' },
-  { src: 'src/components/docs/ThemeCodeBlock.tsx', dest: 'src/components/ThemeCodeBlock.tsx' },
-  { src: 'src/components/docs/CopyCommandButton.tsx', dest: 'src/components/CopyCommandButton.tsx' },
-  { src: 'src/components/docs/Sandbox.tsx', dest: 'src/components/Sandbox.tsx' },
-  { src: 'src/components/docs/sandbox-registry.ts', dest: 'src/components/sandbox-registry.ts' },
+  // Doc components (CN: src/docs/components/ → DOCS: src/components/)
+  { src: 'src/docs/components/APIReference.tsx', dest: 'src/components/APIReference.tsx' },
+  { src: 'src/docs/components/Callout.tsx', dest: 'src/components/Callout.tsx' },
+  { src: 'src/docs/components/CodeFence.tsx', dest: 'src/components/CodeFence.tsx' },
+  { src: 'src/docs/components/CopyButton.tsx', dest: 'src/components/CopyButton.tsx' },
+  { src: 'src/docs/components/DocsCopyPage.tsx', dest: 'src/components/DocsCopyPage.tsx' },
+  { src: 'src/docs/components/DocsMobileNav.tsx', dest: 'src/components/DocsMobileNav.tsx' },
+  { src: 'src/docs/components/DocsSidebar.tsx', dest: 'src/components/DocsSidebar.tsx' },
+  { src: 'src/docs/components/DocsToc.tsx', dest: 'src/components/DocsToc.tsx' },
+  { src: 'src/docs/components/SearchButton.tsx', dest: 'src/components/SearchButton.tsx' },
+  { src: 'src/docs/components/SearchDialog.tsx', dest: 'src/components/SearchDialog.tsx' },
+  { src: 'src/docs/components/ThemeCodeBlock.tsx', dest: 'src/components/ThemeCodeBlock.tsx' },
+  { src: 'src/docs/components/CopyCommandButton.tsx', dest: 'src/components/CopyCommandButton.tsx' },
+  { src: 'src/docs/components/Sandbox.tsx', dest: 'src/components/Sandbox.tsx' },
+  { src: 'src/docs/components/sandbox-registry.ts', dest: 'src/components/sandbox-registry.ts' },
 
-  // Shared layout components (CN: src/components/docs/ → DOCS: src/components/)
-  { src: 'src/components/docs/DocsHeader.tsx', dest: 'src/components/DocsHeader.tsx' },
-  { src: 'src/components/docs/DocsFooter.tsx', dest: 'src/components/DocsFooter.tsx' },
-  { src: 'src/components/docs/DocsLayout.tsx', dest: 'src/components/DocsLayout.tsx' },
+  // Shared layout components (CN: src/docs/components/ → DOCS: src/components/)
+  { src: 'src/docs/components/DocsHeader.tsx', dest: 'src/components/DocsHeader.tsx' },
+  { src: 'src/docs/components/DocsFooter.tsx', dest: 'src/components/DocsFooter.tsx' },
+  { src: 'src/docs/components/DocsLayout.tsx', dest: 'src/components/DocsLayout.tsx' },
 
   // Site-level components (CN: src/components/ → DOCS: src/components/)
   { src: 'src/components/active-theme.tsx', dest: 'src/components/ActiveTheme.tsx' },
@@ -75,7 +75,7 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
   { src: 'src/styles/animations.css', dest: 'src/styles/cn-animations.css' },
 
   // Sandbox demos
-  { src: 'src/demos/sandbox-dashboard-overview.tsx', dest: 'src/demos/sandbox-dashboard-overview.tsx' },
+  { src: 'src/docs/demos/sandbox-dashboard-overview.tsx', dest: 'src/demos/sandbox-dashboard-overview.tsx' },
 
   // Site routes (CN: src/routes/ → DOCS: site/routes/)
   { src: 'src/routes/api/search/index.ts', dest: 'site/routes/api/search/index.ts' },
@@ -154,18 +154,16 @@ function transformImports(content: string, destPath: string): string {
     "'./ModeSwitcher'"
   );
 
-  // @/components/docs/* → ./* (same directory in DOCS components)
+  // @/docs/components/* → ./* (same directory in DOCS components)
   result = result.replace(
-    /['"]@\/components\/docs\/([^'"]+)['"]/g,
+    /['"]@\/docs\/components\/([^'"]+)['"]/g,
     "'./$1'"
   );
 
   // @/demos/* in src/components files points to ../demos/*
   if (!isSiteFile && destPath.replace(/\\/g, '/').includes('/src/components/')) {
-    result = result.replace(
-      /['"]@\/demos\/([^'"]+)['"]/g,
-      "'../demos/$1'"
-    );
+    result = result.replace(/['"]@\/demos\/([^'"]+)['"]/g, "'../demos/$1'");
+    result = result.replace(/['"]@\/docs\/demos\/([^'"]+)['"]/g, "'../demos/$1'");
   }
 
   // ./CodeFence (relative within docs/) stays ./ (same directory in DOCS)
