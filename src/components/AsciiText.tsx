@@ -349,7 +349,7 @@ export function AsciiText({
           ref={canvasRef}
           width={canvasW}
           height={canvasH}
-          className={`text-foreground absolute inset-0 block h-auto w-full cursor-pointer transition-opacity duration-200 ${
+          className={`text-foreground absolute top-0 left-0 block h-auto w-full cursor-pointer transition-opacity duration-200 ${
             isCanvasReady ? 'opacity-100' : 'opacity-0'
           }`}
           style={{ aspectRatio: `${canvasW} / ${canvasH}` }}

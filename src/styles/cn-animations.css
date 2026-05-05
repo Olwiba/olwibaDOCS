@@ -7,6 +7,7 @@
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
   --animate-enchanted: enchanted 2.4s ease-in-out infinite both;
+  --animate-iso-scroll: iso-scroll 35s linear infinite;
 
   @keyframes accordion-down {
     from { height: 0; }
@@ -21,5 +22,10 @@
   @keyframes enchanted {
     0%, 100% { transform: scale(0) rotate(-20deg); opacity: 0; }
     50% { transform: scale(1) rotate(15deg); opacity: 0.9; }
+  }
+
+  @keyframes iso-scroll {
+    from { transform: translateY(0); }
+    to { transform: translateY(calc(-100% / 3)); }
   }
 }
