@@ -82,6 +82,7 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
 
   // App-level components
   { src: 'src/components/AsciiText.tsx', dest: 'src/components/AsciiText.tsx' },
+  { src: 'src/components/IsometricPlane.tsx', dest: 'src/components/IsometricPlane.tsx' },
   { src: 'src/components/ui/error-page.tsx', dest: 'src/components/ErrorPage.tsx' },
 
   // Assets (font used by AsciiText)

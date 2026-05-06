@@ -43,7 +43,8 @@
     "tsc": "tsc",
     "types:check": "fumadocs-mdx && tsc --noEmit",
     "sync": "bun run scripts/sync-from-cn.ts",
-    "sync:build": "bun run sync && bun run build"
+    "sync:build": "bun run sync && bun run build",
+    "iso:generate": "bun scripts/generate-iso-previews.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -62,7 +63,8 @@
   },
   "devDependencies": {
     "@olwiba/cn": "0.1.13",
-    "@olwiba/dx": "0.0.2",
+    "@olwiba/dx": "0.0.6",
+    "puppeteer-core": "^24.0.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@tanstack/react-router": "^1.151.6",
     "@tanstack/react-router-devtools": "^1.151.6",
