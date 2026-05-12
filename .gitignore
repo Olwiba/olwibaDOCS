@@ -11,7 +11,6 @@ dist/
 site/routeTree.gen.ts
 
 # Auth tokens
-bunfig.toml
 
 # Environment
 .env
