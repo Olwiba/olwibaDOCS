@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://docs.olwiba.com
+    about: Browse the docs framework reference and usage examples.
+  - name: Discussions
+    url: https://github.com/Olwiba/olwibaDOCS/discussions
+    about: Ask questions, share ideas, or get help with usage.
+  - name: olwibaCN issues
+    url: https://github.com/Olwiba/olwibaCN/issues
+    about: Issues with primitives or shared docs sources should usually be filed against olwibaCN.

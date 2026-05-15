@@ -1,6 +1,29 @@
-# @olwiba/docs
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset="./public/olwibaDOCS--light.gif" />
+    <source media="(prefers-color-scheme: dark)" srcset="./public/olwibaDOCS.gif" />
+    <img src="./public/olwibaDOCS.gif" alt="olwibaDOCS" style="width: 100%;" />
+  </picture>
+</p>
 
-> Documentation layouts, search, MDX helpers, and TanStack Start docs utilities built on `@olwiba/cn`.
+<p align="center">
+  <strong>Docs framework for the Olwiba ecosystem.</strong>
+</p>
+
+<p align="center">
+  <a href="https://docs.olwiba.com">Documentation</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Olwiba/olwibaDOCS/issues/new?template=bug_report.md">🪲 Report a bug</a> ·
+  <a href="https://github.com/Olwiba/olwibaDOCS/issues/new?template=feature_request.md">✨ Feature request</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/sponsors/Olwiba"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=22c55e" alt="Sponsor" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/Olwiba/olwibaDOCS?label=license&logo=github" alt="License" /></a>
+  <a href="https://github.com/Olwiba/olwibaDOCS/issues"><img src="https://img.shields.io/github/issues/Olwiba/olwibaDOCS" alt="Issues" /></a>
+</p>
 
 ## What This Is
 
@@ -322,6 +345,23 @@ If the `DISCORD_WEBHOOK_URL` GitHub Actions secret is configured, the publish wo
 - [@olwiba/cn](https://github.com/Olwiba/olwibaCN) - Source-of-truth primitive layer
 - [@olwiba/ui](https://github.com/Olwiba/olwibaUI) - App-level package that consumes `@olwiba/docs` where docs shell behavior is needed
 
+## Contributing
+
+Bug reports, pull requests & feature requests are welcome.
+Open an issue first for anything beyond a small fix.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
+
 ## License
 
 MIT
+
+<br/>
+<br/>
+
+<p align="center">
+  Built with 💖 by <a href="https://github.com/Olwiba">Olwiba</a>
+</p>
+
+<p align="center">
+  <a href="https://buymeacoffee.com/olwiba"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buymeacoffee&logoColor=black" alt="Buy Me A Coffee" /></a>
+</p>
