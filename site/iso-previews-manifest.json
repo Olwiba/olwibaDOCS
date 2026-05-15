@@ -1,1 +1,212 @@
-[]
+[
+  {
+    "name": "docs-sidebar",
+    "theme": "light",
+    "file": "docs-sidebar-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-sidebar",
+    "theme": "dark",
+    "file": "docs-sidebar-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-header",
+    "theme": "light",
+    "file": "docs-header-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-header",
+    "theme": "dark",
+    "file": "docs-header-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-toc",
+    "theme": "light",
+    "file": "docs-toc-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-toc",
+    "theme": "dark",
+    "file": "docs-toc-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-footer",
+    "theme": "light",
+    "file": "docs-footer-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-footer",
+    "theme": "dark",
+    "file": "docs-footer-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-provider",
+    "theme": "light",
+    "file": "docs-provider-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-provider",
+    "theme": "dark",
+    "file": "docs-provider-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-mobile-nav",
+    "theme": "light",
+    "file": "docs-mobile-nav-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-mobile-nav",
+    "theme": "dark",
+    "file": "docs-mobile-nav-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-copy-page",
+    "theme": "light",
+    "file": "docs-copy-page-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-copy-page",
+    "theme": "dark",
+    "file": "docs-copy-page-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "code-fence",
+    "theme": "light",
+    "file": "code-fence-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "code-fence",
+    "theme": "dark",
+    "file": "code-fence-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "copy-button",
+    "theme": "light",
+    "file": "copy-button-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "copy-button",
+    "theme": "dark",
+    "file": "copy-button-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "api-reference",
+    "theme": "light",
+    "file": "api-reference-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "api-reference",
+    "theme": "dark",
+    "file": "api-reference-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "active-theme",
+    "theme": "light",
+    "file": "active-theme-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "active-theme",
+    "theme": "dark",
+    "file": "active-theme-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "mode-switcher",
+    "theme": "light",
+    "file": "mode-switcher-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "mode-switcher",
+    "theme": "dark",
+    "file": "mode-switcher-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "sandbox",
+    "theme": "light",
+    "file": "sandbox-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "sandbox",
+    "theme": "dark",
+    "file": "sandbox-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "search-dialog",
+    "theme": "light",
+    "file": "search-dialog-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "search-dialog",
+    "theme": "dark",
+    "file": "search-dialog-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "mdx-components",
+    "theme": "light",
+    "file": "mdx-components-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "mdx-components",
+    "theme": "dark",
+    "file": "mdx-components-dark.png",
+    "width": 1280,
+    "height": 800
+  }
+]
