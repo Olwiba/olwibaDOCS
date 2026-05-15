@@ -1,6 +1,6 @@
 {
   "name": "@olwiba/docs",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "private": false,
   "type": "module",
   "sideEffects": false,
@@ -95,7 +95,8 @@
   "author": "Olwiba",
   "license": "MIT",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "types": "./dist/index.d.ts"
 }

@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.1.22
+
+### Changed
+
+- **Migrated from GitHub Packages to npmjs.** `@olwiba/docs` now publishes to the public npm registry. Bootstrap release uses a temporary scoped npm token; subsequent releases will switch to OIDC trusted publishing with provenance.
+- Bumped `@olwiba/cn` devDep to 0.1.15 and `@olwiba/dx` devDep to 0.0.10 (both now resolved from npmjs).
+- Dropped the GitHub Packages bunfig.toml shim from the Dockerfile - all `@olwiba/*` packages resolve from public npmjs without auth.
+
+### Added
+
+- 7-day `minimumReleaseAge` supply-chain cooldown via tracked `bunfig.toml`.
+- OSS scaffolding: LICENSE (MIT), CONTRIBUTING.md, SECURITY.md, .github issue and PR templates.
+- README banner header with sponsor/license/issues badges, footer with built-by and buy-me-a-coffee links.
+- Populated isometric preview manifest with 30 docs component PNGs (homepage IsometricPlane).
+
+### Fixed
+
+- Synced CN's per-frame `getComputedStyle` perf fix into AsciiText so the homepage canvas does not tank fps when the IsometricPlane is on screen.
+- Synced CN's IsometricPlane compositor optimisations: `contain: layout paint style`, `isolation: isolate`, `backface-visibility: hidden`, `fetchPriority="low"`, `loading="lazy"`, dropped redundant `transform-gpu`.
+- Synced CN's `@keyframes` hoist out of `@theme inline` so production Tailwind v4 builds actually emit them (animations were dead in prod, fine in dev).
+
+### Removed
+
+- Tracked `.npmrc` (stale GitHub Packages auth shim, now in `.gitignore`).
+- Tracked `bash.exe.stackdump` (Windows debug noise, now in `.gitignore`).
+- Unused `src/assets/dosrebel.flf` font (now bundled in `@olwiba/dx`).
+
 ## 0.1.12
 
 ### Changed
