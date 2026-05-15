@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.23
+
+### Changed
+
+- Switched publish workflow to npmjs OIDC trusted publishing with provenance. The bootstrap `NPM_TOKEN` is no longer used; `npm publish --access public --provenance` runs against the configured trusted publisher and signs an attestation visible on npmjs.
+
 ## 0.1.22
 
 ### Changed
