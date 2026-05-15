@@ -85,8 +85,6 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
   { src: 'src/components/IsometricPlane.tsx', dest: 'src/components/IsometricPlane.tsx' },
   { src: 'src/components/ui/error-page.tsx', dest: 'src/components/ErrorPage.tsx' },
 
-  // Assets (font used by AsciiText)
-  { src: 'src/assets/dosrebel.flf', dest: 'src/assets/dosrebel.flf' },
 ];
 
 // ─── Import transforms ──────────────────────────────────────────────────────

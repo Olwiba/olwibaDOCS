@@ -54,17 +54,20 @@ export function IsometricPlane({
   const h = cardHeight === 'auto' ? undefined : cardHeight;
   const tripled = [...baseRows, ...baseRows, ...baseRows];
 
+  // `contain: layout paint style` bounds layout/paint so style invalidations
+  // don't leak out of this subtree. `isolation: isolate` gives the subtree
+  // its own stacking context so the browser keeps it as one composited layer.
   return (
     <div
       className="absolute inset-0 overflow-hidden pointer-events-none select-none animate-iso-fadein"
       aria-hidden="true"
+      style={{ contain: 'layout paint style', isolation: 'isolate' }}
     >
       <div
         className="absolute inset-0 flex items-center justify-center opacity-[0.18] dark:opacity-[0.12]"
         style={{ perspective: '700px', perspectiveOrigin: '50% 50%' }}
       >
         <div
-          className="transform-gpu"
           style={{
             transform: 'translateX(180px) scale(1.6) rotateX(55deg) rotateZ(-45deg)',
             transformOrigin: 'center center',
@@ -73,7 +76,11 @@ export function IsometricPlane({
         >
           <div
             className="flex gap-3 will-change-transform"
-            style={{ animation: `iso-scroll ${scrollDuration}s linear infinite` }}
+            style={{
+              animation: `iso-scroll ${scrollDuration}s linear infinite`,
+              // Skip painting the back face of every card under preserve-3d.
+              backfaceVisibility: 'hidden',
+            }}
           >
             {Array.from({ length: cols }, (_, colIdx) => (
               <div key={colIdx} className="flex flex-col gap-3">
@@ -83,7 +90,11 @@ export function IsometricPlane({
                     <div
                       key={rowIdx}
                       className="bg-card border rounded-lg shrink-0 overflow-hidden"
-                      style={{ width: cardWidth, height: h }}
+                      style={{
+                        width: cardWidth,
+                        height: h,
+                        backfaceVisibility: 'hidden',
+                      }}
                     >
                       <img
                         src={img.src}
@@ -91,8 +102,10 @@ export function IsometricPlane({
                         width={img.width}
                         height={img.height}
                         className={h ? 'w-full h-full object-cover' : 'w-full h-auto block'}
-                        loading="eager"
+                        loading="lazy"
                         decoding="async"
+                        fetchPriority="low"
+                        draggable={false}
                       />
                     </div>
                   );

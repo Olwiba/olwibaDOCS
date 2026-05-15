@@ -1,6 +1,11 @@
 /**
  * olwibaCN animations
- * Synced into olwibaDOCS via sync-from-cn.ts — do not edit the copy in olwibaDOCS.
+ * Synced into olwibaDOCS via sync-from-cn.ts - do not edit the copy in olwibaDOCS.
+ *
+ * Note: @keyframes are declared at top-level (not inside @theme inline).
+ * Tailwind v4 does not reliably hoist nested @keyframes out of @theme blocks,
+ * which leaves the animations registered as utilities but missing their
+ * actual keyframe definitions in the compiled CSS.
  */
 
 @theme inline {
@@ -9,29 +14,29 @@
   --animate-enchanted: enchanted 2.4s ease-in-out infinite both;
   --animate-iso-scroll: iso-scroll 75s linear infinite;
   --animate-iso-fadein: iso-fadein 1.2s ease-out forwards;
+}
 
-  @keyframes accordion-down {
-    from { height: 0; }
-    to { height: var(--radix-accordion-content-height); }
-  }
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
 
-  @keyframes accordion-up {
-    from { height: var(--radix-accordion-content-height); }
-    to { height: 0; }
-  }
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
 
-  @keyframes enchanted {
-    0%, 100% { transform: scale(0) rotate(-20deg); opacity: 0; }
-    50% { transform: scale(1) rotate(15deg); opacity: 0.9; }
-  }
+@keyframes enchanted {
+  0%, 100% { transform: scale(0) rotate(-20deg); opacity: 0; }
+  50% { transform: scale(1) rotate(15deg); opacity: 0.9; }
+}
 
-  @keyframes iso-scroll {
-    from { transform: translateY(0); }
-    to { transform: translateY(calc(-100% / 3)); }
-  }
+@keyframes iso-scroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-100% / 3)); }
+}
 
-  @keyframes iso-fadein {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+@keyframes iso-fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
