@@ -1,5 +1,12 @@
 # Changelog
 
+
+## 0.1.24
+
+### Changed
+
+- No notable changes.
+
 ## 0.1.23
 
 ### Changed

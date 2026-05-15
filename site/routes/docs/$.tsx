@@ -31,7 +31,7 @@ const sidebarSections: SidebarSection[] = [
   { name: 'Builder', href: '/docs/builder' },
   { name: 'Themes', href: '/docs/themes' },
   { name: 'Status', href: '/docs/status' },
-  { name: 'Components', href: '/docs/components', enchanted: true },
+  { name: 'Reference', href: '/docs/components', enchanted: true },
 ];
 
 export const Route = createFileRoute('/docs/$')({

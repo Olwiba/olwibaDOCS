@@ -38,7 +38,7 @@ function Home() {
           </Button>
           <Button asChild variant="outline">
             <Link to="/docs/$" params={{ _splat: 'components' }}>
-              Components
+              Reference
             </Link>
           </Button>
         </div>
