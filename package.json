@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@olwiba/cn": "0.1.13",
-    "@olwiba/dx": "0.0.6",
+    "@olwiba/dx": "0.0.8",
     "puppeteer-core": "^24.0.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@tanstack/react-router": "^1.151.6",
