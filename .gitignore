@@ -40,3 +40,9 @@ yarn-error.log*
 artifacts/
 *.tgz
 
+
+# Windows workspace noise
+*.stackdump
+
+# Local npm config (project npm/auth lives in env / OIDC)
+.npmrc
