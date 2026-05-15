@@ -3,18 +3,16 @@ WORKDIR /app
 
 # Install dependencies
 FROM base AS deps
-ARG PACKAGES_TOKEN
 COPY package.json bun.lock* ./
-# PACKAGES_TOKEN = GitHub classic PAT with read:packages (for @olwiba from GitHub Packages)
-RUN echo '[install.scopes]' > bunfig.toml && \
-    echo "\"@olwiba\" = { url = \"https://npm.pkg.github.com/\", token = '${PACKAGES_TOKEN}' }" >> bunfig.toml && \
-    echo "\"@genesis\" = { url = \"https://npm.pkg.github.com/\", token = '${PACKAGES_TOKEN}' }" >> bunfig.toml && \
-    bun install --frozen-lockfile
+# All @olwiba/* packages are on public npmjs - no auth needed.
+# bunfig.toml (with the supply-chain cooldown) is intentionally NOT copied
+# into this stage so lockfile-pinned versions install cleanly even if a
+# pinned version was published in the cooldown window.
+RUN bun install --frozen-lockfile
 
 # Build
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/bunfig.toml ./bunfig.toml
 COPY . .
 RUN bun run web:build
 

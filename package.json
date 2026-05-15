@@ -62,9 +62,8 @@
     "react-dom": ">=18.0.0"
   },
   "devDependencies": {
-    "@olwiba/cn": "0.1.13",
-    "@olwiba/dx": "0.0.8",
-    "puppeteer-core": "^24.0.0",
+    "@olwiba/cn": "0.1.15",
+    "@olwiba/dx": "0.0.10",
     "@tailwindcss/postcss": "^4.1.18",
     "@tanstack/react-router": "^1.151.6",
     "@tanstack/react-router-devtools": "^1.151.6",
@@ -76,6 +75,7 @@
     "@vitejs/plugin-react": "^4.6.0",
     "fumadocs-mdx": "^14.2.6",
     "next-themes": "^0.4.6",
+    "puppeteer-core": "^24.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-resizable-panels": "^4.4.1",
