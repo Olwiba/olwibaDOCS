@@ -144,16 +144,16 @@ export default createServer();
 
 ## Subpath Exports
 
-- `@olwiba/docs/source` — `createSource`, `loader`, `lucideIconsPlugin`
-- `@olwiba/docs/mdx` — `mdxComponents`
-- `@olwiba/docs/server` — `createServer`
-- `@olwiba/docs/themes` — theme helpers
-- `@olwiba/docs/dev-banner` — `createDevBannerPlugin`, `printBanner`
+- `@olwiba/docs/source` - `createSource`, `loader`, `lucideIconsPlugin`
+- `@olwiba/docs/mdx` - `mdxComponents`
+- `@olwiba/docs/server` - `createServer`
+- `@olwiba/docs/themes` - theme helpers
+- `@olwiba/docs/dev-banner` - `createDevBannerPlugin`, `printBanner`
 
 ## Ecosystem
 
-- [@olwiba/cn](https://github.com/Olwiba/olwibaCN) — primitive layer, source of truth for shared docs UI
-- [@olwiba/ui](https://github.com/Olwiba/olwibaUI) — app-level shells
+- [@olwiba/cn](https://github.com/Olwiba/olwibaCN) - primitive layer, source of truth for shared docs UI
+- [@olwiba/ui](https://github.com/Olwiba/olwibaUI) - app-level shells
 
 ## Contributing
 
