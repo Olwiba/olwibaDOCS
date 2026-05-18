@@ -1,6 +1,11 @@
 # Changelog
 
 
+
+## 0.1.25
+
+No user-facing changes.
+
 ## 0.1.24
 
 ### Changed
