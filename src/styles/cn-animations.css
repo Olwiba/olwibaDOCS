@@ -1,5 +1,6 @@
 /**
- * olwibaCN animations
+ * olwibaCN animations (DOCS sync source via cn-animations.css).
+ * olwibaCN app.css inlines these tokens/keyframes in its @theme block — do not @import this file from app.css.
  * Synced into olwibaDOCS via sync-from-cn.ts - do not edit the copy in olwibaDOCS.
  *
  * Note: @keyframes are declared at top-level (not inside @theme inline).
@@ -8,6 +9,9 @@
  * actual keyframe definitions in the compiled CSS.
  */
 
+/**
+ * @theme tokens only — keyframes live at top level below (see app.css).
+ */
 @theme inline {
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;

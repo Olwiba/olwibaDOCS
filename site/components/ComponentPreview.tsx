@@ -54,7 +54,10 @@ export function ComponentPreview({ name, title }: ComponentPreviewProps) {
             <span className="text-sm text-fd-muted-foreground">{title}</span>
           </div>
         )}
-        <div className="p-8 bg-fd-background flex items-center justify-center min-h-[200px]">
+        <div
+          data-slot="component-preview-canvas"
+          className="p-8 bg-fd-background flex items-center justify-center min-h-[200px]"
+        >
           {Demo ? (
             <React.Suspense fallback={<div className="text-fd-muted-foreground">Loading...</div>}>
               <Demo />

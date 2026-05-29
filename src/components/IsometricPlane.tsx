@@ -64,7 +64,7 @@ export function IsometricPlane({
       style={{ contain: 'layout paint style', isolation: 'isolate' }}
     >
       <div
-        className="absolute inset-0 flex items-center justify-center opacity-[0.18] dark:opacity-[0.12]"
+        className="absolute inset-0 flex items-center justify-center opacity-[0.38] dark:opacity-[0.22]"
         style={{ perspective: '700px', perspectiveOrigin: '50% 50%' }}
       >
         <div
@@ -89,7 +89,7 @@ export function IsometricPlane({
                   return (
                     <div
                       key={rowIdx}
-                      className="bg-card border rounded-lg shrink-0 overflow-hidden"
+                      className="bg-card border border-border/80 shadow-sm shadow-black/[0.06] rounded-lg shrink-0 overflow-hidden dark:border-border dark:shadow-none"
                       style={{
                         width: cardWidth,
                         height: h,

@@ -1,5 +1,19 @@
 [
   {
+    "name": "docs-layout",
+    "theme": "light",
+    "file": "docs-layout-light.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
+    "name": "docs-layout",
+    "theme": "dark",
+    "file": "docs-layout-dark.png",
+    "width": 1280,
+    "height": 800
+  },
+  {
     "name": "docs-sidebar",
     "theme": "light",
     "file": "docs-sidebar-light.png",

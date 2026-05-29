@@ -523,7 +523,7 @@ export function Sandbox({
 
         {mode === 'preview' ? (
           <div className="relative overflow-x-auto bg-fd-background p-4">
-            <div data-slot="component-preview-canvas" className="mx-auto min-w-[360px]" ref={containerRef}>
+            <div className="mx-auto min-w-[360px]" ref={containerRef}>
               <div
                 className={cn(
                   'relative mx-auto rounded-md border border-fd-border bg-background transition-[width]',
