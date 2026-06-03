@@ -127,3 +127,14 @@ export function DocsNotFound() {
   );
 }
 
+export function DocsErrorFallback({ reset }: { error: Error; reset: () => void }) {
+  return (
+    <div className="flex flex-1 min-h-[calc(100svh-var(--header-height)-var(--footer-height))] items-center justify-center p-6">
+      <ErrorPage
+        renderLink={({ href, children }) => <a href={href}>{children}</a>}
+        backAction={{ label: 'Try again', onClick: reset }}
+      />
+    </div>
+  );
+}
+

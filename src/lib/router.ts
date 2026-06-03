@@ -1,5 +1,5 @@
 import { createRouter } from '@tanstack/react-router';
-import { DocsNotFound } from './root';
+import { DocsNotFound, DocsErrorFallback } from './root';
 
 // routeTree typed as any — consumers register their router type via the
 // `Register` interface in their router file, which is where TanStack Router's
@@ -10,5 +10,6 @@ export function createDocsRouter(routeTree: any) {
     defaultPreload: 'intent' as const,
     scrollRestoration: true,
     defaultNotFoundComponent: DocsNotFound,
+    defaultErrorComponent: DocsErrorFallback,
   });
 }
