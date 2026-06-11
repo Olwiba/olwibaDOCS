@@ -10,6 +10,7 @@
     "types": ["vite/client", "node"],
     "isolatedModules": true,
     "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
     "skipLibCheck": true,
     "target": "ES2022",
     "allowJs": true,

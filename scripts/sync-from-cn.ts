@@ -289,8 +289,13 @@ async function main() {
   if (missing.length) {
     console.log('\nMissing files:');
     missing.forEach((f) => console.log(`  - ${f}`));
+    console.error('\n❌ Sync incomplete — missing upstream files. Failing so a stale release cannot ship.');
+    process.exit(1);
   }
   console.log('\nNext: run `bun run types:check` to verify.');
 }
 
-main().catch(console.error);
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

@@ -148,7 +148,8 @@ export default createServer();
 - `@olwiba/docs/mdx` - `mdxComponents`
 - `@olwiba/docs/server` - `createServer`
 - `@olwiba/docs/themes` - theme helpers
-- `@olwiba/docs/dev-banner` - `createDevBannerPlugin`, `printBanner`
+
+Dev-banner helpers (`createDevBannerPlugin`, `printBanner`) live in [`@olwiba/dx`](https://github.com/Olwiba/olwibaDX), not this package.
 
 ## Ecosystem
 
