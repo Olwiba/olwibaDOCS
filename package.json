@@ -41,7 +41,7 @@
     "web:dev": "fumadocs-mdx && vite dev",
     "start": "bun run server.ts",
     "tsc": "tsc",
-    "types:check": "fumadocs-mdx && tsc --noEmit",
+    "types:check": "fumadocs-mdx && tsc --noEmit -p tsconfig.package.json",
     "sync": "bun run scripts/sync-from-cn.ts",
     "sync:build": "bun run sync && bun run types:check && bun run build",
     "iso:generate": "bun scripts/generate-iso-previews.ts"
