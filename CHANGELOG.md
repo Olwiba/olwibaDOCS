@@ -4,6 +4,14 @@
 
 
 
+
+## 0.1.28
+
+### Changed
+
+- chore: update ecosystem packages
+- refactor(site): centralize demo registry and tighten builder preview
+
 ## 0.1.27
 
 ### Changed
