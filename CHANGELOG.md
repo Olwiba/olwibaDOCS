@@ -5,6 +5,13 @@
 
 
 
+
+## 0.1.29
+
+### Changed
+
+- fix(ci): scope types:check to publishable src only
+
 ## 0.1.28
 
 ### Changed
