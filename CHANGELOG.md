@@ -8,16 +8,24 @@
 
 ## 0.1.29
 
-### Changed
+### Fixed
 
-- fix(ci): scope types:check to publishable src only
+- `types:check` now targets only publishable source (`src/**`) via `tsconfig.package.json` — site and script type errors no longer block the publish CI step
 
 ## 0.1.28
 
 ### Changed
 
-- chore: update ecosystem packages
-- refactor(site): centralize demo registry and tighten builder preview
+- Bumped `@olwiba/dx` from `0.0.10` → `0.0.18` and `@olwiba/cn` from `0.1.15` → `0.1.20`.
+- `sync-from-cn` script now exits non-zero on missing upstream files — an incomplete sync can no longer silently produce a stale release.
+- Demo lazy-import map extracted into `site/demos/registry.ts` as a single source of truth; `ComponentPreview` and the builder route both consume it instead of maintaining separate import lists.
+- Builder preview pared back to a thin consumer of the registry, eliminating ~40 lines of duplicated component wiring.
+
+### Added
+
+- `AGENTS.md` — ownership map, hard rules (never edit `@generated` files, published packages only, tag-driven releases), command reference, and step-by-step sync-and-release workflow for AI agents and contributors.
+- `workflow_dispatch` trigger on the publish workflow, allowing manual publish runs from the GitHub Actions UI without pushing a tag.
+- `sync:build` script chains `sync` + `types:check` + `build` for a single-command full verification pass after a CN sync.
 
 ## 0.1.27
 
