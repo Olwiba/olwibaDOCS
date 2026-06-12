@@ -1,11 +1,5 @@
 # Changelog
 
-
-
-
-
-
-
 ## 0.1.29
 
 ### Fixed
@@ -29,15 +23,11 @@
 
 ## 0.1.27
 
-### Changed
-
-- No notable changes.
+No user-facing changes.
 
 ## 0.1.26
 
-### Changed
-
-- No notable changes.
+No user-facing changes.
 
 ## 0.1.25
 
@@ -45,9 +35,7 @@ No user-facing changes.
 
 ## 0.1.24
 
-### Changed
-
-- No notable changes.
+No user-facing changes.
 
 ## 0.1.23
 
@@ -187,6 +175,7 @@ No user-facing changes.
 - Package type declarations are now emitted (`tsup dts: true`) and published.
 - Declaration build now includes Node typings for server utilities.
 - `createDocsRoot` not-found component typing aligned with TanStack route typing.
+
 ## 0.1.1
 
 ### Added
@@ -265,4 +254,3 @@ No user-facing changes.
 - Core components: `DocsSidebar`, `DocsToc`, `SearchDialog`, `SearchButton`, `ModeSwitcher`, `Callout`, `CopyButton`
 - MDX components and utilities
 - Source loader utilities for fumadocs integration
-
