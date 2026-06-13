@@ -23,6 +23,7 @@ export { CopyCommandButton } from './components/CopyCommandButton';
 export { SearchButton, type SearchButtonProps } from './components/SearchButton';
 export {
   SearchDialog,
+  type SearchDialogBrowsePage,
   type SearchDialogProps,
   type SearchDialogItem,
   type SearchDialogSharedProps,

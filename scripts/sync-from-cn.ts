@@ -91,9 +91,10 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
 // DOCS components live in src/components/ (flat), so relative paths go up 1 level.
 // Files destined for site/ use the ~ alias (~/lib/) instead of relative paths.
 
-function transformImports(content: string, destPath: string): string {
+export function transformImports(content: string, destPath: string): string {
   let result = content;
-  const isSiteFile = destPath.replace(/\\/g, '/').includes('/site/');
+  const normalizedDestPath = destPath.replace(/\\/g, '/');
+  const isSiteFile = normalizedDestPath.startsWith('site/') || normalizedDestPath.includes('/site/');
 
   // Merge all @/components/ui/* imports into @olwiba/cn
   // Handles both single-line and multi-line import blocks
@@ -160,7 +161,7 @@ function transformImports(content: string, destPath: string): string {
   );
 
   // @/demos/* in src/components files points to ../demos/*
-  if (!isSiteFile && destPath.replace(/\\/g, '/').includes('/src/components/')) {
+  if (!isSiteFile && normalizedDestPath.includes('/src/components/')) {
     result = result.replace(/['"]@\/demos\/([^'"]+)['"]/g, "'../demos/$1'");
     result = result.replace(/['"]@\/docs\/demos\/([^'"]+)['"]/g, "'../demos/$1'");
   }
@@ -295,7 +296,9 @@ async function main() {
   console.log('\nNext: run `bun run types:check` to verify.');
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (process.argv[1] && resolve(process.argv[1]) === SCRIPT_PATH) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

@@ -3,7 +3,11 @@ import { createRootRoute, HeadContent, Outlet, Scripts, type NotFoundRouteProps 
 import { RootProvider } from 'fumadocs-ui/provider/tanstack';
 import { ErrorPage } from '@/components/ErrorPage';
 import { ActiveThemeProvider } from '@/components/ActiveTheme';
-import { SearchDialog } from '@/components/SearchDialog';
+import {
+  SearchDialog,
+  type SearchDialogBrowsePage,
+  type SearchDialogItem,
+} from '@/components/SearchDialog';
 import { type Theme } from '@/lib/themes';
 
 export interface DocsRootMeta {
@@ -28,6 +32,10 @@ export interface DocsRootConfig {
   footer: React.ComponentType;
   initialTheme?: typeof Theme[keyof typeof Theme];
   cssUrl: string;
+  /** Quick links shown in search dialog when input is empty. */
+  searchItems?: SearchDialogItem[];
+  /** Browse pages shown when input is empty and no quick links are provided. */
+  browsePages?: SearchDialogBrowsePage[];
   notFoundComponent?: (props: NotFoundRouteProps) => React.ReactNode;
   /** Optional wrapper rendered around the full page body — use this to inject a root-level provider (e.g. OlwibaUIProvider). */
   wrapper?: React.ComponentType<{ children: React.ReactNode }>;
@@ -51,6 +59,8 @@ export function createDocsRoot(config: DocsRootConfig) {
     footer: Footer,
     initialTheme,
     cssUrl,
+    browsePages,
+    searchItems,
     notFoundComponent,
     wrapper: Wrapper,
   } = config;
@@ -64,6 +74,19 @@ export function createDocsRoot(config: DocsRootConfig) {
   }
 
   function RootDocument({ children }: { children: React.ReactNode }) {
+    const dialogItems = searchItems !== undefined && searchItems.length > 0 ? searchItems : undefined;
+    const dialogBrowsePages = browsePages !== undefined && browsePages.length > 0 ? browsePages : undefined;
+    const SearchDialogComponent = React.useCallback(
+      (props: React.ComponentProps<typeof SearchDialog>) => (
+        <SearchDialog
+          {...props}
+          {...(dialogItems ? { items: dialogItems } : {})}
+          {...(dialogBrowsePages ? { browsePages: dialogBrowsePages } : {})}
+        />
+      ),
+      [dialogBrowsePages, dialogItems]
+    );
+
     return (
       <html lang="en" suppressHydrationWarning>
         <head>
@@ -71,7 +94,7 @@ export function createDocsRoot(config: DocsRootConfig) {
         </head>
         <body className="flex min-h-screen flex-col antialiased [--header-height:3.5rem] [--footer-height:3.5rem]">
           <ActiveThemeProvider initialTheme={initialTheme}>
-            <RootProvider search={{ SearchDialog }}>
+            <RootProvider search={{ SearchDialog: SearchDialogComponent }}>
               <MaybeWrap wrapper={Wrapper}>
                 <Header />
                 <div className="flex flex-1 justify-center overflow-x-clip">
@@ -137,4 +160,3 @@ export function DocsErrorFallback({ reset }: { error: Error; reset: () => void }
     </div>
   );
 }
-

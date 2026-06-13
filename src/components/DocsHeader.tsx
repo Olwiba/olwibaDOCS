@@ -3,8 +3,8 @@
 
 import * as React from 'react';
 import { Link } from '@tanstack/react-router';
-import { cn } from '@olwiba/cn';
 import { ModeSwitcher } from './ModeSwitcher';
+import { cn } from '../lib/utils';
 import { SearchButton } from './SearchButton';
 
 export interface DocsHeaderProps {

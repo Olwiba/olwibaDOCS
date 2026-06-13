@@ -1,5 +1,27 @@
 # Changelog
 
+
+## 0.1.30
+
+### Added
+
+- `SearchDialogBrowsePage` type exported from package public API.
+- `browsePages` prop on `SearchDialog`, `DocsProvider`, and `createDocsRoot` config — passes page metadata at render time instead of fetching `/api/pages` at runtime. Quick links (`items`) take priority; browse pages render when no quick links are set; neither renders `null`.
+
+### Changed
+
+- `DocsToc` scroll tracker refactored: merged the separate `useActiveItem` and `useScrollProgress` hooks into a single `useTocScrollState` hook. Geometry measurements (`measureTocGeometry`) and scroll math (`calculateTocScrollState`) extracted as pure functions. Scroll updates now batch through `requestAnimationFrame` — position cache is rebuilt on resize only, not on every scroll event.
+- `shiki` moved from `devDependencies` to `peerDependencies` and added to `tsup` externals — consumers must supply their own `shiki@^3.0.0`.
+- `sync-from-cn` script: `transformImports` is now exported for test use; `isSiteFile` detection now checks `startsWith('site/')` in addition to the `includes` check; `main()` is guarded behind a direct-invocation check so importing the module in tests does not auto-execute it.
+- Search API route (`/api/search`) no longer imports `SortedResult` from fumadocs internals — replaced with a local `SearchResult` type and a generic `rankResults<T>` signature.
+- `DocsHeader` imports `cn` from `../lib/utils` instead of `@olwiba/cn` (resolves incorrect peer reference in the published package).
+- `sourcemap` disabled in tsup output.
+- CI publish workflow: separate `Typecheck` + `Build` steps collapsed into a single `Check` step running `bun run check` (`types:check && build && test`).
+
+### Added (dev)
+
+- `vitest@^4.1.8` added as devDependency; `test` and `check` scripts added to `package.json`.
+
 ## 0.1.29
 
 ### Fixed

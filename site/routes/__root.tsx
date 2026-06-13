@@ -4,6 +4,13 @@ import { SiteHeader } from '~/components/SiteHeader';
 import { SiteFooter } from '~/components/SiteFooter';
 import { projectConfig } from '@/project.config';
 import appCss from '~/styles/app.css?url';
+import { source } from '~/lib/source';
+
+const searchBrowsePages = source.getPages().map((page) => ({
+  title: page.data.title,
+  description: page.data.description,
+  url: page.url,
+}));
 
 export const Route = createDocsRoot({
   meta: {
@@ -22,5 +29,6 @@ export const Route = createDocsRoot({
   footer: SiteFooter,
   initialTheme: projectConfig.theme.initialDocsTheme,
   cssUrl: appCss,
+  browsePages: searchBrowsePages,
   wrapper: ProjectThemeWrapper,
 });

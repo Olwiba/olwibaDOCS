@@ -1,7 +1,7 @@
 // @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { useDocsSearch } from 'fumadocs-core/search/client';
 import {
   SearchDialog as FumaSearchDialog,
@@ -17,7 +17,7 @@ import { Search } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { ScrollArea } from '@olwiba/cn';
 
-interface PageItem {
+export interface SearchDialogBrowsePage {
   title: string;
   description?: string;
   url: string;
@@ -29,32 +29,29 @@ export type SearchDialogSharedProps = SharedProps;
 
 export interface SearchDialogProps extends SharedProps {
   items?: SearchDialogItem[];
+  browsePages?: SearchDialogBrowsePage[];
 }
 
 export function SearchDialog(props: SearchDialogProps) {
-  const { items, ...restProps } = props;
+  const { browsePages, items, ...restProps } = props;
   const { search, setSearch, query } = useDocsSearch({
     type: 'fetch',
   });
-  const [allPages, setAllPages] = useState<PageItem[]>([]);
+  const hasQuickLinks = items != null && items.length > 0;
+  const hasBrowsePages = browsePages != null && browsePages.length > 0;
 
-  useEffect(() => {
-    if (!items) {
-      fetch('/api/pages')
-        .then((res) => res.json())
-        .then((pages: PageItem[]) => setAllPages(pages))
-        .catch(() => {});
-    }
-  }, [items]);
-
-  const groupedPages = allPages.reduce<Record<string, PageItem[]>>((acc, page) => {
-    const parts = page.url.split('/').filter(Boolean);
-    const section = parts.length > 2 ? parts[1] : 'docs';
-    const label = section.charAt(0).toUpperCase() + section.slice(1);
-    if (!acc[label]) acc[label] = [];
-    acc[label].push(page);
-    return acc;
-  }, {});
+  const groupedPages = useMemo(
+    () =>
+      (browsePages ?? []).reduce<Record<string, SearchDialogBrowsePage[]>>((acc, page) => {
+        const parts = page.url.split('/').filter(Boolean);
+        const section = parts.length > 2 ? parts[1] : 'docs';
+        const label = section.charAt(0).toUpperCase() + section.slice(1);
+        if (!acc[label]) acc[label] = [];
+        acc[label].push(page);
+        return acc;
+      }, {}),
+    [browsePages]
+  );
 
   return (
     <FumaSearchDialog
@@ -76,7 +73,7 @@ export function SearchDialog(props: SearchDialogProps) {
         </SearchDialogHeader>
         <SearchDialogList items={query.data !== 'empty' ? query.data : null} />
 
-        {search ? null : items ? (
+        {search ? null : hasQuickLinks ? (
           <div className="flex flex-col pb-4">
             {items.map((item) => (
               <a
@@ -94,7 +91,7 @@ export function SearchDialog(props: SearchDialogProps) {
               </a>
             ))}
           </div>
-        ) : (
+        ) : hasBrowsePages ? (
           <ScrollArea className="max-h-[400px]">
             <div className="flex flex-col pb-4">
               {Object.entries(groupedPages).map(([section, pages]) => (
@@ -121,7 +118,7 @@ export function SearchDialog(props: SearchDialogProps) {
               ))}
             </div>
           </ScrollArea>
-        )}
+        ) : null}
       </SearchDialogContent>
     </FumaSearchDialog>
   );

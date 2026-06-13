@@ -13,168 +13,172 @@ import {
 } from '@olwiba/cn';
 
 
-function useActiveItem(itemIds: string[]) {
-  const [activeId, setActiveId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!itemIds.length) return;
-
-    const update = () => {
-      const scrollTop = window.scrollY;
-      const viewportHeight = window.innerHeight;
-      const docHeight = document.documentElement.scrollHeight;
-
-      // At top of page — first heading wins
-      if (scrollTop <= 2) {
-        setActiveId(itemIds[0]);
-        return;
-      }
-
-      // At bottom of page — last heading wins
-      if (scrollTop + viewportHeight >= docHeight - 2) {
-        setActiveId(itemIds[itemIds.length - 1]);
-        return;
-      }
-
-      const triggerPoint = scrollTop + viewportHeight * 0.5;
-
-      // Find the last heading above the trigger point
-      let active: string | null = null;
-      for (const id of itemIds) {
-        const el = document.getElementById(id);
-        if (!el) continue;
-        if (el.getBoundingClientRect().top + scrollTop <= triggerPoint) {
-          active = id;
-        } else {
-          break;
-        }
-      }
-
-      setActiveId(active ?? itemIds[0]);
-    };
-
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
-  }, [itemIds]);
-
-  return activeId;
-}
-
 interface ScrollProgress {
   top: number;
   height: number;
 }
 
-function useScrollProgress(
+interface TocGeometry {
+  id: string;
+  docTop: number;
+  tocTop: number;
+  tocHeight: number;
+}
+
+interface TocScrollState {
+  activeId: string | null;
+  progress: ScrollProgress;
+}
+
+function measureTocGeometry(
+  container: HTMLElement,
+  itemIds: string[]
+): TocGeometry[] {
+  return itemIds
+    .map((id) => {
+      const heading = document.getElementById(id);
+      const tocEl = container.querySelector(`[data-toc-id="${id}"]`) as HTMLElement | null;
+      if (!heading || !tocEl) return null;
+
+      return {
+        id,
+        docTop: heading.getBoundingClientRect().top + window.scrollY,
+        tocTop: tocEl.offsetTop,
+        tocHeight: tocEl.offsetHeight,
+      };
+    })
+    .filter(Boolean) as TocGeometry[];
+}
+
+function calculateTocScrollState(positions: TocGeometry[]): TocScrollState | null {
+  if (!positions.length) return null;
+
+  const scrollTop = window.scrollY;
+  const viewportHeight = window.innerHeight;
+  const docHeight = document.documentElement.scrollHeight;
+  const maxScroll = Math.max(0, docHeight - viewportHeight);
+
+  if (scrollTop <= 2) {
+    const first = positions[0];
+    return {
+      activeId: first.id,
+      progress: { top: first.tocTop, height: first.tocHeight },
+    };
+  }
+
+  if (maxScroll > 0 && scrollTop + viewportHeight >= docHeight - 2) {
+    const last = positions[positions.length - 1];
+    return {
+      activeId: last.id,
+      progress: { top: last.tocTop, height: last.tocHeight },
+    };
+  }
+
+  const triggerPoint = scrollTop + viewportHeight * 0.5;
+
+  let currentIndex = 0;
+  for (let i = positions.length - 1; i >= 0; i--) {
+    if (triggerPoint >= positions[i].docTop) {
+      currentIndex = i;
+      break;
+    }
+  }
+
+  const current = positions[currentIndex];
+  const next = positions[currentIndex + 1];
+
+  let progressRatio = 0;
+  if (next) {
+    const sectionLength = next.docTop - current.docTop;
+    const positionInSection = triggerPoint - current.docTop;
+    progressRatio = sectionLength > 0
+      ? Math.max(0, Math.min(1, positionInSection / sectionLength))
+      : 0;
+  } else {
+    const sectionScrollStart = current.docTop - viewportHeight * 0.5;
+    const sectionScrollEnd = maxScroll;
+    const range = sectionScrollEnd - sectionScrollStart;
+    progressRatio = range > 0
+      ? Math.max(0, Math.min(1, (scrollTop - sectionScrollStart) / range))
+      : 1;
+  }
+
+  const tocStart = current.tocTop;
+  const tocEnd = next ? next.tocTop : current.tocTop + current.tocHeight;
+  const interpolatedTop = tocStart + (tocEnd - tocStart) * progressRatio;
+
+  return {
+    activeId: current.id,
+    progress: {
+      top: interpolatedTop,
+      height: current.tocHeight,
+    },
+  };
+}
+
+function useTocScrollState(
   containerRef: React.RefObject<HTMLElement | null>,
   itemIds: string[]
-): ScrollProgress {
-  const [progress, setProgress] = useState<ScrollProgress>({
-    top: 0,
-    height: 20,
+): TocScrollState {
+  const [state, setState] = useState<TocScrollState>({
+    activeId: null,
+    progress: { top: 0, height: 20 },
   });
+  const positionsRef = useRef<TocGeometry[]>([]);
 
   useEffect(() => {
     if (!itemIds.length) return;
 
-    const updateProgress = () => {
+    let frameId: number | null = null;
+
+    const rebuildCache = () => {
       const container = containerRef.current;
-      if (!container) return;
+      positionsRef.current = container ? measureTocGeometry(container, itemIds) : [];
+    };
 
-      const headingPositions = itemIds
-        .map((id) => {
-          const el = document.getElementById(id);
-          const tocEl = container.querySelector(`[data-toc-id="${id}"]`) as HTMLElement | null;
-          if (!el || !tocEl) return null;
-          return {
-            id,
-            docTop: el.getBoundingClientRect().top + window.scrollY,
-            tocTop: tocEl.offsetTop,
-            tocHeight: tocEl.offsetHeight,
-          };
-        })
-        .filter(Boolean) as Array<{
-          id: string;
-          docTop: number;
-          tocTop: number;
-          tocHeight: number;
-        }>;
+    const update = () => {
+      frameId = null;
+      const nextState = calculateTocScrollState(positionsRef.current);
+      if (!nextState) return;
 
-      if (!headingPositions.length) return;
-
-      const scrollTop = window.scrollY;
-      const viewportHeight = window.innerHeight;
-      const docHeight = document.documentElement.scrollHeight;
-      const maxScroll = docHeight - viewportHeight;
-
-      if (maxScroll > 0 && scrollTop + viewportHeight >= docHeight - 2) {
-        const last = headingPositions[headingPositions.length - 1];
-        setProgress({ top: last.tocTop, height: last.tocHeight });
-        return;
-      }
-
-      if (scrollTop <= 2) {
-        const first = headingPositions[0];
-        setProgress({ top: first.tocTop, height: first.tocHeight });
-        return;
-      }
-
-      const triggerPoint = scrollTop + viewportHeight * 0.5;
-
-      let currentIndex = 0;
-      for (let i = headingPositions.length - 1; i >= 0; i--) {
-        if (triggerPoint >= headingPositions[i].docTop) {
-          currentIndex = i;
-          break;
+      setState((previous) => {
+        if (
+          previous.activeId === nextState.activeId &&
+          previous.progress.top === nextState.progress.top &&
+          previous.progress.height === nextState.progress.height
+        ) {
+          return previous;
         }
-      }
 
-      const current = headingPositions[currentIndex];
-      const next = headingPositions[currentIndex + 1];
-
-      let progressRatio = 0;
-      if (next) {
-        const sectionLength = next.docTop - current.docTop;
-        const positionInSection = triggerPoint - current.docTop;
-        progressRatio = Math.max(0, Math.min(1, positionInSection / sectionLength));
-      } else {
-        const sectionScrollStart = current.docTop - viewportHeight * 0.5;
-        const sectionScrollEnd = maxScroll;
-        const range = sectionScrollEnd - sectionScrollStart;
-        if (range > 0) {
-          progressRatio = Math.max(0, Math.min(1, (scrollTop - sectionScrollStart) / range));
-        } else {
-          progressRatio = 1;
-        }
-      }
-
-      const tocStart = current.tocTop;
-      const tocEnd = next ? next.tocTop : current.tocTop + current.tocHeight;
-      const interpolatedTop = tocStart + (tocEnd - tocStart) * progressRatio;
-
-      setProgress({
-        top: interpolatedTop,
-        height: current.tocHeight,
+        return nextState;
       });
     };
 
-    updateProgress();
-    window.addEventListener("scroll", updateProgress, { passive: true });
-    window.addEventListener("resize", updateProgress, { passive: true });
+    const scheduleUpdate = () => {
+      if (frameId !== null) return;
+      frameId = requestAnimationFrame(update);
+    };
+
+    const handleResize = () => {
+      rebuildCache();
+      scheduleUpdate();
+    };
+
+    rebuildCache();
+    update();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", updateProgress);
-      window.removeEventListener("resize", updateProgress);
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId);
+      }
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", handleResize);
     };
   }, [containerRef, itemIds]);
 
-  return progress;
+  return state;
 }
 
 function useScrollToActive(
@@ -369,8 +373,10 @@ export function DocsToc({
     () => toc.map((item) => item.url.replace("#", "")),
     [toc]
   );
-  const activeHeading = useActiveItem(itemIds);
-  const scrollProgress = useScrollProgress(containerRef, itemIds);
+  const { activeId: activeHeading, progress: scrollProgress } = useTocScrollState(
+    containerRef,
+    itemIds
+  );
   const { trackD, totalLength, yToLength } = useTocPath(
     containerRef,
     svgPathRef,
