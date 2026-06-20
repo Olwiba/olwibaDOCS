@@ -1,5 +1,7 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router';
 import { ErrorPage } from '@/components/ErrorPage';
+import { buildDocsPageHead } from '@olwiba/docs';
+import { siteMeta } from '~/lib/seo';
 
 function DocsNotFound() {
   return (
@@ -37,6 +39,7 @@ const sidebarSections: SidebarSection[] = [
 export const Route = createFileRoute('/docs/$')({
   notFoundComponent: DocsNotFound,
   component: Page,
+  head: ({ loaderData }) => buildDocsPageHead(siteMeta, loaderData as PageLoaderData),
   loader: async ({ params }) => {
     const slugs = params._splat?.split('/') ?? [];
     const data = (await serverLoader({ data: slugs })) as PageLoaderData;

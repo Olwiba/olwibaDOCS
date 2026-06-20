@@ -3,6 +3,7 @@ import { ProjectThemeWrapper } from '~/components/ProjectThemeWrapper';
 import { SiteHeader } from '~/components/SiteHeader';
 import { SiteFooter } from '~/components/SiteFooter';
 import { projectConfig } from '@/project.config';
+import { siteMeta } from '~/lib/seo';
 import appCss from '~/styles/app.css?url';
 import { source } from '~/lib/source';
 
@@ -13,11 +14,7 @@ const searchBrowsePages = source.getPages().map((page) => ({
 }));
 
 export const Route = createDocsRoot({
-  meta: {
-    title: 'olwibaDOCS - Documentation Framework for TanStack Start',
-    description: 'Build beautiful, production-ready documentation sites on TanStack Start. Powered by Fumadocs.',
-    ogImage: 'https://docs.olwiba.com/og-image.png',
-  },
+  meta: siteMeta,
   favicons: [
     { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon/favicon-16.png' },
     { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon/favicon-32.png' },

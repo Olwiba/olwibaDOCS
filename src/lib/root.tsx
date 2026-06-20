@@ -9,14 +9,9 @@ import {
   type SearchDialogItem,
 } from '@/components/SearchDialog';
 import { type Theme } from '@/lib/themes';
+import { buildDocsHead, type DocsRootMeta } from '@/lib/seo';
 
-export interface DocsRootMeta {
-  title: string;
-  description?: string;
-  ogImage?: string;
-  ogType?: string;
-  twitterCard?: string;
-}
+export type { DocsRootMeta } from '@/lib/seo';
 
 export interface DocsRootFavicon {
   rel: 'icon' | 'apple-touch-icon';
@@ -115,28 +110,23 @@ export function createDocsRoot(config: DocsRootConfig) {
   }
 
   return createRootRoute({
-    head: () => ({
-      meta: [
-        { charSet: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { title: meta.title },
-        ...(meta.description ? [{ name: 'description', content: meta.description }] : []),
-        { property: 'og:title', content: meta.title },
-        ...(meta.description ? [{ property: 'og:description', content: meta.description }] : []),
-        ...(meta.ogImage ? [{ property: 'og:image', content: meta.ogImage }] : []),
-        { property: 'og:type', content: meta.ogType ?? 'website' },
-        { name: 'twitter:card', content: meta.twitterCard ?? 'summary_large_image' },
-      ],
-      links: [
-        { rel: 'stylesheet', href: cssUrl },
-        ...favicons.map(({ rel, sizes, type, href }) => ({
-          rel,
-          ...(sizes && { sizes }),
-          ...(type && { type }),
-          href,
-        })),
-      ],
-    }),
+    head: () => {
+      const head = buildDocsHead(meta);
+
+      return {
+        meta: head.meta,
+        links: [
+          { rel: 'stylesheet', href: cssUrl },
+          ...head.links,
+          ...favicons.map(({ rel, sizes, type, href }) => ({
+            rel,
+            ...(sizes && { sizes }),
+            ...(type && { type }),
+            href,
+          })),
+        ],
+      };
+    },
     component: RootComponent,
     notFoundComponent: notFoundComponent ?? DocsNotFound,
   });
