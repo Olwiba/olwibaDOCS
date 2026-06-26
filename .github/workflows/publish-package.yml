@@ -55,7 +55,13 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Check
-        run: bun run check
+        run: |
+          if jq -e '.scripts.check' package.json >/dev/null; then
+            bun run check
+          else
+            bun run types:check
+            bun run build
+          fi
 
       - name: Pack
         run: |
