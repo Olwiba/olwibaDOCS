@@ -30,11 +30,13 @@ function resolveRepoRoot(name: string, candidates: string[]) {
   );
 }
 
-const CN_ROOT = resolveRepoRoot('olwibaCN', [
-  resolve(DOCS_ROOT, '..', 'olwibaCN'),
-  'C:/Workspace/Nexus/olwibaCN',
-  'C:/Workspace/olwibaCN',
-]);
+function getCnRoot() {
+  return resolveRepoRoot('olwibaCN', [
+    resolve(DOCS_ROOT, '..', 'olwibaCN'),
+    'C:/Workspace/Nexus/olwibaCN',
+    'C:/Workspace/olwibaCN',
+  ]);
+}
 
 const GENERATED_BANNER = '// @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.\n';
 
@@ -264,6 +266,7 @@ async function syncFile(srcPath: string, destPath: string) {
 }
 
 async function main() {
+  const CN_ROOT = getCnRoot();
   console.log('Syncing doc components from olwibaCN to olwibaDOCS...\n');
   console.log(`  source: ${CN_ROOT}`);
   console.log(`  target: ${DOCS_ROOT}\n`);
