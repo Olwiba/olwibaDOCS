@@ -3,6 +3,7 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import { defineConfig } from 'vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
 import mdx from 'fumadocs-mdx/vite';
+import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'path';
 import { createDevBannerPlugin, resolveDevPort } from '@olwiba/dx';
 import { projectBanner } from './src/project.config';
@@ -29,6 +30,7 @@ export default defineConfig({
   plugins: [
     createDevBannerPlugin(projectBanner),
     mdx(await import('./source.config')),
+    tailwindcss(),
     tsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
