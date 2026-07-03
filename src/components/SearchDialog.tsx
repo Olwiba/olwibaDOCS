@@ -1,7 +1,7 @@
 // @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDocsSearch } from 'fumadocs-core/search/client';
 import {
   SearchDialog as FumaSearchDialog,
@@ -33,16 +33,36 @@ export interface SearchDialogProps extends SharedProps {
 }
 
 export function SearchDialog(props: SearchDialogProps) {
-  const { browsePages, items, ...restProps } = props;
+  const { browsePages, items, open, ...restProps } = props;
+  const [fetchedBrowsePages, setFetchedBrowsePages] = useState<SearchDialogBrowsePage[]>([]);
   const { search, setSearch, query } = useDocsSearch({
     type: 'fetch',
   });
+  const resolvedBrowsePages = browsePages ?? fetchedBrowsePages;
   const hasQuickLinks = items != null && items.length > 0;
-  const hasBrowsePages = browsePages != null && browsePages.length > 0;
+  const hasBrowsePages = resolvedBrowsePages.length > 0;
+
+  useEffect(() => {
+    if (browsePages != null || fetchedBrowsePages.length > 0 || open === false) return;
+
+    let cancelled = false;
+    fetch('/api/pages/')
+      .then((response) => (response.ok ? response.json() : []))
+      .then((pages: SearchDialogBrowsePage[]) => {
+        if (!cancelled) setFetchedBrowsePages(pages);
+      })
+      .catch(() => {
+        if (!cancelled) setFetchedBrowsePages([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [browsePages, fetchedBrowsePages.length, open]);
 
   const groupedPages = useMemo(
     () =>
-      (browsePages ?? []).reduce<Record<string, SearchDialogBrowsePage[]>>((acc, page) => {
+      (resolvedBrowsePages ?? []).reduce<Record<string, SearchDialogBrowsePage[]>>((acc, page) => {
         const parts = page.url.split('/').filter(Boolean);
         const section = parts.length > 2 ? parts[1] : 'docs';
         const label = section.charAt(0).toUpperCase() + section.slice(1);
@@ -50,7 +70,7 @@ export function SearchDialog(props: SearchDialogProps) {
         acc[label].push(page);
         return acc;
       }, {}),
-    [browsePages]
+    [resolvedBrowsePages]
   );
 
   return (
@@ -58,6 +78,7 @@ export function SearchDialog(props: SearchDialogProps) {
       isLoading={query.isLoading}
       onSearchChange={setSearch}
       search={search}
+      open={open}
       {...restProps}
     >
       <SearchDialogOverlay />
