@@ -4,12 +4,12 @@ import { defineConfig } from 'vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
 import mdx from 'fumadocs-mdx/vite';
 import { resolve } from 'path';
-import { createDevBannerPlugin } from '@olwiba/dx';
+import { createDevBannerPlugin, resolveDevPort } from '@olwiba/dx';
 import { projectBanner } from './src/project.config';
 
 export default defineConfig({
   server: {
-    port: 3001,
+    port: await resolveDevPort(3001),
     allowedHosts: true,
   },
   resolve: {
