@@ -1,6 +1,12 @@
 # Changelog
 
 
+## 0.1.31
+
+### Fixed
+
+- SearchDialog updates synced from olwibaCN alongside the search relevance-order fix.
+
 ## 0.1.30
 
 ### Added
