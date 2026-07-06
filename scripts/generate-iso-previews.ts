@@ -1,7 +1,6 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-// Nexus dev: sibling olwibaDX until @olwiba/dx publish includes light/dark scheme fix.
-import { generatePreviews } from '../../olwibaDX/src/generate-previews.ts';
+import { generatePreviews } from '@olwiba/dx/generate-previews';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

@@ -39,6 +39,8 @@ export interface DocsSidebarProps extends React.ComponentProps<'div'> {
   sections?: SidebarSection[];
   folderIcons?: Record<string, React.ComponentType<{ className?: string }>>;
   defaultOpenFolders?: boolean;
+  /** Pinned to the bottom of the sidebar viewport; pushed up by the footer at page end. */
+  bottomSlot?: React.ReactNode;
 }
 
 interface SidebarFolderProps {
@@ -128,7 +130,7 @@ function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSectio
   );
 }
 
-export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, ...props }: DocsSidebarProps) {
+export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, bottomSlot, ...props }: DocsSidebarProps) {
   const location = useLocation();
   const router = useRouter();
   const pathname = location.pathname;
@@ -168,7 +170,7 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, .
           className="no-scrollbar h-full overflow-y-auto overflow-x-hidden"
           onScroll={() => setShowTopFade((scrollRef.current?.scrollTop ?? 0) > 0)}
         >
-          <div className="px-2 pb-12">
+          <div className={cn('px-2', bottomSlot ? 'pb-16' : 'pb-12')}>
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu className="gap-0.5">
@@ -226,8 +228,22 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, .
             </SidebarGroup>
           </div>
         </div>
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-12 bg-gradient-to-t from-background to-transparent" />
+        <div
+          className={cn(
+            'pointer-events-none absolute left-0 right-0 z-10 h-12 bg-gradient-to-t from-background to-transparent',
+            bottomSlot ? 'bottom-11' : 'bottom-0',
+          )}
+        />
       </div>
+      {/* Sticky against the viewport bottom from first paint (the top spacer
+          offsets the nav block, so an absolute child there starts half cut
+          off). mt-auto drops it to the column end, where the footer pushes
+          it up on full scroll. */}
+      {bottomSlot && (
+        <div className="sticky bottom-0 z-30 mt-auto hidden bg-background px-2 pb-2 pt-1 lg:block">
+          {bottomSlot}
+        </div>
+      )}
     </div>
   );
 }

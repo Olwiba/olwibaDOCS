@@ -47,9 +47,41 @@ export function IsometricPlane({
     [images, rows, cols],
   );
 
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => setMounted(true), []);
-  if (!mounted || images.length === 0) return null;
+  // The card grid is deterministic (seeded RNG) and its chrome is theme-neutral
+  // (CSS variables), so the skeleton renders during SSR and animates from first
+  // paint. Only the <img> layer is client-gated: held until every unique image
+  // is fetched and decoded, so images fade in populated instead of popping in
+  // one by one. Server and first client render both have imagesReady=false,
+  // keeping hydration consistent.
+  const [imagesReady, setImagesReady] = React.useState(false);
+  React.useEffect(() => {
+    setImagesReady(false);
+    if (images.length === 0) return;
+    let cancelled = false;
+    const srcs = [...new Set(images.map((img) => img.src))];
+    Promise.allSettled(
+      srcs.map(
+        (src) =>
+          new Promise<void>((resolve) => {
+            const img = new Image();
+            const settle = () => {
+              img.decode().catch(() => {}).finally(resolve);
+            };
+            img.onload = settle;
+            img.onerror = () => resolve();
+            img.src = src;
+            if (img.complete) settle();
+          }),
+      ),
+    ).then(() => {
+      if (!cancelled) setImagesReady(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [images]);
+
+  if (images.length === 0) return null;
 
   const h = cardHeight === 'auto' ? undefined : cardHeight;
   const tripled = [...baseRows, ...baseRows, ...baseRows];
@@ -75,6 +107,7 @@ export function IsometricPlane({
           }}
         >
           <div
+            data-iso-scroll
             className="flex gap-3 will-change-transform"
             style={{
               animation: `iso-scroll ${scrollDuration}s linear infinite`,
@@ -86,6 +119,12 @@ export function IsometricPlane({
               <div key={colIdx} className="flex flex-col gap-3">
                 {tripled.map((row, rowIdx) => {
                   const img = row[colIdx];
+                  // Without a fixed height, size the empty card from the image's
+                  // intrinsic ratio so the SSR skeleton doesn't collapse.
+                  const ratio =
+                    h == null && img.width && img.height
+                      ? `${img.width} / ${img.height}`
+                      : undefined;
                   return (
                     <div
                       key={rowIdx}
@@ -93,20 +132,25 @@ export function IsometricPlane({
                       style={{
                         width: cardWidth,
                         height: h,
+                        aspectRatio: ratio,
                         backfaceVisibility: 'hidden',
                       }}
                     >
-                      <img
-                        src={img.src}
-                        alt={img.alt ?? ''}
-                        width={img.width}
-                        height={img.height}
-                        className={h ? 'w-full h-full object-cover' : 'w-full h-auto block'}
-                        loading="lazy"
-                        decoding="async"
-                        fetchPriority="low"
-                        draggable={false}
-                      />
+                      {imagesReady && (
+                        <img
+                          src={img.src}
+                          alt={img.alt ?? ''}
+                          width={img.width}
+                          height={img.height}
+                          className={
+                            h != null || ratio
+                              ? 'w-full h-full object-cover'
+                              : 'w-full h-auto block'
+                          }
+                          style={{ animation: 'iso-fadein 0.5s ease-out both' }}
+                          draggable={false}
+                        />
+                      )}
                     </div>
                   );
                 })}

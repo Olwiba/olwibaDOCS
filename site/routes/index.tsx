@@ -7,11 +7,9 @@ import rawManifest from '../iso-previews-manifest.json';
 type ManifestEntry = { file: string; width: number; height: number; theme: string };
 
 function useColorScheme(): 'light' | 'dark' {
-  const [scheme, setScheme] = React.useState<'light' | 'dark'>(() =>
-    typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
-      ? 'dark'
-      : 'light',
-  );
+  // Always start 'light' so the first client render matches SSR output; the
+  // effect below corrects to the real scheme immediately after hydration.
+  const [scheme, setScheme] = React.useState<'light' | 'dark'>('light');
 
   React.useEffect(() => {
     const read = () =>
@@ -48,7 +46,7 @@ function Home() {
 
   return (
     <div className="relative flex flex-col flex-1 min-h-[calc(100svh-var(--header-height)-var(--footer-height))] justify-center items-center px-4 py-16 text-center">
-      {isoImages.length > 0 && <IsometricPlane images={isoImages} key={scheme} />}
+      {isoImages.length > 0 && <IsometricPlane images={isoImages} />}
 
       <div className="absolute inset-0 z-[1] pointer-events-none">
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background/90 to-transparent dark:h-64 dark:from-background dark:to-transparent" />

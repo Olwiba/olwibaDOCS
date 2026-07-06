@@ -32,7 +32,7 @@
 
 @keyframes enchanted {
   0%, 100% { transform: scale(0) rotate(-20deg); opacity: 0; }
-  50% { transform: scale(1) rotate(15deg); opacity: 0.9; }
+  50% { transform: scale(1.15) rotate(15deg); opacity: 1; }
 }
 
 @keyframes iso-scroll {
@@ -43,4 +43,10 @@
 @keyframes iso-fadein {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-iso-scroll] {
+    animation-play-state: paused !important;
+  }
 }
