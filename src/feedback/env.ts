@@ -1,3 +1,4 @@
+// @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 export type EmailProviderName = 'preview' | 'none' | 'resend' | 'plunk';
 
 export interface FeedbackEmailEnv {

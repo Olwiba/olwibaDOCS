@@ -22,6 +22,8 @@ import { ComponentPreview } from '~/components/ComponentPreview';
 import { CopyCommandButton } from '@/components/CopyCommandButton';
 import { type SidebarSection } from '@/components/DocsSidebar';
 import { DocsLayout, type PageLoaderData } from '@/components/DocsLayout';
+import { FeedbackSidebarItem } from '@/feedback/FeedbackSidebarItem';
+import { getFeedbackConfig, submitFeedback } from '~/lib/feedback-server';
 import { serverLoader } from './-loader';
 
 const sidebarSections: SidebarSection[] = [
@@ -66,7 +68,17 @@ function Page() {
   const data = useFumadocsLoader(loaderData);
 
   return (
-    <DocsLayout loaderData={loaderData} pageTree={data.pageTree} sections={sidebarSections}>
+    <DocsLayout
+      loaderData={loaderData}
+      pageTree={data.pageTree}
+      sections={sidebarSections}
+      sidebarBottomSlot={
+        <FeedbackSidebarItem
+          getConfig={() => getFeedbackConfig()}
+          submit={(payload) => submitFeedback({ data: payload })}
+        />
+      }
+    >
       <Suspense fallback={<div className="animate-pulse h-64 bg-muted rounded-lg" />}>
         {clientLoader.useContent(data.path, undefined)}
       </Suspense>

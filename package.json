@@ -28,6 +28,10 @@
     "./themes": {
       "import": "./dist/lib/themes.js",
       "types": "./dist/lib/themes.d.ts"
+    },
+    "./feedback": {
+      "import": "./dist/lib/feedback.js",
+      "types": "./dist/lib/feedback.d.ts"
     }
   },
   "files": [

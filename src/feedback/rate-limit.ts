@@ -1,3 +1,4 @@
+// @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 const buckets = new Map<string, { count: number; resetAt: number }>();
 
 export function checkRateLimit(key: string, max = 5, windowMs = 60_000) {

@@ -87,6 +87,13 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
   { src: 'src/components/IsometricPlane.tsx', dest: 'src/components/IsometricPlane.tsx' },
   { src: 'src/components/ui/error-page.tsx', dest: 'src/components/ErrorPage.tsx' },
 
+  // Feedback system (component + portable server core; server.ts is app-specific
+  // createServerFn wiring and intentionally NOT synced — each app writes its own)
+  { src: 'src/feedback/FeedbackSidebarItem.tsx', dest: 'src/feedback/FeedbackSidebarItem.tsx' },
+  { src: 'src/feedback/submission.ts', dest: 'src/feedback/submission.ts' },
+  { src: 'src/feedback/env.ts', dest: 'src/feedback/env.ts' },
+  { src: 'src/feedback/providers.ts', dest: 'src/feedback/providers.ts' },
+  { src: 'src/feedback/rate-limit.ts', dest: 'src/feedback/rate-limit.ts' },
 ];
 
 // ─── Import transforms ──────────────────────────────────────────────────────

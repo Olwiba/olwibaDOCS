@@ -9,6 +9,7 @@ export default defineConfig({
     'src/lib/mdx-components.tsx',
     'src/lib/server.ts',
     'src/lib/themes.ts',
+    'src/lib/feedback.ts',
   ],
   format: ['esm'],
   dts: true,

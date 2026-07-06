@@ -35,6 +35,13 @@ export { ThemeSelector } from './components/ThemeSelector';
 export { ThemeCodeBlock } from './components/ThemeCodeBlock';
 export { themes, Theme, getThemeStyles, getThemeCode } from './lib/themes';
 
+// Feedback (server helpers live in the './feedback' subpath export)
+export {
+  FeedbackSidebarItem,
+  type FeedbackSidebarItemProps,
+  type FeedbackSidebarPayload,
+} from './feedback/FeedbackSidebarItem';
+
 // Hooks
 export { useCopyToClipboard } from './hooks/use-copy-to-clipboard';
 
