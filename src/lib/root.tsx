@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRootRoute, HeadContent, Outlet, Scripts, type NotFoundRouteProps } from '@tanstack/react-router';
+import { createRootRoute, HeadContent, Outlet, Scripts, useLoaderData, type NotFoundRouteProps } from '@tanstack/react-router';
 import { RootProvider } from 'fumadocs-ui/provider/tanstack';
 import { ErrorPage } from '@/components/ErrorPage';
 import { ActiveThemeProvider } from '@/components/ActiveTheme';
@@ -31,6 +31,13 @@ export interface DocsRootConfig {
   searchItems?: SearchDialogItem[];
   /** Browse pages shown when input is empty and no quick links are provided. */
   browsePages?: SearchDialogBrowsePage[];
+  /**
+   * Server-side alternative to `browsePages`. Runs in the root route loader
+   * during SSR (result is dehydrated to the client), so implementations can
+   * call a server fn that reads the fumadocs source without pulling its
+   * node-only runtime into the client bundle. Ignored when `browsePages` is set.
+   */
+  browsePagesLoader?: () => Promise<SearchDialogBrowsePage[]>;
   notFoundComponent?: (props: NotFoundRouteProps) => React.ReactNode;
   /** Optional wrapper rendered around the full page body — use this to inject a root-level provider (e.g. OlwibaUIProvider). */
   wrapper?: React.ComponentType<{ children: React.ReactNode }>;
@@ -55,6 +62,7 @@ export function createDocsRoot(config: DocsRootConfig) {
     initialTheme,
     cssUrl,
     browsePages,
+    browsePagesLoader,
     searchItems,
     notFoundComponent,
     wrapper: Wrapper,
@@ -69,8 +77,13 @@ export function createDocsRoot(config: DocsRootConfig) {
   }
 
   function RootDocument({ children }: { children: React.ReactNode }) {
+    const loaderData = useLoaderData({ from: '__root__' }) as
+      | { browsePages?: SearchDialogBrowsePage[] }
+      | undefined;
+    const effectiveBrowsePages = browsePages ?? loaderData?.browsePages;
     const dialogItems = searchItems !== undefined && searchItems.length > 0 ? searchItems : undefined;
-    const dialogBrowsePages = browsePages !== undefined && browsePages.length > 0 ? browsePages : undefined;
+    const dialogBrowsePages =
+      effectiveBrowsePages !== undefined && effectiveBrowsePages.length > 0 ? effectiveBrowsePages : undefined;
     const SearchDialogComponent = React.useCallback(
       (props: React.ComponentProps<typeof SearchDialog>) => (
         <SearchDialog
@@ -110,6 +123,9 @@ export function createDocsRoot(config: DocsRootConfig) {
   }
 
   return createRootRoute({
+    loader: async () => ({
+      browsePages: browsePagesLoader ? await browsePagesLoader() : undefined,
+    }),
     head: () => {
       const head = buildDocsHead(meta);
 

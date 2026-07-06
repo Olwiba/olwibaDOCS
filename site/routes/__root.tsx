@@ -5,13 +5,7 @@ import { SiteFooter } from '~/components/SiteFooter';
 import { projectConfig } from '@/project.config';
 import { siteMeta } from '~/lib/seo';
 import appCss from '~/styles/app.css?url';
-import { source } from '~/lib/source';
-
-const searchBrowsePages = source.getPages().map((page) => ({
-  title: page.data.title,
-  description: page.data.description,
-  url: page.url,
-}));
+import { getBrowsePages } from '~/lib/browse-pages';
 
 export const Route = createDocsRoot({
   meta: siteMeta,
@@ -26,6 +20,6 @@ export const Route = createDocsRoot({
   footer: SiteFooter,
   initialTheme: projectConfig.theme.initialDocsTheme,
   cssUrl: appCss,
-  browsePages: searchBrowsePages,
+  browsePagesLoader: () => getBrowsePages(),
   wrapper: ProjectThemeWrapper,
 });

@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { ErrorPage } from '@/components/ErrorPage';
 import { buildDocsPageHead } from '@olwiba/docs';
 import { siteMeta } from '~/lib/seo';
@@ -13,20 +13,16 @@ function DocsNotFound() {
     </div>
   );
 }
-import { createServerFn } from '@tanstack/react-start';
-import { source } from '~/lib/source';
 import browserCollections from 'fumadocs-mdx:collections/browser';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
-import * as React from 'react';
 import { Suspense } from 'react';
 import { mdxComponents } from '@/lib/mdx-components';
 import { ComponentPreview } from '~/components/ComponentPreview';
 import { CopyCommandButton } from '@/components/CopyCommandButton';
-import { type TocItem } from '@/components/DocsToc';
 import { type SidebarSection } from '@/components/DocsSidebar';
-import { DocsLayout, extractTextFromReactNode, type PageLoaderData } from '@/components/DocsLayout';
-import { findNeighbour } from 'fumadocs-core/page-tree';
+import { DocsLayout, type PageLoaderData } from '@/components/DocsLayout';
+import { serverLoader } from './-loader';
 
 const sidebarSections: SidebarSection[] = [
   { name: 'Get Started', href: '/docs' },
@@ -47,39 +43,6 @@ export const Route = createFileRoute('/docs/$')({
     return data;
   },
 });
-
-const serverLoader = createServerFn({
-  method: 'GET',
-})
-  .inputValidator((slugs: string[]) => slugs)
-  .handler(async ({ data: slugs }) => {
-    const page = source.getPage(slugs);
-    if (!page) throw notFound();
-
-    const pageTree = source.getPageTree();
-    const neighbours = findNeighbour(pageTree, page.url);
-    const rawContent = await page.data.getText('raw');
-
-    return {
-      path: page.path,
-      url: page.url,
-      pageTree: await source.serializePageTree(pageTree),
-      frontmatter: {
-        title: page.data.title,
-        description: page.data.description,
-      },
-      toc: (page.data.toc ?? []).map((item: { title?: React.ReactNode; url: string; depth: number }) => ({
-        title: extractTextFromReactNode(item.title),
-        url: item.url,
-        depth: item.depth,
-      })) as TocItem[],
-      rawContent,
-      neighbours: {
-        previous: neighbours.previous ? { url: neighbours.previous.url, name: extractTextFromReactNode(neighbours.previous.name) } : null,
-        next: neighbours.next ? { url: neighbours.next.url, name: extractTextFromReactNode(neighbours.next.name) } : null,
-      },
-    };
-  });
 
 const clientLoader = browserCollections.docs.createClientLoader({
   component({ default: MDX }) {
