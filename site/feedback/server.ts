@@ -36,7 +36,7 @@ export const getFeedbackConfig = createServerFn({ method: 'GET' }).handler(async
 });
 
 export const submitFeedback = createServerFn({ method: 'POST' })
-  .validator((input: FeedbackSubmission): FeedbackSubmission => {
+  .inputValidator((input: FeedbackSubmission): FeedbackSubmission => {
     if (input.type !== 'feedback' && input.type !== 'feature-request') {
       throw new Error('Invalid feedback type');
     }
