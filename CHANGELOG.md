@@ -1,6 +1,20 @@
 # Changelog
 
 
+
+## 0.1.32
+
+### Added
+
+- Feedback feature: `FeedbackSidebarItem` component (plus `FeedbackSidebarItemProps` / `FeedbackSidebarPayload` types) exported from the main entry, and a new `@olwiba/docs/feedback` subpath export with the server-side helpers — `deliverFeedback`, `feedbackEnabled`, `validateFeedbackSubmission`, `getFeedbackEmailEnv` — covering pluggable email providers and rate limiting. TanStack Start compiles server fns from app source only, so each site writes two thin `createServerFn` wrappers around these helpers and passes them to `<FeedbackSidebarItem>`; see the demo site's `site/lib/feedback-server.ts` for the reference wiring.
+- `browsePagesLoader` option on `createDocsRoot` — a server-side alternative to `browsePages` that runs in the root route loader during SSR (result is dehydrated to the client), so implementations can read the fumadocs source via a server fn without pulling its node-only runtime into the client bundle. Ignored when `browsePages` is set.
+- `sidebarBottomSlot` prop on `DocsLayout` (surfaced as `bottomSlot` on `DocsSidebar`) — content pinned to the bottom of the sidebar viewport, pushed up by the footer at page end.
+- `links` prop on `DocsFooter` (`DocsFooterLink[]`) — right-aligned links rendered before the changelog link.
+
+### Changed
+
+- `IsometricPlane` now server-renders its card-grid skeleton instead of returning `null` until mount (the seeded layout is deterministic and its chrome is theme-neutral, so SSR output matches hydration). The image layer stays client-gated: it waits until every unique image is fetched and decoded, then fades in populated instead of popping in one by one. Cards without a fixed height size themselves from the image's intrinsic aspect ratio so the skeleton doesn't collapse, and the scroll animation pauses under `prefers-reduced-motion`.
+
 ## 0.1.31
 
 ### Fixed
