@@ -12,10 +12,20 @@ export interface DocsHeaderProps {
   navItems?: Array<{ label: string; href: string }>;
   githubUrl?: string;
   githubBadge?: string;
+  showSearch?: boolean;
+  showModeSwitcher?: boolean;
   rightSlot?: React.ReactNode;
 }
 
-export function DocsHeader({ logo, navItems, githubUrl, githubBadge, rightSlot }: DocsHeaderProps) {
+export function DocsHeader({
+  logo,
+  navItems,
+  githubUrl,
+  githubBadge,
+  showSearch = true,
+  showModeSwitcher = true,
+  rightSlot,
+}: DocsHeaderProps) {
   return (
     <header className="sticky top-0 z-50 flex h-14 shrink-0 justify-center border-b bg-background/95 backdrop-blur-sm">
       <div className="h-full w-4 shrink-0 border-dashed lg:w-12 lg:border-l" aria-hidden="true" />
@@ -42,7 +52,7 @@ export function DocsHeader({ logo, navItems, githubUrl, githubBadge, rightSlot }
         )}
 
         <div className="flex items-center gap-2 ml-auto">
-          <SearchButton />
+          {showSearch && <SearchButton />}
           {githubUrl && (
             <div className="relative overflow-visible">
               <a
@@ -68,7 +78,7 @@ export function DocsHeader({ logo, navItems, githubUrl, githubBadge, rightSlot }
             </div>
           )}
           {rightSlot}
-          <ModeSwitcher />
+          {showModeSwitcher && <ModeSwitcher />}
         </div>
       </div>
       <div className="h-full w-4 shrink-0 border-dashed lg:w-12 lg:border-r" aria-hidden="true" />

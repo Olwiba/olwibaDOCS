@@ -55,5 +55,14 @@ export { mdxComponents, type MdxComponents } from './lib/mdx-components';
 export { createDocsRoot, DocsNotFound, type DocsRootConfig, type DocsRootMeta, type DocsRootFavicon } from './lib/root';
 export { buildDocsHead, buildDocsMetaTags, buildDocsLinkTags, buildDocsPageHead, type DocsPageSeoData } from './lib/seo';
 export { createDocsRouter } from './lib/router';
+export {
+  guardDocsResponse,
+  requireDocsAccess,
+  resolveDocsAccess,
+  type DocsAccessConfig,
+  type DocsAccessMode,
+  type DocsAccessState,
+  type DocsUnauthorizedBehavior,
+} from './lib/access';
 // Re-export useful fumadocs page-tree types
 export type { Root as PageTreeRoot, Node as PageTreeNode, Item as PageTreeItem, Folder as PageTreeFolder, Separator as PageTreeSeparator } from 'fumadocs-core/page-tree';
