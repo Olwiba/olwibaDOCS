@@ -123,7 +123,49 @@ function Page() {
 }
 ```
 
-### 4. Optional: production server helper
+### 4. Sandbox bootstrap
+
+Register consumer-owned sandboxes before any `<Sandbox id="..." />` renders (e.g. at app startup, alongside your route tree):
+
+```ts
+import { registerSandboxes } from '@olwiba/docs';
+
+registerSandboxes([
+  {
+    id: 'my-example',
+    title: 'My Example',
+    files: [{ path: 'app/page.tsx', language: 'tsx', code: '...' }],
+    preview: React.lazy(() => import('./demos/my-example')),
+  },
+]);
+```
+
+```mdx
+<Sandbox id="my-example" />
+```
+
+### 5. Full app bootstrap
+
+`createDocsRoot` and `createDocsRouter` wire up the root route and router in one call, replacing hand-rolled `createRootRoute`/`createRouter` setup:
+
+```tsx
+import { createDocsRoot, createDocsRouter } from '@olwiba/docs';
+import { Header } from './Header';
+import { Footer } from './Footer';
+
+export const Route = createDocsRoot({
+  meta: { title: 'My Docs', description: 'Docs site' },
+  header: Header,
+  footer: Footer,
+  cssUrl: '/app.css',
+});
+
+export function getRouter() {
+  return createDocsRouter(routeTree);
+}
+```
+
+### 6. Optional: production server helper
 
 ```ts
 import { createServer } from '@olwiba/docs/server';

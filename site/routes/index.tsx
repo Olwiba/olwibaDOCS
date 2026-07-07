@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { AsciiText, Button } from '@olwiba/cn';
-import { IsometricPlane, type IsometricImage } from '@/components/IsometricPlane';
+import { IsometricPlane, type IsometricImage } from '~/components/IsometricPlane';
 import rawManifest from '../iso-previews-manifest.json';
 
 type ManifestEntry = { file: string; width: number; height: number; theme: string };

@@ -16,6 +16,12 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN bun run web:build
 
+# Production-only dependencies (excludes puppeteer-core, vite, tsup, vitest,
+# typescript, tailwind, etc. — server.ts only needs hono + runtime deps)
+FROM base AS prod-deps
+COPY package.json bun.lock* ./
+RUN bun install --frozen-lockfile --production
+
 # Production
 FROM base AS runner
 WORKDIR /app
@@ -25,9 +31,8 @@ ENV NODE_ENV=production
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/content ./content
 COPY --from=builder /app/server.ts ./server.ts
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
 EXPOSE 3000

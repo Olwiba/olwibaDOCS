@@ -31,6 +31,10 @@ function resolveRepoRoot(name: string, candidates: string[]) {
 }
 
 function getCnRoot() {
+  if (process.env.CN_ROOT) {
+    return resolveRepoRoot('olwibaCN', [process.env.CN_ROOT]);
+  }
+
   return resolveRepoRoot('olwibaCN', [
     resolve(DOCS_ROOT, '..', 'olwibaCN'),
     'C:/Workspace/Nexus/olwibaCN',
@@ -84,7 +88,8 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
 
   // App-level components
   { src: 'src/components/AsciiText.tsx', dest: 'src/components/AsciiText.tsx' },
-  { src: 'src/components/IsometricPlane.tsx', dest: 'src/components/IsometricPlane.tsx' },
+  // Site-only (not exported from the package) — see lode/olwibaDOCS finding #7.
+  { src: 'src/components/IsometricPlane.tsx', dest: 'site/components/IsometricPlane.tsx' },
   { src: 'src/components/ui/error-page.tsx', dest: 'src/components/ErrorPage.tsx' },
 
   // Feedback system (component + portable server core; server.ts is app-specific

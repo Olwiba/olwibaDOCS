@@ -37,7 +37,7 @@ function buildGrid<T>(items: T[], rows: number, cols: number): T[][] {
 export function IsometricPlane({
   images,
   cols = 13,
-  rows = 22,
+  rows = 11,
   cardWidth = 176,
   cardHeight = 'auto',
   scrollDuration = 75,
