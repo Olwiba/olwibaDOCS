@@ -7,6 +7,7 @@ import {
   composeAsciiText,
   dosrebelFont,
   getAsciiAccentColumns,
+  getAsciiCellIntensity,
   parseFigletFont,
   renderAsciiFrameToContext,
   type AsciiFrameContext,
@@ -17,6 +18,9 @@ import {
 export interface AsciiTextProps {
   text?: string;
   accent?: string;
+  accents?: Array<{ text: string; color: string }>;
+  shine?: string;
+  shineColor?: string;
   color?: string;
   accentColor?: string;
 }
@@ -24,6 +28,9 @@ export interface AsciiTextProps {
 export function AsciiText({
   text = 'olwibaCN',
   accent = '',
+  accents,
+  shine = '',
+  shineColor = 'rgba(255,255,255,0.92)',
   color,
   accentColor,
 }: AsciiTextProps) {
@@ -34,6 +41,26 @@ export function AsciiText({
   const accentCols = useMemo(() => {
     return getAsciiAccentColumns(font, text, accent);
   }, [font, text, accent]);
+  const multiAccentCols = useMemo(() => {
+    if (!accents?.length) return null;
+    const map = new Map<number, string>();
+    for (const item of accents) {
+      const cols = getAsciiAccentColumns(font, text, item.text);
+      for (const col of cols) map.set(col, item.color);
+    }
+    return map;
+  }, [accents, font, text]);
+  const getCellColor = useCallback((col: number, baseColor: string, highlightColor: string) => {
+    return multiAccentCols?.get(col) ?? (accentCols.has(col) ? highlightColor : baseColor);
+  }, [accentCols, multiAccentCols]);
+  const shineCols = useMemo(() => {
+    return getAsciiAccentColumns(font, text, shine);
+  }, [font, shine, text]);
+  const shineBounds = useMemo(() => {
+    if (!shineCols.size) return null;
+    const cols = Array.from(shineCols);
+    return { min: Math.min(...cols), max: Math.max(...cols) };
+  }, [shineCols]);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
@@ -98,14 +125,37 @@ export function AsciiText({
 
     const { base: baseColor, accent: highlightColor } = colorsRef.current;
 
-    renderAsciiFrameToContext(ctx as unknown as AsciiFrameContext, { cells, cols, rows }, {
-      accentColumns: accentCols,
-      color: baseColor,
-      accentColor: highlightColor,
-      time,
-      pointer: mouseRef.current,
-      waves: wavesRef.current,
-    });
+    if (multiAccentCols || shineCols.size) {
+      for (const cell of cells) {
+        const intensity = getAsciiCellIntensity(cell, {
+          time,
+          pointer: mouseRef.current,
+          waves: wavesRef.current,
+        });
+        ctx.globalAlpha = intensity;
+        ctx.fillStyle = getCellColor(cell.col, baseColor, highlightColor);
+        ctx.fillRect(cell.col * CHAR_W, cell.row * CHAR_H, CHAR_W, CHAR_H);
+
+        if (shineBounds && shineCols.has(cell.col)) {
+          const alpha = getShineAlpha(cell.col, cell.row, time, shineBounds) * (cell.ch === '░' ? 0.55 : 1);
+          if (alpha > 0) {
+            ctx.globalAlpha = intensity * alpha;
+            ctx.fillStyle = shineColor;
+            ctx.fillRect(cell.col * CHAR_W, cell.row * CHAR_H, CHAR_W, CHAR_H);
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+    } else {
+      renderAsciiFrameToContext(ctx as unknown as AsciiFrameContext, { cells, cols, rows }, {
+        accentColumns: accentCols,
+        color: baseColor,
+        accentColor: highlightColor,
+        time,
+        pointer: mouseRef.current,
+        waves: wavesRef.current,
+      });
+    }
 
     if (!hasPaintedRef.current) {
       hasPaintedRef.current = true;
@@ -114,12 +164,12 @@ export function AsciiText({
 
     // Prune old waves
     wavesRef.current = wavesRef.current.filter((w) => time - w.t < 3);
-  }, [cells, accentCols, cols, rows]);
+  }, [accentCols, cells, cols, getCellColor, multiAccentCols, rows, shineBounds, shineColor, shineCols]);
 
   useEffect(() => {
     hasPaintedRef.current = false;
     setIsCanvasReady(false);
-  }, [text, accent, color, accentColor]);
+  }, [text, accent, accents, shine, shineColor, color, accentColor]);
 
   useEffect(() => {
     let running = true;
@@ -191,16 +241,31 @@ export function AsciiText({
         >
           {cells.map((cell) => {
             const isAccent = accentCols.has(cell.col);
+            const multiAccentColor = multiAccentCols?.get(cell.col);
+            const shineAlpha = shineBounds && shineCols.has(cell.col)
+              ? getShineAlpha(cell.col, cell.row, 0.2, shineBounds) * (cell.ch === '░' ? 0.55 : 1)
+              : 0;
             return (
-              <rect
-                key={`${cell.col}-${cell.row}`}
-                x={cell.col * CHAR_W}
-                y={cell.row * CHAR_H}
-                width={CHAR_W}
-                height={CHAR_H}
-                fill={isAccent ? fallbackAccentColor : 'currentColor'}
-                opacity={cell.ch === '░' ? 0.15 : 0.78}
-              />
+              <React.Fragment key={`${cell.col}-${cell.row}`}>
+                <rect
+                  x={cell.col * CHAR_W}
+                  y={cell.row * CHAR_H}
+                  width={CHAR_W}
+                  height={CHAR_H}
+                  fill={multiAccentColor ?? (isAccent ? fallbackAccentColor : 'currentColor')}
+                  opacity={cell.ch === '░' ? 0.15 : 0.78}
+                />
+                {shineAlpha > 0 && (
+                  <rect
+                    x={cell.col * CHAR_W}
+                    y={cell.row * CHAR_H}
+                    width={CHAR_W}
+                    height={CHAR_H}
+                    fill={shineColor}
+                    opacity={shineAlpha}
+                  />
+                )}
+              </React.Fragment>
             );
           })}
         </svg>
@@ -219,4 +284,20 @@ export function AsciiText({
       </div>
     </div>
   );
+}
+
+function getShineAlpha(col: number, row: number, time: number, bounds: { min: number; max: number }) {
+  const span = bounds.max - bounds.min + 1;
+  const travel = span + 6;
+  const diagonalCol = col + row * 0.62;
+  const primarySweep = bounds.max + 3 - ((time * 1.35) % 1) * travel;
+  const secondarySweep = bounds.max + 3 - (((time * 1.35) + 0.5) % 1) * travel;
+  const primary = getShineBandAlpha(diagonalCol, primarySweep);
+  const secondary = getShineBandAlpha(diagonalCol, secondarySweep);
+  return Math.min(0.86, primary + secondary * 0.82);
+}
+
+function getShineBandAlpha(diagonalCol: number, sweep: number) {
+  const distance = Math.abs(diagonalCol - sweep);
+  return Math.max(0, 1 - distance / 2.7) ** 2 * 0.78;
 }
