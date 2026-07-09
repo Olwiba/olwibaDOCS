@@ -2,6 +2,17 @@
 
 
 
+
+## 0.1.33
+
+### Added
+
+- Add private access guards
+
+### Fixed
+
+- Close out Fable 5 findings — docs drift, Dockerfile bloat, site-only IsometricPlane
+
 ## 0.1.32
 
 ### Added
