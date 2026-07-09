@@ -4,6 +4,17 @@
 
 
 
+
+## 0.1.35
+
+### Changed
+
+- `Sandbox` preview iframe now auto-sizes to its content when no `previewHeight` is set. A `ResizeObserver` inside the iframe document tracks the mounted root's height and resizes the iframe to match (writes only on change, so no resize feedback loop), with a 288px placeholder height before first measure. When `previewHeight` is provided, the previous fixed-height (`h-full`) behavior is unchanged. Expanded mode now makes the preview area a scrollable flex child (`flex-1 overflow-y-auto`) instead of clipping tall content.
+
+### Fixed
+
+- Docs SSR runtime dependencies are now included in the published package.
+
 ## 0.1.34
 
 No user-facing changes.

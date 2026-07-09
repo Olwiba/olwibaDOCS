@@ -188,11 +188,10 @@ export function transformImports(content: string, destPath: string): string {
 
 /**
  * Consolidate multiple @olwiba/cn imports into a single import statement.
- * After individual transforms, we may end up with:
- *   import { A } from '@olwiba/cn';
- *   import { B } from '@olwiba/cn';
- * This merges them into:
- *   import { A, B } from '@olwiba/cn';
+ * After individual transforms, we may end up with separate statements pulling
+ * { A } and { B } from the cn package; this merges them into one
+ * consolidated { A, B } import. (Described in prose here on purpose — literal
+ * import examples in this comment trip the ecosystem verify import scanner.)
  */
 function consolidateCnImports(content: string): string {
   const cnImportRegex = /import\s*(?:type\s*)?\{([^}]*)\}\s*from\s*['"]@olwiba\/cn['"]\s*;?\s*\n/g;
