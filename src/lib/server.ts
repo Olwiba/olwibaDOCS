@@ -63,7 +63,7 @@ export function createServer(options: ServerOptions = {}) {
 
   return {
     port,
-    fetch: app.fetch,
+    fetch: app.fetch.bind(app),
   }
 }
 
