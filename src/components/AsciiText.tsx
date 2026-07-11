@@ -286,12 +286,15 @@ export function AsciiText({
   );
 }
 
+// Sweeps per second for the shine bands. Tuned by feel — was 1.35, slowed 25%.
+const SHINE_SPEED = 1.0125;
+
 function getShineAlpha(col: number, row: number, time: number, bounds: { min: number; max: number }) {
   const span = bounds.max - bounds.min + 1;
   const travel = span + 6;
   const diagonalCol = col + row * 0.62;
-  const primarySweep = bounds.max + 3 - ((time * 1.35) % 1) * travel;
-  const secondarySweep = bounds.max + 3 - (((time * 1.35) + 0.5) % 1) * travel;
+  const primarySweep = bounds.max + 3 - ((time * SHINE_SPEED) % 1) * travel;
+  const secondarySweep = bounds.max + 3 - (((time * SHINE_SPEED) + 0.5) % 1) * travel;
   const primary = getShineBandAlpha(diagonalCol, primarySweep);
   const secondary = getShineBandAlpha(diagonalCol, secondarySweep);
   return Math.min(0.86, primary + secondary * 0.82);
