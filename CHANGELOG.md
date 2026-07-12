@@ -5,6 +5,18 @@
 
 
 
+
+## 0.1.36
+
+### Changed
+
+- `AsciiText` shine sweep animation slowed by 25%.
+
+### Fixed
+
+- `DocsFooter` links now collapse into an upward-opening dropdown menu behind an ellipsis button below the `md` breakpoint, so they no longer wrap onto a second line on narrow viewports.
+- `createServer` now binds the returned `fetch` handler to the app instance (`app.fetch.bind(app)`), fixing lost-`this` errors when the handler is passed by reference to a server runtime.
+
 ## 0.1.35
 
 ### Changed
