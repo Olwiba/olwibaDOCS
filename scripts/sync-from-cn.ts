@@ -62,6 +62,9 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
   { src: 'src/docs/components/ThemeCodeBlock.tsx', dest: 'src/components/ThemeCodeBlock.tsx' },
   { src: 'src/docs/components/CopyCommandButton.tsx', dest: 'src/components/CopyCommandButton.tsx' },
   { src: 'src/docs/components/Sandbox.tsx', dest: 'src/components/Sandbox.tsx' },
+  { src: 'src/docs/components/DocsHeroPattern.tsx', dest: 'src/components/DocsHeroPattern.tsx' },
+  { src: 'src/docs/components/DocsCardGrid.tsx', dest: 'src/components/DocsCardGrid.tsx' },
+  { src: 'src/docs/components/DocsFeedback.tsx', dest: 'src/components/DocsFeedback.tsx' },
   { src: 'src/docs/components/sandbox-registry.ts', dest: 'src/components/sandbox-registry.ts' },
 
   // Shared layout components (CN: src/docs/components/ → DOCS: src/components/)

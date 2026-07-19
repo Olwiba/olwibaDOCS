@@ -19,6 +19,14 @@ export { DocsHeader, type DocsHeaderProps } from './components/DocsHeader';
 export { DocsFooter, type DocsFooterProps } from './components/DocsFooter';
 export { DocsLayout, type DocsLayoutProps, type PageLoaderData, extractTextFromReactNode } from './components/DocsLayout';
 export { ModeSwitcher, type ModeSwitcherProps } from './components/ModeSwitcher';
+export {
+  DocsHeroPattern,
+  DocsGridPattern,
+  type DocsHeroPatternProps,
+  type DocsGridPatternProps,
+} from './components/DocsHeroPattern';
+export { DocsCardGrid, DocsCard, type DocsCardGridProps, type DocsCardProps } from './components/DocsCardGrid';
+export { DocsFeedback, type DocsFeedbackProps, type DocsFeedbackPayload } from './components/DocsFeedback';
 export { CopyCommandButton } from './components/CopyCommandButton';
 export { SearchButton, type SearchButtonProps } from './components/SearchButton';
 export {
