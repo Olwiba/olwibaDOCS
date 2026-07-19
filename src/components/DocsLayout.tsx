@@ -49,24 +49,48 @@ export interface DocsLayoutProps {
   defaultOpenFolders?: boolean;
   /** Pinned to the bottom of the sidebar viewport; pushed up by the footer at page end. */
   sidebarBottomSlot?: React.ReactNode;
+  /**
+   * 'technical' (default): current look — blueprint rails, tight chrome.
+   * 'product': softer product-docs feel — no rails, wider gutters, larger title
+   * and description. Also stamps `data-docs-variant` on the root for CSS hooks.
+   */
+  variant?: 'technical' | 'product';
   children: React.ReactNode;
 }
 
-export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders, sidebarBottomSlot, children }: DocsLayoutProps) {
+function cx(...classes: Array<string | false | undefined>) {
+  return classes.filter(Boolean).join(' ');
+}
+
+export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders, sidebarBottomSlot, variant = 'technical', children }: DocsLayoutProps) {
+  const product = variant === 'product';
   return (
-    <div className="flex flex-1 flex-col lg:px-2">
+    <div className="flex flex-1 flex-col lg:px-2" data-docs-variant={variant}>
       <SidebarProvider className="min-h-min flex-1 items-start px-0 [--sidebar-width:220px] [--top-spacing:1.5rem] lg:[--sidebar-width:240px] lg:[--top-spacing:2rem]">
         <DocsSidebar tree={pageTree} sections={sections} defaultOpenFolders={defaultOpenFolders} bottomSlot={sidebarBottomSlot} />
-        <div className="hidden lg:block w-4 self-stretch border-x border-dashed blueprint-pattern" aria-hidden="true" />
+        <div
+          className={cx('hidden lg:block w-4 self-stretch', !product && 'border-x border-dashed blueprint-pattern')}
+          aria-hidden="true"
+        />
         <div className="flex-1 min-w-0">
           <DocsMobileNav tree={pageTree} sections={sections} />
           <div className="flex items-stretch xl:w-full">
             <div className="flex min-w-0 flex-1 flex-col">
               <div className="h-[var(--top-spacing)] shrink-0" />
-              <div className="flex w-full min-w-0 flex-1 flex-col gap-8 px-4 pb-6 text-neutral-800 md:px-6 lg:pb-8 dark:text-neutral-300">
+              <div
+                className={cx(
+                  'flex w-full min-w-0 flex-1 flex-col text-neutral-800 dark:text-neutral-300',
+                  product ? 'gap-10 px-6 pb-8 md:px-10 lg:pb-12' : 'gap-8 px-4 pb-6 md:px-6 lg:pb-8',
+                )}
+              >
                 <div className="flex flex-col gap-2">
                   <div className="flex items-start justify-between">
-                    <h1 className="scroll-m-20 font-semibold text-4xl tracking-tight sm:text-3xl xl:text-4xl">
+                    <h1
+                      className={cx(
+                        'scroll-m-20 font-semibold tracking-tight',
+                        product ? 'text-4xl sm:text-4xl xl:text-5xl' : 'text-4xl sm:text-3xl xl:text-4xl',
+                      )}
+                    >
                       {loaderData.frontmatter.title}
                     </h1>
                     <div className="flex items-center gap-2 sm:gap-2">
@@ -103,7 +127,7 @@ export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders,
                     />
                   </div>
                   {loaderData.frontmatter.description && (
-                    <p className="text-balance text-muted-foreground">
+                    <p className={cx('text-balance text-muted-foreground', product && 'text-lg leading-relaxed')}>
                       {loaderData.frontmatter.description}
                     </p>
                   )}
@@ -134,7 +158,10 @@ export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders,
             </div>
             {loaderData.toc?.length > 0 && (
               <>
-              <div className="hidden xl:block w-4 self-stretch border-x border-dashed blueprint-pattern" aria-hidden="true" />
+              <div
+                className={cx('hidden xl:block w-4 self-stretch', !product && 'border-x border-dashed blueprint-pattern')}
+                aria-hidden="true"
+              />
               <div className="hidden w-fit shrink-0 flex-col pb-4 lg:pb-6 xl:flex">
                 <div className="h-[var(--top-spacing)] shrink-0" />
                 <div className="sticky top-[calc(var(--header-height)+13px)] z-30 max-h-[calc(100svh-var(--header-height)-1px)] overflow-hidden overscroll-none">
