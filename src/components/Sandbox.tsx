@@ -3,7 +3,6 @@
 
 import * as React from 'react';
 import { createPortal } from 'react-dom';
-import { createRoot, type Root } from 'react-dom/client';
 import {
   ChevronDown,
   ChevronRight,
@@ -77,7 +76,6 @@ function IframePreview({
   const iframeRef = React.useRef<HTMLIFrameElement | null>(null);
   const [mountNode, setMountNode] = React.useState<HTMLElement | null>(null);
   const [mountFailed, setMountFailed] = React.useState(false);
-  const reactRootRef = React.useRef<Root | null>(null);
   const lastHeightRef = React.useRef(0);
 
   const setupIframeDocument = React.useCallback(() => {
@@ -165,25 +163,6 @@ function IframePreview({
   }, [setupIframeDocument]);
 
   React.useEffect(() => {
-    if (!mountNode) return;
-    if (!reactRootRef.current) {
-      reactRootRef.current = createRoot(mountNode);
-    }
-    reactRootRef.current.render(<>{children}</>);
-    return () => {
-      reactRootRef.current?.render(<></>);
-    };
-  }, [children, mountNode]);
-
-  React.useEffect(
-    () => () => {
-      reactRootRef.current?.unmount();
-      reactRootRef.current = null;
-    },
-    []
-  );
-
-  React.useEffect(() => {
     if (!autoHeight || !mountNode) return;
     const iframe = iframeRef.current;
     if (!iframe) return;
@@ -227,6 +206,7 @@ function IframePreview({
           Preview failed to mount inside iframe.
         </div>
       ) : null}
+      {mountNode ? createPortal(children, mountNode) : null}
     </div>
   );
 }
@@ -414,7 +394,9 @@ export function Sandbox({
   const previewWidth =
     viewport === 'custom'
       ? Math.max(360, Math.min(customWidth, maxWidth))
-      : Math.min(viewportWidths[viewport], maxWidth);
+      : viewport === 'desktop'
+        ? undefined
+        : Math.min(viewportWidths[viewport], maxWidth);
   const previewHeight = height ?? (shellPreview ? 640 : undefined);
 
   const toggleFolder = (folderPath: string) => {
@@ -579,7 +561,7 @@ export function Sandbox({
                   isResizing && 'select-none'
                 )}
                 style={{
-                  width: `${previewWidth}px`,
+                  width: previewWidth === undefined ? '100%' : `${previewWidth}px`,
                   ...(previewHeight
                     ? { height: `${isExpanded ? Math.max(previewHeight, 720) : previewHeight}px` }
                     : {}),
