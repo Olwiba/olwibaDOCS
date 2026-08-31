@@ -6,6 +6,19 @@
 
 
 
+
+## 0.1.39
+
+### Changed
+
+- `Sandbox` desktop viewport now fills the available preview width instead of being clamped to a fixed pixel width, so a docs page with a wide content column no longer letterboxes its own preview. The `mobile` (390px) and `tablet` (768px) presets and the drag-resizable `custom` viewport are unchanged.
+- `@olwiba/cn` 0.1.29 → 0.1.34 and `@olwiba/dx` 0.0.19 → 0.0.23 (dev dependencies).
+
+### Fixed
+
+- `Sandbox` preview children now portal into the iframe (`createPortal`) instead of being rendered by a second React root created with `createRoot`. The separate root started a fresh React tree, so providers wrapping `<Sandbox>` — theme, router, docs context — were invisible to the previewed component and any consumer of them threw or fell back to defaults. Portaling keeps the children in the parent tree while still mounting them into the iframe document, so context flows through.
+- The `@olwiba/cn` dev dependency was pinned to 0.1.20, which is not a published version and could never resolve — it blocked every workspace-root install.
+
 ## 0.1.36
 
 ### Changed
