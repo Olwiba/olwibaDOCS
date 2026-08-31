@@ -56,6 +56,21 @@ type FolderNode = {
 
 type TreeNode = FileNode | FolderNode;
 
+// Demos render <SandboxControls> inside their own tree — inside the preview
+// iframe, even — but the DOM is portaled to a strip below the preview frame.
+// Example switches are documentation scaffolding: inside the frame they read
+// as product chrome, which is exactly the wrong lesson for a page pattern.
+const SandboxControlsContext = React.createContext<HTMLDivElement | null>(null);
+
+export function SandboxControls({ children }: { children: React.ReactNode }) {
+  const target = React.useContext(SandboxControlsContext);
+  if (!target) return null;
+  return createPortal(
+    <div className="border-t border-fd-border bg-fd-muted/20 px-4 py-3">{children}</div>,
+    target,
+  );
+}
+
 const viewportWidths: Record<Exclude<SandboxViewport, 'custom'>, number> = {
   desktop: 1200,
   tablet: 768,
@@ -238,6 +253,7 @@ export function Sandbox({
   );
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [isMounted, setIsMounted] = React.useState(false);
+  const [controlsTarget, setControlsTarget] = React.useState<HTMLDivElement | null>(null);
   const codeLayoutRef = React.useRef<HTMLDivElement | null>(null);
 
   const handlePointerMove = React.useCallback((event: PointerEvent) => {
@@ -464,6 +480,7 @@ export function Sandbox({
     });
 
   const panel = (
+    <SandboxControlsContext.Provider value={controlsTarget}>
     <div
       className={cn(
         'not-prose my-6 overflow-hidden rounded-lg border border-fd-border bg-fd-background',
@@ -550,6 +567,7 @@ export function Sandbox({
         </div>
 
         {mode === 'preview' ? (
+          <>
           <div
             className={cn(
               'relative overflow-x-auto bg-fd-background p-4',
@@ -608,7 +626,9 @@ export function Sandbox({
                 ) : null}
               </div>
             </div>
-          </div>
+            </div>
+            <div className="shrink-0" ref={setControlsTarget} />
+          </>
         ) : (
           <div
             className={cn(
@@ -679,6 +699,7 @@ export function Sandbox({
           </div>
         )}
     </div>
+    </SandboxControlsContext.Provider>
   );
 
   if (isExpanded && isMounted) {

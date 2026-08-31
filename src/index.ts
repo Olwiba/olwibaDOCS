@@ -8,7 +8,7 @@ export { DocsMobileNav, type DocsMobileNavProps } from './components/DocsMobileN
 export { DocsCopyPage } from './components/DocsCopyPage';
 export { DocsToc, type DocsTocProps, type TocItem } from './components/DocsToc';
 export { APIReference } from './components/APIReference';
-export { Sandbox } from './components/Sandbox';
+export { Sandbox, SandboxControls } from './components/Sandbox';
 export {
   registerSandboxes,
   getSandboxDefinition,
