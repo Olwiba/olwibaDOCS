@@ -66,7 +66,12 @@ export function SandboxControls({ children }: { children: React.ReactNode }) {
   const target = React.useContext(SandboxControlsContext);
   if (!target) return null;
   return createPortal(
-    <div className="border-t border-fd-border bg-fd-muted/20 px-4 py-3">{children}</div>,
+    <div
+      data-slot="sandbox-controls"
+      className="border-t border-fd-border bg-fd-muted/20 px-4 py-3"
+    >
+      {children}
+    </div>,
     target,
   );
 }
