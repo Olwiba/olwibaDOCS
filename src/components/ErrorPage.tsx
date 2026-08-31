@@ -6,6 +6,7 @@ import { AsciiText } from './AsciiText'
 import {
   Button,
   UIVariantProvider,
+  useUIVariant,
 } from '@olwiba/cn';
 
 
@@ -37,9 +38,11 @@ export function ErrorPage({
   action = { label: "Take me home", href: "/" },
   backAction = { label: "Go back" },
   renderLink = defaultRenderLink,
-  mode,
+  mode: modeProp,
   className,
 }: ErrorPageProps) {
+  const mode = modeProp ?? useUIVariant()
+
   return (
     <UIVariantProvider mode={mode}>
       <div className={cn("flex flex-col items-center justify-center px-6 py-16 text-center", className)}>

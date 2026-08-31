@@ -398,6 +398,10 @@ export function Sandbox({
         ? undefined
         : Math.min(viewportWidths[viewport], maxWidth);
   const previewHeight = height ?? (shellPreview ? 640 : undefined);
+  // Expanded is a near-fullscreen surface, so a fixed-height frame strands
+  // vertical space at every viewport preset. Fixed-height previews stretch to
+  // the modal instead; auto-height ones keep growing and scrolling the wrapper.
+  const fillsExpandedHeight = isExpanded && previewHeight !== undefined;
 
   const toggleFolder = (folderPath: string) => {
     setCollapsedFolders((prev) => {
@@ -549,21 +553,29 @@ export function Sandbox({
           <div
             className={cn(
               'relative overflow-x-auto bg-fd-background p-4',
-              isExpanded && 'flex-1 overflow-y-auto'
+              isExpanded && 'flex-1 overflow-y-auto',
+              fillsExpandedHeight && 'flex min-h-0 flex-col overflow-y-hidden'
             )}
           >
-            <div className="mx-auto min-w-[360px]" ref={containerRef}>
+            <div
+              className={cn(
+                'mx-auto min-w-[360px]',
+                fillsExpandedHeight && 'flex min-h-0 w-full flex-1 flex-col'
+              )}
+              ref={containerRef}
+            >
               <div
                 className={cn(
                   'relative mx-auto rounded-md border border-fd-border bg-background transition-[width]',
                   'min-h-[320px] overflow-hidden',
                   shellPreview ? 'p-0' : 'p-4',
-                  isResizing && 'select-none'
+                  isResizing && 'select-none',
+                  fillsExpandedHeight && 'min-h-0 flex-1'
                 )}
                 style={{
                   width: previewWidth === undefined ? '100%' : `${previewWidth}px`,
-                  ...(previewHeight
-                    ? { height: `${isExpanded ? Math.max(previewHeight, 720) : previewHeight}px` }
+                  ...(previewHeight && !fillsExpandedHeight
+                    ? { height: `${previewHeight}px` }
                     : {}),
                 }}
               >
