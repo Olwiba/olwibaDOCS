@@ -7,6 +7,19 @@
 
 
 
+
+## 0.1.40
+
+### Added
+
+- `SandboxControls` is now exported from the package barrel. Demos render `<SandboxControls>` anywhere inside their own tree — including inside the preview iframe — and the children portal out to a bordered strip directly below the preview frame. Example switches and toggles stay out of the preview, where they would otherwise read as part of the component being documented. The portaled wrapper carries `data-slot="sandbox-controls"` for styling. Rendering `<SandboxControls>` outside a `<Sandbox>` renders nothing.
+
+### Changed
+
+- `Sandbox` expanded mode no longer clamps fixed-height previews to a 720px frame. A preview with an explicit `height` (or the 640px `shellPreview` default) now stretches to fill the expanded modal instead of stranding vertical space at every viewport preset. Auto-height previews are unchanged — they keep growing and scrolling the wrapper.
+- `ErrorPage` falls back to the ambient `useUIVariant()` value when no `mode` prop is passed, so an `ErrorPage` inside a `UIVariantProvider` inherits the surrounding variant instead of resetting to the default.
+- `@olwiba/cn` 0.1.34 → 0.1.35 (dev dependency).
+
 ## 0.1.39
 
 ### Changed
