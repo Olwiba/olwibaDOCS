@@ -8,6 +8,19 @@
 
 
 
+
+## 0.1.41
+
+### Changed
+
+- `DocsHeader` renders the GitHub control as a disabled button with a tooltip when `githubBadge` is set, instead of a link with a badge pinned over it. Below the `sm` breakpoint there was no room beside the icon, so the badge sat centred on top of it — covering the thing it annotated. The tooltip carries the same text at every size and takes no space until asked for. It is a real `<button>` with `aria-disabled` rather than the `disabled` attribute, because a disabled button emits no pointer events and the tooltip explaining why it is disabled would never open; it is also opened on click, so the reason is reachable on touch screens where hover does not exist. With no `githubBadge`, the control is an ordinary link as before.
+- `DocsMobileNav` now renders its trigger inline when the host page has no `#docs-mobile-nav-trigger` element, instead of rendering nothing. Previously a missing mount point left the sheet reachable only through a button that did not exist, so mobile navigation disappeared silently while the component looked correct in isolation. Consumers that do render the mount point are unaffected — placing the trigger in your own header is now opt-in rather than something you lose by forgetting an id.
+
+### Fixed
+
+- `Sandbox` toolbar no longer forces horizontal page scroll on narrow viewports. The viewport preset group was absolutely centred at every width, which reserves no layout width, so its four buttons overflowed the toolbar on a phone. Below `lg` the group rejoins normal flow as a full-width row beneath the tabs; at `lg` and above the centred layout is unchanged.
+- Docs site homepage: the decorative isometric plane is pulled back and scaled down below 640px (it was translated 180px right and scaled 1.6x, putting nearly all of it off-screen on a 375px viewport), and the edge fade gradients are thinner on small screens so they no longer swallow the content they frame.
+
 ## 0.1.40
 
 ### Added
