@@ -49,10 +49,10 @@ function Home() {
       {isoImages.length > 0 && <IsometricPlane images={isoImages} />}
 
       <div className="absolute inset-0 z-[1] pointer-events-none">
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background/90 to-transparent dark:h-64 dark:from-background dark:to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background/90 to-transparent dark:h-64 dark:from-background dark:to-transparent" />
-        <div className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-background/90 to-transparent dark:w-64 dark:from-background dark:to-transparent" />
-        <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-background/90 to-transparent dark:w-64 dark:from-background dark:to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-24 sm:h-40 bg-gradient-to-b from-background/90 to-transparent dark:h-24 sm:dark:h-64 dark:from-background dark:to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-24 sm:h-40 bg-gradient-to-t from-background/90 to-transparent dark:h-24 sm:dark:h-64 dark:from-background dark:to-transparent" />
+        <div className="absolute inset-y-0 left-0 w-12 sm:w-40 bg-gradient-to-r from-background/90 to-transparent dark:w-12 sm:dark:w-64 dark:from-background dark:to-transparent" />
+        <div className="absolute inset-y-0 right-0 w-12 sm:w-40 bg-gradient-to-l from-background/90 to-transparent dark:w-12 sm:dark:w-64 dark:from-background dark:to-transparent" />
       </div>
 
       <div className="relative z-10 flex flex-col items-center w-full">

@@ -32,6 +32,9 @@ export function DocsMobileNav({ tree, sections }: DocsMobileNavProps) {
   const location = useLocation();
   const pathname = location.pathname;
 
+  // Null is a supported outcome, not a failure — see the fallback in the
+  // return. Read after mount because the header that owns the mount point
+  // renders in the same pass.
   React.useEffect(() => {
     setPortalTarget(document.getElementById('docs-mobile-nav-trigger'));
   }, []);
@@ -54,7 +57,19 @@ export function DocsMobileNav({ tree, sections }: DocsMobileNavProps) {
 
   return (
     <>
-      {portalTarget && createPortal(trigger, portalTarget)}
+      {portalTarget ? (
+        createPortal(trigger, portalTarget)
+      ) : (
+        // No mount point in the host's header. Previously this rendered
+        // nothing at all, which left the sheet reachable only by a button that
+        // did not exist — the nav was simply gone on mobile, silently, and the
+        // component looked fine in isolation. Two sites shipped that way.
+        //
+        // Rendering inline instead means a consumer gets a working nav by
+        // default and opts *in* to placing it in their header, rather than
+        // opting out of a feature by forgetting an id.
+        <div className="flex items-center px-4 pt-4 lg:hidden">{trigger}</div>
+      )}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="left" className="w-[280px] p-0">
           <SheetTitle className="sr-only">Navigation</SheetTitle>

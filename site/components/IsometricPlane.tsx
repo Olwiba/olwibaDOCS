@@ -53,6 +53,23 @@ export function IsometricPlane({
   // is fetched and decoded, so images fade in populated instead of popping in
   // one by one. Server and first client render both have imagesReady=false,
   // keeping hydration consistent.
+  // The plane is decorative, but it was effectively invisible on a phone: the
+  // desktop transform pushes it 180px right and scales it 1.6x, so on a 375px
+  // viewport almost all of it sat outside the screen. Pulled back and scaled
+  // down instead of hidden — the point of the thing is that it is seen.
+  //
+  // Server and first client render both assume wide, so hydration matches; the
+  // correction lands in the same frame as the effect. Acceptable for an
+  // aria-hidden background.
+  const [isoNarrow, setIsoNarrow] = React.useState(false);
+  React.useEffect(() => {
+    const query = window.matchMedia('(max-width: 640px)');
+    const sync = () => setIsoNarrow(query.matches);
+    sync();
+    query.addEventListener('change', sync);
+    return () => query.removeEventListener('change', sync);
+  }, []);
+
   const [imagesReady, setImagesReady] = React.useState(false);
   React.useEffect(() => {
     setImagesReady(false);
@@ -101,7 +118,9 @@ export function IsometricPlane({
       >
         <div
           style={{
-            transform: 'translateX(180px) scale(1.6) rotateX(55deg) rotateZ(-45deg)',
+            transform: isoNarrow
+              ? 'translateX(0px) scale(1.05) rotateX(55deg) rotateZ(-45deg)'
+              : 'translateX(180px) scale(1.6) rotateX(55deg) rotateZ(-45deg)',
             transformOrigin: 'center center',
             transformStyle: 'preserve-3d',
           }}

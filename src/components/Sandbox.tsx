@@ -494,7 +494,12 @@ export function Sandbox({
       )}
     >
         <div className="border-b border-fd-border bg-fd-muted/40 px-4 py-3">
-          <div className="relative flex items-center justify-between gap-2">
+          {/* Wraps below lg. The viewport group is absolutely centred on wide
+              screens, which reserves no width — so on a phone its four buttons
+              simply overflowed the toolbar and dragged the page into
+              horizontal scroll. Below lg it rejoins the flow as a full-width
+              row of its own, where it fits. */}
+          <div className="relative flex flex-wrap items-center justify-between gap-2">
             <div className="shrink-0">
               <Tabs
                 className="m-0"
@@ -513,8 +518,8 @@ export function Sandbox({
               </Tabs>
             </div>
 
-            <div className="pointer-events-none absolute left-1/2 -translate-x-1/2">
-              <div className="pointer-events-auto flex items-center justify-center gap-2">
+            <div className="order-last w-full lg:pointer-events-none lg:absolute lg:left-1/2 lg:order-none lg:w-auto lg:-translate-x-1/2">
+              <div className="pointer-events-auto flex flex-wrap items-center justify-center gap-2">
               <Button
                 className="h-7 px-2 text-xs"
                 onClick={() => setViewport('desktop')}
