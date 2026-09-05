@@ -9,6 +9,17 @@
 
 
 
+
+## 0.1.42
+
+### Added
+
+- `createDocsRoot` accepts an optional `useSearchEnabled` hook, called during render so it can read a session. Returning `false` unmounts the search dialog entirely rather than hiding its trigger — on a gated site, hiding the button was never enough, because the provider registers a Cmd+K handler regardless, so search stayed reachable by keyboard for signed-out visitors and would list the titles of pages they cannot open, leaking the shape of the documentation to exactly the people it is gated from. Defaults to always-on, which is correct for public docs, so existing consumers are unchanged.
+
+### Changed
+
+- `@olwiba/cn` 0.1.35 → 0.1.37 (dev dependency).
+
 ## 0.1.41
 
 ### Changed
