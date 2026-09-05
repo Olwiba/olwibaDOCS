@@ -38,9 +38,26 @@ export interface DocsRootConfig {
    * node-only runtime into the client bundle. Ignored when `browsePages` is set.
    */
   browsePagesLoader?: () => Promise<SearchDialogBrowsePage[]>;
+  /**
+   * Whether search is available to this visitor. Called as a hook during
+   * render, so it can read a session.
+   *
+   * Hiding the search *button* is not enough on a gated site: the provider
+   * registers a Cmd+K handler, so search stays reachable by keyboard and will
+   * happily list the titles of pages the visitor cannot open. Returning false
+   * unmounts the dialog rather than hiding its trigger.
+   *
+   * Defaults to always-on, which is right for public docs.
+   */
+  useSearchEnabled?: () => boolean;
   notFoundComponent?: (props: NotFoundRouteProps) => React.ReactNode;
   /** Optional wrapper rendered around the full page body — use this to inject a root-level provider (e.g. OlwibaUIProvider). */
   wrapper?: React.ComponentType<{ children: React.ReactNode }>;
+}
+
+/** Default for `useSearchEnabled`: public docs search everything. */
+function alwaysEnabled(): boolean {
+  return true;
 }
 
 function MaybeWrap({
@@ -64,6 +81,7 @@ export function createDocsRoot(config: DocsRootConfig) {
     browsePages,
     browsePagesLoader,
     searchItems,
+    useSearchEnabled,
     notFoundComponent,
     wrapper: Wrapper,
   } = config;
@@ -84,6 +102,11 @@ export function createDocsRoot(config: DocsRootConfig) {
     const dialogItems = searchItems !== undefined && searchItems.length > 0 ? searchItems : undefined;
     const dialogBrowsePages =
       effectiveBrowsePages !== undefined && effectiveBrowsePages.length > 0 ? effectiveBrowsePages : undefined;
+    // Resolved through a stable local so the hook call is unconditional —
+    // `useSearchEnabled` comes from module-level config, never from state.
+    const resolveSearchEnabled = useSearchEnabled ?? alwaysEnabled;
+    const searchEnabled = resolveSearchEnabled();
+
     const SearchDialogComponent = React.useCallback(
       (props: React.ComponentProps<typeof SearchDialog>) => (
         <SearchDialog
@@ -102,7 +125,11 @@ export function createDocsRoot(config: DocsRootConfig) {
         </head>
         <body className="flex min-h-screen flex-col antialiased [--header-height:3.5rem] [--footer-height:3.5rem]">
           <ActiveThemeProvider initialTheme={initialTheme}>
-            <RootProvider search={{ SearchDialog: SearchDialogComponent }}>
+            <RootProvider
+              search={
+                searchEnabled ? { SearchDialog: SearchDialogComponent } : { enabled: false }
+              }
+            >
               <MaybeWrap wrapper={Wrapper}>
                 <Header />
                 <div className="flex flex-1 justify-center overflow-x-clip">
