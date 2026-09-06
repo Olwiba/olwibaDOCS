@@ -50,6 +50,20 @@ export interface DocsRootConfig {
    * Defaults to always-on, which is right for public docs.
    */
   useSearchEnabled?: () => boolean;
+  /**
+   * Inline scripts rendered first in <head>, before anything else.
+   *
+   * For configuration the app must have before its own bundle evaluates —
+   * public env values, feature flags — which is the alternative to inlining
+   * them at build time with a VITE_ prefix. A function rather than a string so
+   * it is evaluated per render: on the server from the environment, in the
+   * browser from whatever that first render already wrote, which is what keeps
+   * the two markups identical through hydration.
+   *
+   * Trusted content, injected as-is. Escape anything that could contain a
+   * closing script tag before returning it.
+   */
+  headScripts?: () => string[];
   notFoundComponent?: (props: NotFoundRouteProps) => React.ReactNode;
   /** Optional wrapper rendered around the full page body — use this to inject a root-level provider (e.g. OlwibaUIProvider). */
   wrapper?: React.ComponentType<{ children: React.ReactNode }>;
@@ -82,6 +96,7 @@ export function createDocsRoot(config: DocsRootConfig) {
     browsePagesLoader,
     searchItems,
     useSearchEnabled,
+    headScripts,
     notFoundComponent,
     wrapper: Wrapper,
   } = config;
@@ -121,6 +136,13 @@ export function createDocsRoot(config: DocsRootConfig) {
     return (
       <html lang="en" suppressHydrationWarning>
         <head>
+          {headScripts?.().map((script, index) => (
+            <script
+              key={index}
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: script }}
+            />
+          ))}
           <HeadContent />
         </head>
         <body className="flex min-h-screen flex-col antialiased [--header-height:3.5rem] [--footer-height:3.5rem]">
