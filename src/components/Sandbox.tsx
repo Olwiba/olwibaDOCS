@@ -212,7 +212,7 @@ function IframePreview({
         ref={iframeRef}
         className={cn('block w-full border-0 bg-transparent', !autoHeight && 'h-full')}
         onLoad={setupIframeDocument}
-        sandbox="allow-same-origin allow-scripts"
+        sandbox="allow-same-origin allow-scripts allow-forms"
         srcDoc={IFRAME_PREVIEW_DOC}
         style={
           autoHeight
