@@ -10,6 +10,17 @@
 
 
 
+
+## 0.1.43
+
+### Added
+
+- `createDocsRoot` accepts an optional `headScripts` hook returning inline scripts, rendered first in `<head>` before the app's own bundle. This is for configuration the app must have before its modules evaluate — public env values, feature flags — and is the alternative to inlining them at build time behind a `VITE_` prefix, which bakes the value into the image and makes one name resolve from `process.env` on the server and `import.meta.env` in the browser. It is a function rather than a string so it is evaluated per render: on the server from the environment, in the browser from whatever that first render already wrote, which is what keeps the two markups identical through hydration. The returned strings are injected as-is and are treated as trusted — escape anything that could contain a closing script tag before returning it. Omitting the hook renders no extra scripts, so existing consumers are unchanged.
+
+### Changed
+
+- Publish workflow moved off actions pinned to Node 20: `actions/checkout` v4 → v7, `actions/setup-node` v4 → v5, `dorny/paths-filter` v3 → v4. The runners already force those versions onto Node 24 with a warning and will eventually stop running them.
+
 ## 0.1.42
 
 ### Added
