@@ -12,6 +12,14 @@
 
 
 
+
+## 0.1.45
+
+### Added
+
+- Add a pre-paint theme init script
+- Authorize protected assets before static delivery
+
 ## 0.1.44
 
 No user-facing changes.
