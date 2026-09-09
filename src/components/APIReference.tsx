@@ -1,7 +1,7 @@
 // @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Lock } from "lucide-react";
 import { useState } from "react";
 import { cn } from "../lib/utils";
 
@@ -15,32 +15,65 @@ interface APIReferenceProps {
   name: string;
   extends?: string;
   props?: PropDef[];
+  /**
+   * Renders the closed control without its contents, for documentation the
+   * visitor is not entitled to read.
+   *
+   * This is presentation for a decision made on the server, not the decision
+   * itself. It is safe only because the panel is closed by default and its
+   * contents are conditionally rendered, so a locked control and a full one
+   * are identical in the DOM. Callers must omit `props` entirely: passing
+   * them alongside `locked` puts the data in the page for anyone to read.
+   */
+  locked?: boolean;
 }
 
-export function APIReference({ name, extends: extendsEl, props }: APIReferenceProps) {
+export function APIReference({ name, extends: extendsEl, props, locked = false }: APIReferenceProps) {
   const [open, setOpen] = useState(false);
+  const isOpen = open && !locked;
 
   return (
     <div className="my-2 rounded-lg border">
       <button
         type="button"
-        className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium transition-colors hover:bg-muted/50"
-        onClick={() => setOpen(!open)}
+        // aria-disabled rather than `disabled`, matching DocsHeader's locked
+        // GitHub control: a disabled button stops emitting pointer events, so
+        // the title explaining why it cannot open would never appear.
+        aria-disabled={locked || undefined}
+        aria-expanded={locked ? undefined : open}
+        title={locked ? "Sign in to view the API reference" : undefined}
+        className={cn(
+          "flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium transition-colors",
+          locked ? "cursor-not-allowed" : "hover:bg-muted/50"
+        )}
+        onClick={() => {
+          if (locked) return;
+          setOpen(!open);
+        }}
       >
         <ChevronRight
           className={cn(
-            "size-4 shrink-0 text-muted-foreground transition-transform duration-200",
-            open && "rotate-90"
+            "size-4 shrink-0 transition-transform duration-200",
+            locked ? "text-muted-foreground/50" : "text-muted-foreground",
+            isOpen && "rotate-90"
           )}
         />
-        <code className="text-[0.85rem] font-semibold">{`<${name}>`}</code>
+        <code className={cn("text-[0.85rem] font-semibold", locked && "text-muted-foreground")}>
+          {`<${name}>`}
+        </code>
         {extendsEl && (
           <span className="text-muted-foreground text-xs">
             extends <code className="bg-muted rounded px-1 py-0.5 text-xs">{`<${extendsEl}>`}</code>
           </span>
         )}
+        {locked && (
+          <>
+            <Lock className="ml-auto size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
+            <span className="sr-only">Locked. Sign in to view the API reference.</span>
+          </>
+        )}
       </button>
-      {open && (
+      {isOpen && (
         <div className="border-t px-4 py-3">
           {props && props.length > 0 ? (
             <table className="w-full text-sm">

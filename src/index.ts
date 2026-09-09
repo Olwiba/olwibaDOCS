@@ -8,6 +8,16 @@ export { DocsMobileNav, type DocsMobileNavProps } from './components/DocsMobileN
 export { DocsCopyPage } from './components/DocsCopyPage';
 export { DocsToc, type DocsTocProps, type TocItem } from './components/DocsToc';
 export { APIReference } from './components/APIReference';
+// Imported by published demos, so these must resolve from the package rather
+// than each consuming site's own copy.
+export {
+  ComponentNameContext,
+  ControlsPortalContext,
+  DemoControls,
+  LiveUsageCode,
+  useUsageCode,
+} from './components/demo-controls';
+export { getUsageCode, setUsageCode, subscribeUsageCode } from './lib/usage-code-store';
 export { Sandbox, SandboxControls } from './components/Sandbox';
 export {
   registerSandboxes,

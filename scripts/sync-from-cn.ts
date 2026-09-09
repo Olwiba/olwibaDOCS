@@ -67,6 +67,12 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
   { src: 'src/docs/components/DocsFeedback.tsx', dest: 'src/components/DocsFeedback.tsx' },
   { src: 'src/docs/components/sandbox-registry.ts', dest: 'src/components/sandbox-registry.ts' },
 
+  // Generic half of the component preview. Demos published from olwibaUI import
+  // these, so they must resolve from the package rather than a consumer alias.
+  // `ComponentPreview` itself stays site-local: it holds a per-site demo registry.
+  { src: 'src/docs/components/demo-controls.tsx', dest: 'src/components/demo-controls.tsx' },
+  { src: 'src/lib/usage-code-store.ts', dest: 'src/lib/usage-code-store.ts' },
+
   // Shared layout components (CN: src/docs/components/ → DOCS: src/components/)
   { src: 'src/docs/components/DocsHeader.tsx', dest: 'src/components/DocsHeader.tsx' },
   { src: 'src/docs/components/DocsFooter.tsx', dest: 'src/components/DocsFooter.tsx' },
