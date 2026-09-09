@@ -135,15 +135,22 @@ function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSectio
             {pages.map((page) => {
               const suffix = itemDecoration?.suffix?.(page);
               const label = itemDecoration?.label?.(page);
+              const isActive = page.url === pathname;
               // Colour and motion alone never carry the state: the row also
               // gets text only a screen reader reads.
-              const RowWrapper = itemDecoration?.enchanted?.(page) ? Enchanted : React.Fragment;
+              const decorated = itemDecoration?.enchanted?.(page) ?? false;
+              const RowWrapper = decorated ? Enchanted : React.Fragment;
 
               return (
                 <SidebarMenuSubItem key={page.url}>
-                  <RowWrapper {...(RowWrapper === Enchanted ? { hoverOnly: true } : {})}>
+                  <RowWrapper
+                    // The page you are on keeps its glint rather than needing to
+                    // be pointed at. Elsewhere it stays hover-only, so a long
+                    // list of decorated rows does not all animate at once.
+                    {...(decorated ? { hoverOnly: !isActive } : {})}
+                  >
                     <SidebarMenuSubButton
-                      isActive={page.url === pathname}
+                      isActive={isActive}
                       className={cn(itemDecoration?.muted?.(page) && 'text-muted-foreground')}
                       onClick={() => {
                         void router.navigate({ href: page.url });

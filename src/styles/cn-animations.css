@@ -49,4 +49,18 @@
   [data-iso-scroll] {
     animation-play-state: paused !important;
   }
+
+  /*
+   * Glints are hidden rather than paused. The keyframes drive opacity and
+   * scale, so a paused glint freezes at whatever point it reached — some
+   * invisible, some mid-pop — which looks like a rendering fault rather than a
+   * decoration. Hiding them costs nothing: wherever the effect marks something,
+   * a label carries the meaning and the glint is decoration on top.
+   *
+   * This matters more since the effect can run persistently on an active row
+   * rather than only while hovered.
+   */
+  .animate-enchanted {
+    display: none !important;
+  }
 }
