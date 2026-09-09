@@ -73,6 +73,7 @@ export { mdxComponents, type MdxComponents } from './lib/mdx-components';
 export { createDocsRoot, DocsNotFound, type DocsRootConfig, type DocsRootMeta, type DocsRootFavicon } from './lib/root';
 export { buildDocsHead, buildDocsMetaTags, buildDocsLinkTags, buildDocsPageHead, type DocsPageSeoData } from './lib/seo';
 export { createDocsRouter } from './lib/router';
+export { buildThemeInitScript } from './lib/theme-init';
 export {
   guardDocsResponse,
   requireDocsAccess,
