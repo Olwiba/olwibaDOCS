@@ -1,7 +1,7 @@
 // @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 import * as React from 'react';
 import { Link } from '@tanstack/react-router';
-import { DocsSidebar, type SidebarSection } from './DocsSidebar';
+import { DocsSidebar, type SidebarSection, type SidebarItemDecoration } from './DocsSidebar';
 import { DocsMobileNav } from './DocsMobileNav';
 import { DocsToc, type TocItem } from './DocsToc';
 import { DocsCopyPage } from './DocsCopyPage';
@@ -55,6 +55,8 @@ export interface DocsLayoutProps {
    * and description. Also stamps `data-docs-variant` on the root for CSS hooks.
    */
   variant?: 'technical' | 'product';
+  /** Per-page sidebar decoration, e.g. tier badges. Passed straight through. */
+  itemDecoration?: SidebarItemDecoration;
   children: React.ReactNode;
 }
 
@@ -62,12 +64,12 @@ function cx(...classes: Array<string | false | undefined>) {
   return classes.filter(Boolean).join(' ');
 }
 
-export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders, sidebarBottomSlot, variant = 'technical', children }: DocsLayoutProps) {
+export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders, sidebarBottomSlot, variant = 'technical', itemDecoration, children }: DocsLayoutProps) {
   const product = variant === 'product';
   return (
     <div className="flex flex-1 flex-col lg:px-2" data-docs-variant={variant}>
       <SidebarProvider className="min-h-min flex-1 items-start px-0 [--sidebar-width:220px] [--top-spacing:1.5rem] lg:[--sidebar-width:240px] lg:[--top-spacing:2rem]">
-        <DocsSidebar tree={pageTree} sections={sections} defaultOpenFolders={defaultOpenFolders} bottomSlot={sidebarBottomSlot} />
+        <DocsSidebar tree={pageTree} sections={sections} defaultOpenFolders={defaultOpenFolders} bottomSlot={sidebarBottomSlot} itemDecoration={itemDecoration} />
         <div
           className={cx('hidden lg:block w-4 self-stretch', !product && 'border-x border-dashed blueprint-pattern')}
           aria-hidden="true"

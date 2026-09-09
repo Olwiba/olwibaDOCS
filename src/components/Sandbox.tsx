@@ -22,13 +22,13 @@ import { cn } from '../lib/utils';
 import { getSandboxDefinition } from './sandbox-registry';
 import { CodeFence } from './CodeFence';
 import { CopyButton } from './CopyButton';
+
 import {
   Button,
   Tabs,
   TabsList,
   TabsTrigger,
 } from '@olwiba/cn';
-
 
 type SandboxViewport = 'desktop' | 'tablet' | 'mobile' | 'custom';
 type SandboxMode = 'preview' | 'code';
@@ -207,7 +207,13 @@ function IframePreview({
   }, [autoHeight, mountNode]);
 
   return (
-    <div className={cn('relative w-full', !autoHeight && 'h-full', className)}>
+    // Marked so preview capture has a stable target. The demo itself lives in
+    // an iframe, which a selector cannot reach into; screenshotting this
+    // wrapper captures what the frame is displaying.
+    <div
+      data-slot="sandbox-preview"
+      className={cn('relative w-full', !autoHeight && 'h-full', className)}
+    >
       <iframe
         ref={iframeRef}
         className={cn('block w-full border-0 bg-transparent', !autoHeight && 'h-full')}

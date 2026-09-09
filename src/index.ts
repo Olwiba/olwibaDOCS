@@ -3,7 +3,7 @@ export { Callout, type CalloutProps } from './components/Callout';
 export { CopyButton } from './components/CopyButton';
 export { CodeFence } from './components/CodeFence';
 export { DocsProvider, type DocsProviderProps } from './components/DocsProvider';
-export { DocsSidebar, type DocsSidebarProps, type SidebarSection } from './components/DocsSidebar';
+export { DocsSidebar, type DocsSidebarProps, type SidebarSection, type SidebarItemDecoration } from './components/DocsSidebar';
 export { DocsMobileNav, type DocsMobileNavProps } from './components/DocsMobileNav';
 export { DocsCopyPage } from './components/DocsCopyPage';
 export { DocsToc, type DocsTocProps, type TocItem } from './components/DocsToc';

@@ -44,8 +44,12 @@ export function ActiveThemeProvider({
   const styleRef = React.useRef<HTMLStyleElement | null>(null);
 
   // Keep demo theme for the current browser session only.
+  //
+  // `initialTheme` is the application's default, not an override. It used to
+  // short-circuit this effect, so any site that set one could never restore a
+  // visitor's saved choice — the theme silently reset on every navigation.
+  // Precedence is application default first, then whatever the visitor picked.
   React.useEffect(() => {
-    if (initialTheme) return;
     clearLegacyThemeCookie();
     const savedTheme = getSessionTheme();
     if (savedTheme) {

@@ -1,11 +1,13 @@
 // @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 'use client';
 
+import * as React from 'react';
 import { useRef, useState, useEffect } from 'react';
 import { useLocation, useRouter } from '@tanstack/react-router';
 import { Rocket, ChevronRight } from 'lucide-react';
 import { cn } from '../lib/utils';
 import type { Root, Node, Item } from 'fumadocs-core/page-tree';
+
 import {
   Collapsible,
   CollapsibleContent,
@@ -21,7 +23,6 @@ import {
   Enchanted,
 } from '@olwiba/cn';
 
-
 export interface SidebarSection {
   name: string;
   href: string;
@@ -34,6 +35,24 @@ const TOP_LEVEL_SECTIONS: SidebarSection[] = [
   { name: 'Get Started', href: '/docs', icon: Rocket },
 ];
 
+/**
+ * Per-page decoration, supplied by the consumer.
+ *
+ * Deliberately generic. A docs site may want to mark rows as paid, new,
+ * deprecated or anything else, and this component has no business knowing which
+ * — it renders what it is given beside the label.
+ */
+export interface SidebarItemDecoration {
+  /** Rendered after the page name, e.g. a badge or a lock. */
+  suffix?: (page: Item) => React.ReactNode;
+  /** Adds the glint treatment to the row. */
+  enchanted?: (page: Item) => boolean;
+  /** Muted styling for rows the visitor cannot fully read yet. */
+  muted?: (page: Item) => boolean;
+  /** Accessible suffix describing the row's state, e.g. "Pro, locked". */
+  label?: (page: Item) => string | undefined;
+}
+
 export interface DocsSidebarProps extends React.ComponentProps<'div'> {
   tree: Root;
   sections?: SidebarSection[];
@@ -41,6 +60,7 @@ export interface DocsSidebarProps extends React.ComponentProps<'div'> {
   defaultOpenFolders?: boolean;
   /** Pinned to the bottom of the sidebar viewport; pushed up by the footer at page end. */
   bottomSlot?: React.ReactNode;
+  itemDecoration?: SidebarItemDecoration;
 }
 
 interface SidebarFolderProps {
@@ -53,9 +73,10 @@ interface SidebarFolderProps {
   defaultOpen: boolean;
   pathname: string;
   enchanted?: boolean;
+  itemDecoration?: SidebarItemDecoration;
 }
 
-function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSection, defaultOpen, pathname, enchanted }: SidebarFolderProps) {
+function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSection, defaultOpen, pathname, enchanted, itemDecoration }: SidebarFolderProps) {
   const [open, setOpen] = useState(defaultOpen);
   const HeaderRow = enchanted ? Enchanted : 'div';
   const router = useRouter();
@@ -111,18 +132,33 @@ function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSectio
 
         <CollapsibleContent>
           <SidebarMenuSub>
-            {pages.map((page) => (
-              <SidebarMenuSubItem key={page.url}>
-                <SidebarMenuSubButton
-                  isActive={page.url === pathname}
-                  onClick={() => {
-                    void router.navigate({ href: page.url });
-                  }}
-                >
-                    {page.name}
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
-            ))}
+            {pages.map((page) => {
+              const suffix = itemDecoration?.suffix?.(page);
+              const label = itemDecoration?.label?.(page);
+              // Colour and motion alone never carry the state: the row also
+              // gets text only a screen reader reads.
+              const RowWrapper = itemDecoration?.enchanted?.(page) ? Enchanted : React.Fragment;
+
+              return (
+                <SidebarMenuSubItem key={page.url}>
+                  <RowWrapper {...(RowWrapper === Enchanted ? { hoverOnly: true } : {})}>
+                    <SidebarMenuSubButton
+                      isActive={page.url === pathname}
+                      className={cn(itemDecoration?.muted?.(page) && 'text-muted-foreground')}
+                      onClick={() => {
+                        void router.navigate({ href: page.url });
+                      }}
+                    >
+                      <span className="flex w-full items-center gap-1.5">
+                        <span className="truncate">{page.name}</span>
+                        {suffix}
+                        {label && <span className="sr-only">{label}</span>}
+                      </span>
+                    </SidebarMenuSubButton>
+                  </RowWrapper>
+                </SidebarMenuSubItem>
+              );
+            })}
           </SidebarMenuSub>
         </CollapsibleContent>
       </SidebarMenuItem>
@@ -130,7 +166,7 @@ function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSectio
   );
 }
 
-export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, bottomSlot, ...props }: DocsSidebarProps) {
+export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, bottomSlot, itemDecoration, ...props }: DocsSidebarProps) {
   const location = useLocation();
   const router = useRouter();
   const pathname = location.pathname;
@@ -202,6 +238,7 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, b
                           defaultOpen={isExpanded}
                           pathname={pathname}
                           enchanted={enchanted}
+                          itemDecoration={itemDecoration}
                         />
                       );
                     }
