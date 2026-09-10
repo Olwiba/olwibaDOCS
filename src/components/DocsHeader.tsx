@@ -6,7 +6,17 @@ import { Link } from '@tanstack/react-router';
 import { ModeSwitcher } from './ModeSwitcher';
 import { cn } from '../lib/utils';
 import { SearchButton } from './SearchButton';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@olwiba/cn';
+import { MoreHorizontal } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@olwiba/cn';
+
 
 export interface DocsHeaderProps {
   logo: React.ReactNode;
@@ -16,6 +26,23 @@ export interface DocsHeaderProps {
   showSearch?: boolean;
   showModeSwitcher?: boolean;
   rightSlot?: React.ReactNode;
+  /**
+   * Controls that stay in the bar on desktop and collapse into a menu below
+   * `md`.
+   *
+   * The header is a fixed-height row with no wrapping, so every control a site
+   * adds to `rightSlot` is a control that has to fit on a phone. It did not:
+   * a signed-in administrator had search, two repository links, Admin, a mode
+   * dropdown and Sign out all competing for one line, and the row simply ran
+   * off the side of the screen.
+   *
+   * Anything secondary belongs here instead. Search and the theme switcher are
+   * the two worth keeping visible at every width; the rest can live one tap
+   * away without losing anything.
+   */
+  overflowSlot?: React.ReactNode;
+  /** Accessible name for the overflow trigger. */
+  overflowLabel?: string;
 }
 
 export function DocsHeader({
@@ -26,16 +53,22 @@ export function DocsHeader({
   showSearch = true,
   showModeSwitcher = true,
   rightSlot,
+  overflowSlot,
+  overflowLabel = 'More',
 }: DocsHeaderProps) {
   const [soonOpen, setSoonOpen] = React.useState(false);
 
   return (
     <header className="sticky top-0 z-50 flex h-14 shrink-0 justify-center border-b bg-background/95 backdrop-blur-sm">
       <div className="h-full w-4 shrink-0 border-dashed lg:w-12 lg:border-l" aria-hidden="true" />
-      <div className="flex h-full w-full max-w-[1600px] items-center gap-2 border-l border-r border-dashed px-4 md:gap-5 md:px-6">
+      <div className="flex h-full w-full min-w-0 max-w-[1600px] items-center gap-2 border-l border-r border-dashed px-4 md:gap-5 md:px-6">
         <div id="docs-mobile-nav-trigger" className="empty:hidden lg:hidden" />
-        <Link className="flex items-center gap-2" to="/">
-          <span className="font-bold text-lg">
+        {/* The wordmark is the one thing here that can afford to give up room,
+            so it is the only child allowed to shrink. Without `min-w-0` a flex
+            item refuses to go below its content width and pushes the controls
+            past the edge instead. */}
+        <Link className="flex min-w-0 items-center gap-2" to="/">
+          <span className="truncate font-bold text-lg">
             {logo}
           </span>
         </Link>
@@ -54,7 +87,7 @@ export function DocsHeader({
           </nav>
         )}
 
-        <div className="flex items-center gap-2 ml-auto">
+        <div className="ml-auto flex shrink-0 items-center gap-1 md:gap-2">
           {showSearch && <SearchButton />}
           {githubUrl &&
             (githubBadge ? (
@@ -111,6 +144,34 @@ export function DocsHeader({
               </a>
             ))}
           {rightSlot}
+          {overflowSlot && (
+            <>
+              {/* Two renderings of the same nodes, not two sets of controls.
+                  The inline copy is display:none on a phone so it costs no
+                  width, and the menu copy only mounts while the menu is open,
+                  so the two are never interactive at once. */}
+              <div className="hidden items-center gap-2 md:flex">{overflowSlot}</div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label={overflowLabel}
+                    className="flex size-9 shrink-0 items-center justify-center rounded-md text-sm transition-colors hover:bg-accent hover:text-accent-foreground md:hidden"
+                  >
+                    <MoreHorizontal className="size-4" />
+                  </button>
+                </DropdownMenuTrigger>
+                {/* The slot holds whole controls — links, buttons — rather than
+                    menu items, so this is a panel that stacks them, not a list
+                    that re-styles them. */}
+                <DropdownMenuContent align="end" className="w-56 p-1">
+                  <div className="flex flex-col items-stretch gap-1 [&>*]:w-full [&>*]:justify-start">
+                    {overflowSlot}
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          )}
           {showModeSwitcher && <ModeSwitcher />}
         </div>
       </div>

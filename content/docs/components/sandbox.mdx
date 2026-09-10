@@ -37,6 +37,16 @@ For full-page shells or sidebar-heavy layouts, use `shellPreview` to give the pr
 <Sandbox id="dashboard-overview" shellPreview />
 ```
 
+## API Reference
+
+<APIReference name="Sandbox" props={[
+  { name: "id", type: "string", description: "Key into the sandbox registry. Required." },
+  { name: "defaultMode", type: '"preview" | "code"', default: '"preview"', description: "Which tab opens first." },
+  { name: "defaultViewport", type: '"desktop" | "tablet" | "mobile" | "custom"', default: '"desktop"', description: "Opening preview width. A `defaultViewport` on the registry entry wins over this." },
+  { name: "height", type: "number", default: "auto", description: "Fixed preview height in pixels." },
+  { name: "shellPreview", type: "boolean", default: "false", description: "Gives the preview a taller viewport and scrolls inside it — for full-page shells and sidebar-heavy layouts." },
+]} />
+
 ## Notes
 
 - `id` maps to entries in the sandbox registry.

@@ -7,7 +7,6 @@ import { useLocation, useRouter } from '@tanstack/react-router';
 import { Rocket, ChevronRight } from 'lucide-react';
 import { cn } from '../lib/utils';
 import type { Root, Node, Item } from 'fumadocs-core/page-tree';
-
 import {
   Collapsible,
   CollapsibleContent,
@@ -22,6 +21,7 @@ import {
   SidebarMenuSubItem,
   Enchanted,
 } from '@olwiba/cn';
+
 
 export interface SidebarSection {
   name: string;

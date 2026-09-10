@@ -51,7 +51,8 @@
     "sync": "bun run scripts/sync-from-cn.ts",
     "sync:build": "bun run sync && bun run types:check && bun run build",
     "iso:generate": "bun scripts/generate-iso-previews.ts",
-    "env:check": "dx env-check"
+    "env:check": "dx env-check",
+    "docs:check": "dx docs-check"
   },
   "dependencies": {
     "clsx": "^2.1.1",
