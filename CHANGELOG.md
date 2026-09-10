@@ -13,6 +13,22 @@
 
 
 
+
+## 0.1.46
+
+### Added
+
+- Sync the collapsing header and document Sandbox
+
+### Changed
+
+- Pin @olwiba/dx 0.0.28 for env:check
+- Add env:check
+
+### Fixed
+
+- Pin @tanstack/react-router to the version the sites run
+
 ## 0.1.45
 
 ### Added
