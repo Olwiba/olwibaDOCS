@@ -14,6 +14,25 @@
 
 
 
+
+## 0.1.47
+
+### Added
+
+- `DocsFooter` accepts a `versions` array, rendered as pills linking to each package's changelog, and `VersionPill` is exported alongside the `DocsFooterVersion` type so a site can place one anywhere. Each entry takes a bare `version` (the `v` is added when rendering), an `href`, an optional `label` for sites that ship more than one package, and an optional `accent` of `default` or `pro` — the latter borrows the primary colour so two pills can be told apart without reading them. This replaces the `changelog.md` text link, which said the same thing in more words while leaving the one fact a visitor wants — which version is out — somewhere else entirely. Setting `versions` makes `changelogUrl` inert rather than rendering both; `changelogUrl` on its own behaves exactly as before. The pills stay visible at every width instead of collapsing into the mobile drop-up, because they are the shortest thing in the footer and the only part of it that changes.
+- `APIReference` renders a `description` column for props that carry one. Pages have been passing `description` since the table was written and it was never read, so several hundred lines of authored explanation sat in the MDX without reaching a reader. The field stays optional — a name and a type are sometimes the whole story — and the column only appears when at least one prop in the table has a description, so tables that pass none are unchanged.
+
+### Changed
+
+- `DocsHeader` renders `rightSlot` after the overflow menu rather than before it, so a control a site keeps in the bar — a second switcher, most obviously — sits next to the theme switcher pinned at the end of the row instead of being stranded on the far side of the overflow button. Sites passing `rightSlot` will see their control move one position right.
+- `SearchButton` is a square icon button below the `md` breakpoint and a labelled field at `md` and above. It was `w-full max-w-[75%]` at every width, so on a 390px screen the search box claimed three quarters of the header and crushed the wordmark to a four-pixel sliver beside it — nothing overflowed, the row simply gave all its room to the widest thing in it. The `⌘K` hint now appears with the field at `md` rather than at `sm`, since a phone has no ⌘K to offer, and the button carries an `aria-label` for the icon-only state.
+- `DocsHeader` gutters drop to `px-3` below `md` and the wordmark steps down to `text-base` below `sm`. The row carries a navigation trigger, the wordmark and up to five controls at 390px; the eight pixels the wider padding cost came straight out of the wordmark, which truncated mid-word. The mobile overflow trigger is `size-8` to match the other controls in the row.
+- `@olwiba/cn` 0.1.40 → 0.1.41 (dev dependency).
+
+### Fixed
+
+- `APIReference` no longer forces horizontal page scroll on narrow viewports. The type column cannot wrap without becoming unreadable, so the table now scrolls inside its own container at a `28rem` minimum width rather than pushing the page sideways. Rows are top-aligned, which matters now that a description can run to several lines beside a one-line type.
+
 ## 0.1.46
 
 ### Added
