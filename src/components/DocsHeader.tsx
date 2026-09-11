@@ -61,14 +61,20 @@ export function DocsHeader({
   return (
     <header className="sticky top-0 z-50 flex h-14 shrink-0 justify-center border-b bg-background/95 backdrop-blur-sm">
       <div className="h-full w-4 shrink-0 border-dashed lg:w-12 lg:border-l" aria-hidden="true" />
-      <div className="flex h-full w-full min-w-0 max-w-[1600px] items-center gap-2 border-l border-r border-dashed px-4 md:gap-5 md:px-6">
+      {/* Tighter gutters on a phone. The row carries a navigation trigger, the
+          wordmark and up to five controls at 390px, and the eight pixels the
+          wider padding costs came straight out of the wordmark. */}
+      <div className="flex h-full w-full min-w-0 max-w-[1600px] items-center gap-2 border-l border-r border-dashed px-3 md:gap-5 md:px-6">
         <div id="docs-mobile-nav-trigger" className="empty:hidden lg:hidden" />
         {/* The wordmark is the one thing here that can afford to give up room,
             so it is the only child allowed to shrink. Without `min-w-0` a flex
             item refuses to go below its content width and pushes the controls
             past the edge instead. */}
         <Link className="flex min-w-0 items-center gap-2" to="/">
-          <span className="truncate font-bold text-lg">
+          {/* A step down on the narrowest screens. At `text-lg` the wordmark
+              was the first thing to run out of room and truncated mid-word,
+              which costs more than the point of type size it saves. */}
+          <span className="truncate font-bold text-base sm:text-lg">
             {logo}
           </span>
         </Link>
@@ -143,7 +149,10 @@ export function DocsHeader({
                 <span className="hidden sm:inline">GitHub</span>
               </a>
             ))}
-          {rightSlot}
+          {/* Before `rightSlot`, not after it. The theme switcher is pinned to
+              the end of the row, so anything a site keeps in the bar — a second
+              switcher, most obviously — belongs next to it rather than stranded
+              on the far side of the overflow button. */}
           {overflowSlot && (
             <>
               {/* Two renderings of the same nodes, not two sets of controls.
@@ -156,7 +165,7 @@ export function DocsHeader({
                   <button
                     type="button"
                     aria-label={overflowLabel}
-                    className="flex size-9 shrink-0 items-center justify-center rounded-md text-sm transition-colors hover:bg-accent hover:text-accent-foreground md:hidden"
+                    className="flex size-8 shrink-0 items-center justify-center rounded-md text-sm transition-colors hover:bg-accent hover:text-accent-foreground md:hidden"
                   >
                     <MoreHorizontal className="size-4" />
                   </button>
@@ -172,6 +181,7 @@ export function DocsHeader({
               </DropdownMenu>
             </>
           )}
+          {rightSlot}
           {showModeSwitcher && <ModeSwitcher />}
         </div>
       </div>

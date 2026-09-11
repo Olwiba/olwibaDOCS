@@ -26,7 +26,12 @@ export {
   type SandboxRegistryInput,
 } from './components/sandbox-registry';
 export { DocsHeader, type DocsHeaderProps } from './components/DocsHeader';
-export { DocsFooter, type DocsFooterProps } from './components/DocsFooter';
+export {
+  DocsFooter,
+  VersionPill,
+  type DocsFooterProps,
+  type DocsFooterVersion,
+} from './components/DocsFooter';
 export { DocsLayout, type DocsLayoutProps, type PageLoaderData, extractTextFromReactNode } from './components/DocsLayout';
 export { ModeSwitcher, type ModeSwitcherProps } from './components/ModeSwitcher';
 export {

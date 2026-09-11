@@ -9,6 +9,16 @@ interface PropDef {
   name: string;
   type: string;
   default?: string;
+  /**
+   * What the prop is for.
+   *
+   * Pages have been passing this since the table was written and it was never
+   * read, so several hundred lines of authored explanation sat in the MDX
+   * without ever reaching a reader. It is optional because a name and a type
+   * are sometimes the whole story, and the column only appears when something
+   * has one.
+   */
+  description?: string;
 }
 
 interface APIReferenceProps {
@@ -31,6 +41,7 @@ interface APIReferenceProps {
 export function APIReference({ name, extends: extendsEl, props, locked = false }: APIReferenceProps) {
   const [open, setOpen] = useState(false);
   const isOpen = open && !locked;
+  const showDescriptions = props?.some((prop) => prop.description) ?? false;
 
   return (
     <div className="my-2 rounded-lg border">
@@ -76,30 +87,42 @@ export function APIReference({ name, extends: extendsEl, props, locked = false }
       {isOpen && (
         <div className="border-t px-4 py-3">
           {props && props.length > 0 ? (
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b">
-                  <th className="py-2 pr-4 text-left font-bold">Prop</th>
-                  <th className="py-2 pr-4 text-left font-bold">Type</th>
-                  <th className="py-2 text-left font-bold">Default</th>
-                </tr>
-              </thead>
-              <tbody>
-                {props.map((prop) => (
-                  <tr key={prop.name} className="border-b last:border-b-0">
-                    <td className="py-2 pr-4">
-                      <code className="bg-muted rounded px-1 py-0.5 text-xs">{prop.name}</code>
-                    </td>
-                    <td className="py-2 pr-4 whitespace-nowrap">
-                      <code className="text-xs">{prop.type}</code>
-                    </td>
-                    <td className="py-2">
-                      <code className="text-xs">{prop.default ?? "-"}</code>
-                    </td>
+            // The type column cannot wrap without becoming unreadable, so on a
+            // narrow screen the table has to scroll rather than the page.
+            <div className="-mx-1 overflow-x-auto px-1">
+              <table className="w-full min-w-[28rem] text-sm">
+                <thead>
+                  <tr className="border-b">
+                    <th className="py-2 pr-4 text-left font-bold">Prop</th>
+                    <th className="py-2 pr-4 text-left font-bold">Type</th>
+                    <th className="py-2 pr-4 text-left font-bold">Default</th>
+                    {showDescriptions && (
+                      <th className="py-2 text-left font-bold">Description</th>
+                    )}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {props.map((prop) => (
+                    <tr key={prop.name} className="border-b align-top last:border-b-0">
+                      <td className="py-2 pr-4">
+                        <code className="bg-muted rounded px-1 py-0.5 text-xs">{prop.name}</code>
+                      </td>
+                      <td className="py-2 pr-4 whitespace-nowrap">
+                        <code className="text-xs">{prop.type}</code>
+                      </td>
+                      <td className="py-2 pr-4">
+                        <code className="text-xs">{prop.default ?? "-"}</code>
+                      </td>
+                      {showDescriptions && (
+                        <td className="text-muted-foreground min-w-[14rem] py-2 text-xs">
+                          {prop.description ?? ""}
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : (
             <p className="text-muted-foreground text-sm">
               No additional props. Accepts all{" "}
