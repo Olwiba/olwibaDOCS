@@ -15,6 +15,21 @@
 
 
 
+
+## 0.1.48
+
+### Added
+
+- `createDocsRoot` accepts an optional `gaMeasurementId`, and `GoogleAnalytics` and `trackEvent` are exported for sites that want to place the tag or report an event themselves. Each docs site had been wiring GA4 up on its own, so the same script and the same route-change bookkeeping existed in four places and drifted between them. Unset is the supported default and the interesting one: with no ID nothing is injected, no request reaches Google, and a deployment that has not opted in carries no third party at all, so there is no consent question to answer. The ID falls back to `VITE_GA_MEASUREMENT_ID`, which is how most sites will set it — the variable and no code. Being a `VITE_` var it is a build argument, baked into the bundle when the image is built: setting it on a running container does nothing until the image is rebuilt, which in Coolify means marking it a build variable and redeploying rather than restarting. The component mounts inside the router, because in a single-page app a route change is what counts as a page view — GA4's automatic pageview fires once on script load, so every route after the first would otherwise go uncounted — and the script is injected from an effect so it never runs during SSR. `trackEvent` is safe to call unconditionally; on a site with no ID it returns without doing anything, so a page never has to branch on whether this deployment has analytics.
+
+### Changed
+
+- `@olwiba/cn` 0.1.41 → 0.1.44 and `@olwiba/dx` 0.0.28 → 0.0.31 (dev dependencies).
+
+### Fixed
+
+- `DocsLayout` no longer sets a horizontal gutter on its outer element at `lg` and above. The sidebar already carries its own `px-2`, so the outer padding stacked on top of it and left the sidebar's text 16px from the layout edge but 8px from the rail on its other side — visibly off-centre in the one place a reader's eye tracks down a straight column of links. The page's dashed rails supply the outer breathing room the gutter was there for.
+
 ## 0.1.47
 
 ### Added
