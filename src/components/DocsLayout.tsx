@@ -66,8 +66,12 @@ function cx(...classes: Array<string | false | undefined>) {
 
 export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders, sidebarBottomSlot, variant = 'technical', itemDecoration, children }: DocsLayoutProps) {
   const product = variant === 'product';
+  // No horizontal padding on the outer element. The sidebar already sets its
+  // own `px-2`, so an outer gutter stacked on top of it put the sidebar's text
+  // 16px from the layout edge and 8px from the rail on its other side. The
+  // page's dashed rails provide the outer breathing room.
   return (
-    <div className="flex flex-1 flex-col lg:px-2" data-docs-variant={variant}>
+    <div className="flex flex-1 flex-col" data-docs-variant={variant}>
       <SidebarProvider className="min-h-min flex-1 items-start px-0 [--sidebar-width:220px] [--top-spacing:1.5rem] lg:[--sidebar-width:240px] lg:[--top-spacing:2rem]">
         <DocsSidebar tree={pageTree} sections={sections} defaultOpenFolders={defaultOpenFolders} bottomSlot={sidebarBottomSlot} itemDecoration={itemDecoration} />
         <div

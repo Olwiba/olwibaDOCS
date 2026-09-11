@@ -3,6 +3,7 @@ import { createRootRoute, HeadContent, Outlet, Scripts, useLoaderData, type NotF
 import { RootProvider } from 'fumadocs-ui/provider/tanstack';
 import { ErrorPage } from '@/components/ErrorPage';
 import { ActiveThemeProvider } from '@/components/ActiveTheme';
+import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 import {
   SearchDialog,
   type SearchDialogBrowsePage,
@@ -65,6 +66,15 @@ export interface DocsRootConfig {
    */
   headScripts?: () => string[];
   notFoundComponent?: (props: NotFoundRouteProps) => React.ReactNode;
+  /**
+   * GA4 measurement ID, e.g. `G-XXXXXXXXXX`.
+   *
+   * Optional, and optional is the supported default: with nothing set, no
+   * script is injected and no request reaches Google, so a site that has not
+   * opted in carries no third party. Falls back to `VITE_GA_MEASUREMENT_ID`,
+   * so most sites set the variable and pass nothing here.
+   */
+  gaMeasurementId?: string;
   /** Optional wrapper rendered around the full page body — use this to inject a root-level provider (e.g. OlwibaUIProvider). */
   wrapper?: React.ComponentType<{ children: React.ReactNode }>;
 }
@@ -98,6 +108,7 @@ export function createDocsRoot(config: DocsRootConfig) {
     useSearchEnabled,
     headScripts,
     notFoundComponent,
+    gaMeasurementId,
     wrapper: Wrapper,
   } = config;
 
@@ -153,6 +164,9 @@ export function createDocsRoot(config: DocsRootConfig) {
               }
             >
               <MaybeWrap wrapper={Wrapper}>
+                {/* Inside the router, which it needs in order to count a route
+                    change as a page view. Renders nothing when unconfigured. */}
+                <GoogleAnalytics measurementId={gaMeasurementId} />
                 <Header />
                 <div className="flex flex-1 justify-center overflow-x-clip">
                   <div className="w-4 shrink-0 border-dashed blueprint-pattern lg:w-12 lg:border-l" aria-hidden="true" />

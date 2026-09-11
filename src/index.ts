@@ -27,6 +27,11 @@ export {
 } from './components/sandbox-registry';
 export { DocsHeader, type DocsHeaderProps } from './components/DocsHeader';
 export {
+  GoogleAnalytics,
+  trackEvent,
+  type GoogleAnalyticsProps,
+} from './components/GoogleAnalytics';
+export {
   DocsFooter,
   VersionPill,
   type DocsFooterProps,
