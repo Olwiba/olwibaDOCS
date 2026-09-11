@@ -8,6 +8,7 @@ export function SiteFooter() {
       versions={[
         { version, href: 'https://github.com/Olwiba/olwibaDOCS/blob/master/CHANGELOG.md' },
       ]}
+      changelogUrl="https://github.com/Olwiba/olwibaDOCS/blob/master/CHANGELOG.md"
       links={[
         {
           label: '🪲 Report a bug',

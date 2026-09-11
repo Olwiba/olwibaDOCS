@@ -41,7 +41,11 @@ export interface DocsFooterProps {
    *
    * This replaces the `changelog.md` text link, which said the same thing in
    * more words and left the one fact a visitor actually wants — which version
-   * is out — somewhere else entirely. When set, `changelogUrl` is ignored.
+   * is out. Rendered at the start of the footer, ahead of the credit line.
+   *
+   * Sits alongside `changelogUrl` rather than replacing it: the pill answers
+   * "which version am I on" at a glance on the left, and the text link on the
+   * right is still where someone goes to read what changed.
    */
   versions?: DocsFooterVersion[];
 }
@@ -68,9 +72,7 @@ export function VersionPill({ version, href, label, accent = 'default' }: DocsFo
 
 export function DocsFooter({ children, changelogUrl, links, versions }: DocsFooterProps) {
   const hasVersions = (versions?.length ?? 0) > 0;
-  // The pills take over from the text link rather than sitting beside it.
-  const effectiveChangelogUrl = hasVersions ? undefined : changelogUrl;
-  const hasLinks = (links?.length ?? 0) > 0 || !!effectiveChangelogUrl || hasVersions;
+  const hasLinks = (links?.length ?? 0) > 0 || !!changelogUrl;
 
   return (
     <footer className="flex h-14 shrink-0 justify-center border-t">
@@ -78,6 +80,16 @@ export function DocsFooter({ children, changelogUrl, links, versions }: DocsFoot
       <div className="flex h-full w-full max-w-[1600px] items-center gap-1 border-l border-r border-dashed px-4 lg:gap-2 lg:px-6">
         {children ?? (
           <>
+            {/* Version first, then the credit line. The pill is the only part
+                of this footer that changes, and reading it as "v1.2.3, built
+                with love by" puts it where the eye already starts. */}
+            {hasVersions && (
+              <div className="flex shrink-0 items-center gap-1.5">
+                {versions?.map((entry) => (
+                  <VersionPill key={`${entry.label ?? ''}${entry.version}`} {...entry} />
+                ))}
+              </div>
+            )}
             <p className="text-muted-foreground text-xs md:text-sm">
               Built with 💖 by <a
                 className="underline"
@@ -103,10 +115,10 @@ export function DocsFooter({ children, changelogUrl, links, versions }: DocsFoot
                       {link.label}
                     </a>
                   ))}
-                  {effectiveChangelogUrl && (
+                  {changelogUrl && (
                     <a
                       className="text-muted-foreground text-sm underline"
-                      href={effectiveChangelogUrl}
+                      href={changelogUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -115,22 +127,11 @@ export function DocsFooter({ children, changelogUrl, links, versions }: DocsFoot
                   )}
                 </div>
 
-                {/* Pills stay visible at every width. They are the shortest
-                    thing in the footer and the only part of it that changes,
-                    so collapsing them into the menu would hide the one fact
-                    worth glancing at. */}
-                {hasVersions && (
-                  <div className="flex items-center gap-1.5">
-                    {versions?.map((entry) => (
-                      <VersionPill key={`${entry.label ?? ''}${entry.version}`} {...entry} />
-                    ))}
-                  </div>
-                )}
                 {/* Mobile: collapse links into a drop-up menu so they never
                     wrap. Only rendered when there is something to put in it —
                     a site with pills and no links would otherwise get a button
                     that opens an empty menu. */}
-                {((links?.length ?? 0) > 0 || effectiveChangelogUrl) && (
+                {((links?.length ?? 0) > 0 || changelogUrl) && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -150,9 +151,9 @@ export function DocsFooter({ children, changelogUrl, links, versions }: DocsFoot
                           </a>
                         </DropdownMenuItem>
                       ))}
-                      {effectiveChangelogUrl && (
+                      {changelogUrl && (
                         <DropdownMenuItem asChild>
-                          <a href={effectiveChangelogUrl} target="_blank" rel="noopener noreferrer">
+                          <a href={changelogUrl} target="_blank" rel="noopener noreferrer">
                             changelog.md
                           </a>
                         </DropdownMenuItem>
