@@ -36,17 +36,7 @@ export interface DocsFooterProps {
   changelogUrl?: string;
   /** Right-aligned links rendered before the changelog link. */
   links?: DocsFooterLink[];
-  /**
-   * Released versions, rendered as pills linking to their changelogs.
-   *
-   * This replaces the `changelog.md` text link, which said the same thing in
-   * more words and left the one fact a visitor actually wants — which version
-   * is out. Rendered at the start of the footer, ahead of the credit line.
-   *
-   * Sits alongside `changelogUrl` rather than replacing it: the pill answers
-   * "which version am I on" at a glance on the left, and the text link on the
-   * right is still where someone goes to read what changed.
-   */
+  /** Released versions, rendered as pills linking to their changelogs. */
   versions?: DocsFooterVersion[];
 }
 
@@ -75,23 +65,21 @@ export function DocsFooter({ children, changelogUrl, links, versions }: DocsFoot
   const hasLinks = (links?.length ?? 0) > 0 || !!changelogUrl;
 
   return (
-    <footer className="flex h-14 shrink-0 justify-center border-t">
+    <footer className="mt-auto flex h-14 shrink-0 justify-center border-t">
       <div className="h-full w-4 shrink-0 border-dashed lg:w-12 lg:border-l" aria-hidden="true" />
       <div className="flex h-full w-full max-w-[1600px] items-center gap-1 border-l border-r border-dashed px-4 lg:gap-2 lg:px-6">
         {children ?? (
           <>
-            {/* Version first, then the credit line. The pill is the only part
-                of this footer that changes, and reading it as "v1.2.3, built
-                with love by" puts it where the eye already starts. */}
             {hasVersions && (
-              <div className="flex shrink-0 items-center gap-1.5">
+              <div className="hidden shrink-0 items-center gap-1.5 md:flex">
                 {versions?.map((entry) => (
                   <VersionPill key={`${entry.label ?? ''}${entry.version}`} {...entry} />
                 ))}
               </div>
             )}
             <p className="text-muted-foreground text-xs md:text-sm">
-              Built with 💖 by <a
+              <span className="md:hidden">Built</span>
+              <span className="hidden md:inline">made</span> with 💖 by <a
                 className="underline"
                 href="https://github.com/Olwiba"
                 target="_blank"
@@ -100,8 +88,15 @@ export function DocsFooter({ children, changelogUrl, links, versions }: DocsFoot
                 Olwiba
               </a>
             </p>
-            {hasLinks && (
+            {(hasLinks || hasVersions) && (
               <div className="ml-auto flex items-center gap-2">
+                {hasVersions && (
+                  <div className="flex shrink-0 items-center gap-1.5 md:hidden">
+                    {versions?.map((entry) => (
+                      <VersionPill key={`${entry.label ?? ''}${entry.version}`} {...entry} />
+                    ))}
+                  </div>
+                )}
                 {/* Desktop: inline links */}
                 <div className="hidden items-center gap-3 md:flex lg:gap-4">
                   {links?.map((link) => (

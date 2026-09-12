@@ -156,7 +156,7 @@ export function createDocsRoot(config: DocsRootConfig) {
           ))}
           <HeadContent />
         </head>
-        <body className="flex min-h-screen flex-col antialiased [--header-height:3.5rem] [--footer-height:3.5rem]">
+        <body className="flex min-h-dvh flex-col antialiased [--header-height:3.5rem] [--footer-height:3.5rem]">
           <ActiveThemeProvider initialTheme={initialTheme}>
             <RootProvider
               search={
