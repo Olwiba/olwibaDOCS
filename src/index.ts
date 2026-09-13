@@ -37,6 +37,7 @@ export {
   type DocsFooterProps,
   type DocsFooterVersion,
 } from './components/DocsFooter';
+export { DocsMagicLinkForm, type DocsMagicLinkFormProps } from './components/DocsMagicLinkForm';
 export { DocsLayout, type DocsLayoutProps, type PageLoaderData, extractTextFromReactNode } from './components/DocsLayout';
 export { ModeSwitcher, type ModeSwitcherProps } from './components/ModeSwitcher';
 export {
