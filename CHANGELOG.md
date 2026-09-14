@@ -1,30 +1,10 @@
 # Changelog
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 0.1.52
 
 ### Added
 
-- `DocsHeader` accepts an `authSlot`, rendered after `rightSlot` and immediately before the optional theme toggle, so the account action holds one position in the row. Sites had been passing Sign in through `rightSlot` and Sign out through `overflowSlot`, which meant the control a reader reaches for jumped from the bar to the overflow menu the moment they signed in — and back again when they signed out. Pinning it makes it the rightmost control when `showModeSwitcher` is false and the penultimate one when it is not, at every width: search, the account action and the theme switcher are the three worth keeping visible on a phone, and everything secondary still belongs in `overflowSlot`. `rightSlot` is unchanged for sites that use it for utilities rather than auth; a site that put its account button there will see it move one position left once it switches to `authSlot`.
+- `DocsHeader` accepts an `authSlot`, rendered after `rightSlot` and immediately before the optional theme toggle, so the account action holds one position in the row. Sites had been passing Sign in through `rightSlot` and Sign out through `overflowSlot`, which meant the control a reader reaches for jumped from the bar to the overflow menu the moment they signed in, and back again when they signed out. Pinning it makes it the rightmost control when `showModeSwitcher` is false and the penultimate one when it is not, at every width: search, the account action and the theme switcher are the three worth keeping visible on a phone, and everything secondary still belongs in `overflowSlot`. `rightSlot` is unchanged for sites that use it for utilities rather than auth; a site that put its account button there will see it move one position left once it switches to `authSlot`.
 
 ### Changed
 
