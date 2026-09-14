@@ -25,7 +25,14 @@ export interface DocsHeaderProps {
   githubBadge?: string;
   showSearch?: boolean;
   showModeSwitcher?: boolean;
+  /** Utility controls rendered before the account action. */
   rightSlot?: React.ReactNode;
+  /**
+   * Primary account action, such as Sign in or Sign out. It is always placed
+   * immediately before the optional theme toggle, and therefore becomes the
+   * rightmost control when theming is disabled.
+   */
+  authSlot?: React.ReactNode;
   /**
    * Controls that stay in the bar on desktop and collapse into a menu below
    * `md`.
@@ -36,8 +43,8 @@ export interface DocsHeaderProps {
    * dropdown and Sign out all competing for one line, and the row simply ran
    * off the side of the screen.
    *
-   * Anything secondary belongs here instead. Search and the theme switcher are
-   * the two worth keeping visible at every width; the rest can live one tap
+   * Anything secondary belongs here instead. Search, the account action and
+   * the theme switcher stay visible at every width; the rest can live one tap
    * away without losing anything.
    */
   overflowSlot?: React.ReactNode;
@@ -53,6 +60,7 @@ export function DocsHeader({
   showSearch = true,
   showModeSwitcher = true,
   rightSlot,
+  authSlot,
   overflowSlot,
   overflowLabel = 'More',
 }: DocsHeaderProps) {
@@ -149,10 +157,8 @@ export function DocsHeader({
                 <span className="hidden sm:inline">GitHub</span>
               </a>
             ))}
-          {/* Before `rightSlot`, not after it. The theme switcher is pinned to
-              the end of the row, so anything a site keeps in the bar — a second
-              switcher, most obviously — belongs next to it rather than stranded
-              on the far side of the overflow button. */}
+          {/* Secondary links collapse first. Persistent utilities follow them,
+              then the account action, with the theme switcher pinned last. */}
           {overflowSlot && (
             <>
               {/* Two renderings of the same nodes, not two sets of controls.
@@ -182,6 +188,7 @@ export function DocsHeader({
             </>
           )}
           {rightSlot}
+          {authSlot}
           {showModeSwitcher && <ModeSwitcher />}
         </div>
       </div>
