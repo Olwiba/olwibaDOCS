@@ -68,26 +68,26 @@
   --blueprint-fg: oklch(0 0 0 / 0.04);
 
   /* Neutral base colors */
-  --background: oklch(1 0 0);
+  --background: oklch(0.985 0 0);
   --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
+  --card: oklch(0.997 0 0);
   --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.997 0 0);
   --popover-foreground: oklch(0.145 0 0);
 
   /* Project accent */
   --primary: var(--project-brand-accent);
   --primary-foreground: oklch(0.985 0 0);
 
-  --secondary: oklch(0.97 0 0);
+  --secondary: oklch(0.962 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
+  --muted: oklch(0.962 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
+  --accent: oklch(0.955 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
+  --border: oklch(0.912 0 0);
+  --input: oklch(0.912 0 0);
   --ring: var(--project-brand-accent);
 
   /* Blue chart colors */
@@ -97,19 +97,53 @@
   --chart-4: oklch(0.424 0.199 265.638);
   --chart-5: oklch(0.37 0.155 266.024);
 
-  --sidebar: oklch(0.985 0 0);
+  --sidebar: oklch(0.975 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: var(--project-brand-accent);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent: oklch(0.955 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-border: oklch(0.912 0 0);
   --sidebar-ring: oklch(0.546 0.245 262.881);
   --surface: oklch(0.98 0 0);
   --surface-foreground: var(--foreground);
   --code: var(--surface);
   --code-foreground: var(--surface-foreground);
   --code-highlight: oklch(0.96 0 0);
+  /* Brand tint for the light neutrals, mirroring @olwiba/cn's preset so the
+     docs read like the products rather than a separate, whiter site. The scale
+     factors are the preset's: a page barely tinted, lines the most. Set
+     --neutral-tint-chroma: 0 to drop the hue and keep the plain off-white. */
+  --neutral-tint-chroma: 0.012;
+  --neutral-tint-page: calc(var(--neutral-tint-chroma) * 0.33);
+  --neutral-tint-raised: calc(var(--neutral-tint-chroma) * 0.25);
+  --neutral-tint-muted: calc(var(--neutral-tint-chroma) * 0.67);
+  --neutral-tint-line: calc(var(--neutral-tint-chroma) * 0.83);
+}
+/*
+ * The brand-derived half, gated on relative colour syntax being supported.
+ *
+ * @supports rather than two plain declarations: a custom property stores almost
+ * any token stream, so oklch(from ...) is kept even by a browser that cannot
+ * parse it, and the failure only shows when the value is used, as invalid at
+ * computed-value time. That falls back to the property's initial value, not to
+ * an earlier declaration, so the page would go transparent rather than untinted.
+ * Gated, an older browser simply keeps the off-white above.
+ */
+@supports (color: oklch(from white l c h)) {
+  :root:not(.dark) {
+    --background: oklch(from var(--primary) 0.985 var(--neutral-tint-page) h);
+    --card: oklch(from var(--primary) 0.997 var(--neutral-tint-raised) h);
+    --popover: oklch(from var(--primary) 0.997 var(--neutral-tint-raised) h);
+    --secondary: oklch(from var(--primary) 0.962 var(--neutral-tint-muted) h);
+    --muted: oklch(from var(--primary) 0.962 var(--neutral-tint-muted) h);
+    --accent: oklch(from var(--primary) 0.955 var(--neutral-tint-chroma) h);
+    --border: oklch(from var(--primary) 0.912 var(--neutral-tint-line) h);
+    --input: oklch(from var(--primary) 0.912 var(--neutral-tint-line) h);
+    --sidebar: oklch(from var(--primary) 0.975 var(--neutral-tint-muted) h);
+    --sidebar-accent: oklch(from var(--primary) 0.955 var(--neutral-tint-chroma) h);
+    --sidebar-border: oklch(from var(--primary) 0.912 var(--neutral-tint-line) h);
+  }
 }
 
 .dark {
