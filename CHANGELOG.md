@@ -1,5 +1,16 @@
 # Changelog
 
+
+## 0.1.53
+
+### Changed
+
+- `@olwiba/cn` 0.1.50 → 0.1.54 and `@olwiba/dx` 0.0.34 → 0.0.35 (dev dependencies).
+
+### Fixed
+
+- The docs site's light theme comes off pure white. This is `site/styles/app.css`, which is this repository's own site rather than anything the package publishes, so a consumer's palette is unaffected: the published stylesheet reads `--background`, `--border` and the rest from whatever preset the consuming site loads, and has never defined them. The site was still on `oklch(1 0 0)`, the polarising white the products moved off after an accessibility pass. That work shipped inside `@olwiba/cn`'s preset, so anything importing the preset picked up the off-white for free, but this site predates it and carries a hand-rolled neutral block, which left products that read well sitting beside docs that glared. The neutrals now match the preset value for value: an off-white page, raised surfaces a step above it, and the muted and line steps moved to sit correctly against the new base rather than against white. The brand tint that goes with them is derived with relative colour syntax and gated behind `@supports`, because a custom property will happily store an `oklch(from ...)` value a browser cannot parse and only fail at the point of use, where the fallback is the property's initial value and not the declaration above it; an ungated block would leave an older browser with a transparent page instead of an untinted one. It is scoped `:root:not(.dark)` rather than `:root`, since `.dark` is a class and `:root` a pseudo-class and the two carry the same specificity, so a later plain `:root` block would win on source order and repaint dark mode with the light values. Set `--neutral-tint-chroma: 0` to keep the neutrals and drop the hue. The values are copied rather than imported from the preset; importing it alongside the fumadocs presets the site already pulls in is the better answer and needs a build to verify, so it is left to a separate change.
+
 ## 0.1.52
 
 ### Added
