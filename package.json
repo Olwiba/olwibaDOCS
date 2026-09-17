@@ -71,8 +71,8 @@
     "react-dom": ">=18.0.0"
   },
   "devDependencies": {
-    "@olwiba/cn": "0.1.54",
-    "@olwiba/dx": "0.0.36",
+    "@olwiba/cn": "0.1.55",
+    "@olwiba/dx": "0.0.37",
     "@tailwindcss/vite": "^4.3.1",
     "@tanstack/react-router": "1.154.8",
     "@tanstack/react-router-devtools": "1.154.8",
