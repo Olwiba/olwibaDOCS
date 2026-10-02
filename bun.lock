@@ -42,7 +42,7 @@
         "vitest": "^4.1.8",
       },
       "peerDependencies": {
-        "@olwiba/cn": ">=0.1.2",
+        "@olwiba/cn": ">=0.1.65",
         "@tanstack/react-router": ">=1.0.0",
         "react": ">=18.0.0",
         "react-dom": ">=18.0.0",

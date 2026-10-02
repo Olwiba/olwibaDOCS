@@ -1,6 +1,21 @@
 # Changelog
 
 
+
+## 0.1.54
+
+### Added
+
+- Sync the sandbox theme toggle and header switches from CN
+
+### Changed
+
+- Gate dev and build on dx dep-check
+
+### Fixed
+
+- Require @olwiba/cn 0.1.65
+
 ## 0.1.53
 
 ### Changed
