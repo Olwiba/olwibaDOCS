@@ -10,7 +10,7 @@ describe('DocsHeader trailing controls', () => {
 
     const utilities = source.lastIndexOf('{rightSlot}');
     const auth = source.lastIndexOf('{authSlot}');
-    const theme = source.lastIndexOf('{showModeSwitcher && <ModeSwitcher />}');
+    const theme = source.lastIndexOf('{showModeSwitcher && <ThemeSwitchMinimal />}');
 
     expect(utilities).toBeGreaterThan(-1);
     expect(auth).toBeGreaterThan(utilities);
