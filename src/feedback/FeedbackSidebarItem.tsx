@@ -37,11 +37,35 @@ export interface FeedbackSidebarItemProps {
    */
   getConfig: () => Promise<{ enabled: boolean }>;
   submit: (payload: FeedbackSidebarPayload) => Promise<{ ok: boolean; error?: string }>;
+  /**
+   * Copy, defaulted to the docs wording this started life as.
+   *
+   * Optional rather than required because the first consumer was a docs site
+   * and every string here read correctly there. The second consumer was a
+   * product, where "Help us make these docs better" is simply wrong — so the
+   * strings become props rather than a second copy of the component.
+   */
+  emoji?: string;
+  label?: string;
+  title?: string;
+  description?: string;
+  /** Label above the 1-5 row. */
+  ratingLabel?: string;
+  placeholder?: string;
 }
 
 const CONFETTI_PINKS = ['#db2777', '#ec4899', '#f472b6', '#f9a8d4', '#fbcfe8'];
 
-export function FeedbackSidebarItem({ getConfig, submit }: FeedbackSidebarItemProps) {
+export function FeedbackSidebarItem({
+  getConfig,
+  submit,
+  emoji = '🥰',
+  label = 'Share feedback',
+  title = 'Share feedback',
+  description = 'Help us make these docs better.',
+  ratingLabel = 'Do you like this?',
+  placeholder = 'What can we improve?',
+}: FeedbackSidebarItemProps) {
   const [enabled, setEnabled] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [rating, setRating] = React.useState<number | null>(null);
@@ -118,8 +142,8 @@ export function FeedbackSidebarItem({ getConfig, submit }: FeedbackSidebarItemPr
           onClick={handleTriggerClick}
           className="flex h-8 w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm text-muted-foreground outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2"
         >
-          <span aria-hidden="true">🥰</span>
-          Share feedback
+          <span aria-hidden="true">{emoji}</span>
+          {label}
         </button>
       </Enchanted>
 
@@ -140,15 +164,13 @@ export function FeedbackSidebarItem({ getConfig, submit }: FeedbackSidebarItemPr
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <DialogHeader>
-                <DialogTitle>Share feedback</DialogTitle>
-                <DialogDescription>
-                  Help us make these docs better.
-                </DialogDescription>
+                <DialogTitle>{title}</DialogTitle>
+                <DialogDescription>{description}</DialogDescription>
               </DialogHeader>
 
               <div className="space-y-1.5">
-                <Label>Do you like this?</Label>
-                <div className="flex gap-1.5" role="radiogroup" aria-label="Do you like this? 1 to 5">
+                <Label>{ratingLabel}</Label>
+                <div className="flex gap-1.5" role="radiogroup" aria-label={`${ratingLabel} 1 to 5`}>
                   {[1, 2, 3, 4, 5].map((value) => (
                     <button
                       key={value}
@@ -175,7 +197,7 @@ export function FeedbackSidebarItem({ getConfig, submit }: FeedbackSidebarItemPr
                   id="feedback-message"
                   value={message}
                   onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(event.target.value)}
-                  placeholder="What can we improve?"
+                  placeholder={placeholder}
                   rows={5}
                   maxLength={2000}
                   required

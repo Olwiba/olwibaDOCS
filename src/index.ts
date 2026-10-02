@@ -18,7 +18,7 @@ export {
   useUsageCode,
 } from './components/demo-controls';
 export { getUsageCode, setUsageCode, subscribeUsageCode } from './lib/usage-code-store';
-export { Sandbox, SandboxControls } from './components/Sandbox';
+export { Sandbox, SandboxControls, useSandboxTheme } from './components/Sandbox';
 export {
   registerSandboxes,
   getSandboxDefinition,
@@ -61,6 +61,7 @@ export {
 // Theme
 export { ActiveThemeProvider, useThemeConfig } from './components/ActiveTheme';
 export { ThemeSelector } from './components/ThemeSelector';
+export { DocsBrandSwitch } from './components/DocsBrandSwitch';
 export { ThemeCodeBlock } from './components/ThemeCodeBlock';
 export { themes, Theme, getThemeStyles, getThemeCode } from './lib/themes';
 
@@ -75,6 +76,7 @@ export {
 export { useCopyToClipboard } from './hooks/use-copy-to-clipboard';
 
 export { UIModeDropdown, type UIModeDropdownProps, type UIModeOption } from './components/UIModeDropdown';
+export { UIModeSwitchMinimal } from './components/UIModeSwitchMinimal';
 export { getUIMode, setUIMode, subscribeUIMode } from './lib/ui-mode-store';
 
 // Lib

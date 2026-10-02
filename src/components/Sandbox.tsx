@@ -13,9 +13,11 @@ import {
   Maximize2,
   Minimize2,
   Monitor,
+  Moon,
   PanelLeftClose,
   PanelLeftOpen,
   Smartphone,
+  Sun,
   Tablet,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -76,6 +78,59 @@ export function SandboxControls({ children }: { children: React.ReactNode }) {
   );
 }
 
+type SandboxTheme = 'light' | 'dark';
+
+// The theme a preview is showing: the site's, unless the toolbar toggle has
+// set this sandbox apart. Demos that draw their own document (an email, a
+// canvas) read it to match what is around them.
+const SandboxThemeContext = React.createContext<SandboxTheme | null>(null);
+
+/** The preview's light/dark theme inside a sandbox; null outside one. */
+export function useSandboxTheme(): SandboxTheme | null {
+  return React.useContext(SandboxThemeContext);
+}
+
+/**
+ * The site's light/dark theme, followed live from the `dark` class on <html>.
+ * Seeded light and corrected after mount, so server and client render alike.
+ */
+function useDocumentTheme(): SandboxTheme {
+  const [theme, setTheme] = React.useState<SandboxTheme>('light');
+  React.useEffect(() => {
+    const root = document.documentElement;
+    const read = () => setTheme(root.classList.contains('dark') ? 'dark' : 'light');
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+  return theme;
+}
+
+/**
+ * Copies the parent's identified <style> elements into the preview, and keeps
+ * them current. The active brand theme is one, injected and rewritten at
+ * runtime, so a copy taken once at mount went stale on the first switch.
+ */
+function mirrorIdentifiedStyles(doc: Document) {
+  const sources = Array.from(document.head.querySelectorAll<HTMLStyleElement>('style[id]'));
+  const ids = new Set(sources.map((source) => source.id));
+  for (const source of sources) {
+    let copy = Array.from(
+      doc.head.querySelectorAll<HTMLStyleElement>('style[data-sandbox-mirror]')
+    ).find((node) => node.getAttribute('data-sandbox-mirror') === source.id);
+    if (!copy) {
+      copy = doc.createElement('style');
+      copy.setAttribute('data-sandbox-mirror', source.id);
+      doc.head.appendChild(copy);
+    }
+    if (copy.textContent !== source.textContent) copy.textContent = source.textContent;
+  }
+  for (const copy of Array.from(doc.head.querySelectorAll('style[data-sandbox-mirror]'))) {
+    if (!ids.has(copy.getAttribute('data-sandbox-mirror') ?? '')) copy.remove();
+  }
+}
+
 const viewportWidths: Record<Exclude<SandboxViewport, 'custom'>, number> = {
   desktop: 1200,
   tablet: 768,
@@ -88,10 +143,13 @@ function IframePreview({
   children,
   className,
   autoHeight = false,
+  themeOverride,
 }: {
   children: React.ReactNode;
   className?: string;
   autoHeight?: boolean;
+  /** Set when the toolbar holds this preview apart from the site's theme. */
+  themeOverride: SandboxTheme | null;
 }) {
   const iframeRef = React.useRef<HTMLIFrameElement | null>(null);
   const [mountNode, setMountNode] = React.useState<HTMLElement | null>(null);
@@ -109,40 +167,6 @@ function IframePreview({
 
     root.style.display = 'flex';
     root.style.flexDirection = 'column';
-    setMountNode(root as HTMLElement);
-    setMountFailed(false);
-
-    const html = doc.documentElement;
-    const body = doc.body;
-    const sourceHtml = document.documentElement;
-    const sourceBody = document.body;
-
-    html.className = sourceHtml.className;
-    body.className = sourceBody.className;
-
-    const htmlStyle = sourceHtml.getAttribute('style');
-    const bodyStyle = sourceBody.getAttribute('style');
-    if (htmlStyle) html.setAttribute('style', htmlStyle);
-    else html.removeAttribute('style');
-    if (bodyStyle) body.setAttribute('style', bodyStyle);
-    else body.removeAttribute('style');
-
-    body.style.margin = '0';
-    if (autoHeight) {
-      // Content drives height: any forced 100% chain here would pin the
-      // measured height to the iframe itself and go circular.
-      html.style.height = '';
-      body.style.height = '';
-      body.style.minHeight = '';
-      root.style.height = '';
-      root.style.minHeight = '';
-    } else {
-      html.style.height = '100%';
-      body.style.height = '100%';
-      body.style.minHeight = '100%';
-      root.style.height = '100%';
-      root.style.minHeight = '100%';
-    }
 
     if (!doc.head.querySelector('base')) {
       const base = doc.createElement('base');
@@ -154,16 +178,77 @@ function IframePreview({
       const marker = doc.createElement('meta');
       marker.setAttribute('data-sandbox-styles', 'true');
       doc.head.appendChild(marker);
+      // Identified <style> elements are left to `mirrorIdentifiedStyles`,
+      // which keeps them current instead of copying them once.
       const styleNodes = Array.from(
-        document.querySelectorAll('link[rel="stylesheet"], style')
+        document.querySelectorAll('link[rel="stylesheet"], style:not([id])')
       );
       for (const node of styleNodes) {
         doc.head.appendChild(node.cloneNode(true));
       }
     }
 
+    setMountNode(root as HTMLElement);
+    setMountFailed(false);
     return true;
-  }, [autoHeight]);
+  }, []);
+
+  // The preview follows the page around it for as long as it is mounted, not
+  // just at mount: classes and inline styles on <html> and <body>, and the
+  // identified styles in <head>. Copying them once is why demos kept the theme
+  // they loaded with when the site's was switched. An override from the
+  // toolbar then sets the light/dark class over the copied one.
+  React.useEffect(() => {
+    if (!mountNode) return;
+    const doc = mountNode.ownerDocument;
+    const root = mountNode;
+
+    const sync = () => {
+      const html = doc.documentElement;
+      const body = doc.body;
+      const sourceHtml = document.documentElement;
+      const sourceBody = document.body;
+
+      html.className = sourceHtml.className;
+      body.className = sourceBody.className;
+      if (themeOverride) html.classList.toggle('dark', themeOverride === 'dark');
+
+      const htmlStyle = sourceHtml.getAttribute('style');
+      const bodyStyle = sourceBody.getAttribute('style');
+      if (htmlStyle) html.setAttribute('style', htmlStyle);
+      else html.removeAttribute('style');
+      if (bodyStyle) body.setAttribute('style', bodyStyle);
+      else body.removeAttribute('style');
+      if (themeOverride) html.style.colorScheme = themeOverride;
+
+      body.style.margin = '0';
+      if (autoHeight) {
+        // Content drives height: any forced 100% chain here would pin the
+        // measured height to the iframe itself and go circular.
+        html.style.height = '';
+        body.style.height = '';
+        body.style.minHeight = '';
+        root.style.height = '';
+        root.style.minHeight = '';
+      } else {
+        html.style.height = '100%';
+        body.style.height = '100%';
+        body.style.minHeight = '100%';
+        root.style.height = '100%';
+        root.style.minHeight = '100%';
+      }
+
+      mirrorIdentifiedStyles(doc);
+    };
+
+    sync();
+    const observer = new MutationObserver(sync);
+    const attributes = { attributes: true, attributeFilter: ['class', 'style'] };
+    observer.observe(document.documentElement, attributes);
+    observer.observe(document.body, attributes);
+    observer.observe(document.head, { childList: true, subtree: true, characterData: true });
+    return () => observer.disconnect();
+  }, [mountNode, themeOverride, autoHeight]);
 
   React.useEffect(() => {
     let retries = 0;
@@ -263,6 +348,14 @@ export function Sandbox({
     new Set()
   );
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const siteTheme = useDocumentTheme();
+  const [themeOverride, setThemeOverride] = React.useState<SandboxTheme | null>(null);
+  // Switching the site's theme clears the override, so every preview follows
+  // the toggle the visitor just used rather than a choice made earlier.
+  React.useEffect(() => {
+    setThemeOverride(null);
+  }, [siteTheme]);
+  const previewTheme = themeOverride ?? siteTheme;
   const [isMounted, setIsMounted] = React.useState(false);
   const [controlsTarget, setControlsTarget] = React.useState<HTMLDivElement | null>(null);
   const codeLayoutRef = React.useRef<HTMLDivElement | null>(null);
@@ -564,7 +657,35 @@ export function Sandbox({
               </div>
             </div>
 
-            <div className="shrink-0">
+            <div className="flex shrink-0 items-center gap-2">
+              {mode === 'preview' ? (
+                <Button
+                  aria-label={
+                    previewTheme === 'dark' ? 'Preview in light mode' : 'Preview in dark mode'
+                  }
+                  className="h-7 px-2 text-xs"
+                  onClick={() => setThemeOverride(previewTheme === 'dark' ? 'light' : 'dark')}
+                  size="sm"
+                  title={previewTheme === 'dark' ? 'Preview in light mode' : 'Preview in dark mode'}
+                  variant="outline"
+                >
+                  {themeOverride ? (
+                    themeOverride === 'dark' ? (
+                      <Sun className="size-3" />
+                    ) : (
+                      <Moon className="size-3" />
+                    )
+                  ) : (
+                    // Following the site, the icon follows its `dark` class in
+                    // CSS, so it is right on the first frame rather than after
+                    // the theme is read on mount.
+                    <>
+                      <Sun className="hidden size-3 dark:block" />
+                      <Moon className="size-3 dark:hidden" />
+                    </>
+                  )}
+                </Button>
+              ) : null}
               <Button
                 className="h-7 px-2 text-xs"
                 onClick={() => setIsExpanded((value) => !value)}
@@ -620,16 +741,19 @@ export function Sandbox({
                     previewHeight &&
                       (shellPreview ? 'h-full min-h-0 overflow-hidden' : 'h-full')
                   )}
+                  themeOverride={themeOverride}
                 >
-                  <React.Suspense
-                    fallback={
-                      <div className="flex min-h-[280px] items-center justify-center text-sm text-muted-foreground">
-                        Loading preview...
-                      </div>
-                    }
-                  >
-                    <Preview />
-                  </React.Suspense>
+                  <SandboxThemeContext.Provider value={previewTheme}>
+                    <React.Suspense
+                      fallback={
+                        <div className="flex min-h-[280px] items-center justify-center text-sm text-muted-foreground">
+                          Loading preview...
+                        </div>
+                      }
+                    >
+                      <Preview />
+                    </React.Suspense>
+                  </SandboxThemeContext.Provider>
                 </IframePreview>
 
                 {viewport === 'custom' ? (

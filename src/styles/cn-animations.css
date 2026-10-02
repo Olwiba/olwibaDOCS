@@ -64,3 +64,30 @@
     display: none !important;
   }
 }
+
+/*
+ * Aurora drift, for AppContentAura's colour layers.
+ *
+ * Minutes per cycle, not seconds. The effect should read as a backdrop that
+ * happens to be alive rather than as something animating — at any glance it
+ * looks static, and only over a long dwell does the shape appear to have
+ * moved. Translation stays small and the scale change smaller, because a blur
+ * of this radius amplifies both: 6% of a 620px blob is already a visible shift
+ * in where the light falls.
+ *
+ * Opacity is deliberately untouched. Fading a wash under text changes the
+ * contrast of whatever sits on top of it, and the whole reason this exists is
+ * that brand-coloured headings were competing with the backdrop.
+ */
+@keyframes aurora-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(4%, -3%, 0) scale(1.06);
+  }
+  66% {
+    transform: translate3d(-3%, 3%, 0) scale(0.97);
+  }
+}

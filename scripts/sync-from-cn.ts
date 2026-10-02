@@ -82,6 +82,7 @@ const SYNC_MAP: Array<{ src: string; dest: string }> = [
   { src: 'src/components/active-theme.tsx', dest: 'src/components/ActiveTheme.tsx' },
   { src: 'src/components/ModeSwitcher.tsx', dest: 'src/components/ModeSwitcher.tsx' },
   { src: 'src/components/ThemeSelector.tsx', dest: 'src/components/ThemeSelector.tsx' },
+  { src: 'src/docs/components/DocsBrandSwitch.tsx', dest: 'src/components/DocsBrandSwitch.tsx' },
 
   // Hooks
   { src: 'src/hooks/use-copy-to-clipboard.ts', dest: 'src/hooks/use-copy-to-clipboard.ts' },
