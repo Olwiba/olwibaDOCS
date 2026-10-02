@@ -2,6 +2,13 @@
 
 
 
+
+## 0.1.55
+
+### Changed
+
+- Test: follow DocsHeader's theme control to ThemeSwitchMinimal
+
 ## 0.1.54
 
 ### Added
