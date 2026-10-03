@@ -5,6 +5,7 @@ export const Theme = {
   Purple: "purple",
   Rose: "rose",
   Orange: "orange",
+  Lime: "lime",
   Slate: "slate",
 } as const;
 
@@ -17,6 +18,7 @@ export const themes: { name: Theme; label: string; color: string }[] = [
   { name: Theme.Purple, label: "Purple", color: "oklch(0.558 0.288 302.321)" },
   { name: Theme.Rose, label: "Rose", color: "oklch(0.645 0.246 16.439)" },
   { name: Theme.Orange, label: "Orange", color: "oklch(0.705 0.213 47.604)" },
+  { name: Theme.Lime, label: "Lime", color: "oklch(0.648 0.2 131.684)" },
   { name: Theme.Slate, label: "Slate", color: "oklch(0.446 0.043 257.281)" },
 ];
 
@@ -91,6 +93,18 @@ const themeStyles: Record<Theme, string> = {
       --primary: oklch(0.792 0.184 70.08);
       --primary-foreground: oklch(0.145 0 0);
       --ring: oklch(0.792 0.184 70.08);
+    }
+  `,
+  [Theme.Lime]: `
+    :root {
+      --primary: oklch(0.648 0.2 131.684);
+      --primary-foreground: oklch(0.985 0 0);
+      --ring: oklch(0.648 0.2 131.684);
+    }
+    .dark {
+      --primary: oklch(0.841 0.238 132.9);
+      --primary-foreground: oklch(0.145 0 0);
+      --ring: oklch(0.841 0.238 132.9);
     }
   `,
   [Theme.Slate]: `
@@ -395,6 +409,54 @@ const themeCode: Record<Theme, string> = {
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.792 0.184 70.08);
+}`,
+
+  [Theme.Lime]: `:root {
+  --radius: 0.25rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.648 0.2 131.684);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.648 0.2 131.684);
+  --chart-1: oklch(0.897 0.196 126.665);
+  --chart-2: oklch(0.768 0.233 130.85);
+  --chart-3: oklch(0.648 0.2 131.684);
+  --chart-4: oklch(0.532 0.157 131.589);
+  --chart-5: oklch(0.453 0.124 130.933);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.269 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.841 0.238 132.9);
+  --primary-foreground: oklch(0.145 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.371 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.841 0.238 132.9);
 }`,
 
   [Theme.Slate]: `:root {
