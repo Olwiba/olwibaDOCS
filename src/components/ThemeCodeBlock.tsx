@@ -13,11 +13,15 @@ import * as React from "react";
 
 export function ThemeCodeBlock() {
   const { activeTheme } = useThemeConfig();
-  const [selectedTheme, setSelectedTheme] = React.useState<Theme>(activeTheme);
+  // A custom colour has no full theme to copy, so the block stays on (or
+  // starts from) a named one while it is active.
+  const [selectedTheme, setSelectedTheme] = React.useState<Theme>(
+    activeTheme === "custom" ? themes[0].name : activeTheme
+  );
 
   // Sync with active theme when it changes
   React.useEffect(() => {
-    setSelectedTheme(activeTheme);
+    if (activeTheme !== "custom") setSelectedTheme(activeTheme);
   }, [activeTheme]);
 
   const themeCode = getThemeCode(selectedTheme);

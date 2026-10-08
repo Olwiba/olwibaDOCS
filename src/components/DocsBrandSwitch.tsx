@@ -2,7 +2,7 @@
 'use client';
 
 import { BrandColorSwitchMinimal } from '@olwiba/cn';
-import { useThemeConfig } from './ActiveTheme';
+import { useThemeConfig, type ActiveTheme } from './ActiveTheme';
 import { Theme, themes } from '../lib/themes';
 
 /**
@@ -10,10 +10,11 @@ import { Theme, themes } from '../lib/themes';
  *
  * The products' control (the palette button genesis puts in its nav), driving
  * the docs theme provider instead of its own storage, so a pick restyles the
- * site, its demos, and the code samples that print the active theme.
+ * site, its demos, and the code samples that print the active theme. A custom
+ * colour goes to the provider too, which derives its light and dark tokens.
  */
 export function DocsBrandSwitch() {
-  const { activeTheme, setActiveTheme } = useThemeConfig();
+  const { activeTheme, setActiveTheme, customColor, setCustomColor } = useThemeConfig();
 
   return (
     <BrandColorSwitchMinimal
@@ -24,7 +25,9 @@ export function DocsBrandSwitch() {
         neutral: theme.name === Theme.Default,
       }))}
       value={activeTheme}
-      onValueChange={(name: string) => setActiveTheme(name as Theme)}
+      onValueChange={(name: string) => setActiveTheme(name as ActiveTheme)}
+      customColor={customColor}
+      onCustomColorChange={(hex: string) => setCustomColor(hex)}
     />
   );
 }

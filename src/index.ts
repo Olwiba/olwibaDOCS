@@ -59,7 +59,7 @@ export {
 } from './components/SearchDialog';
 
 // Theme
-export { ActiveThemeProvider, useThemeConfig } from './components/ActiveTheme';
+export { ActiveThemeProvider, useThemeConfig, type ActiveTheme } from './components/ActiveTheme';
 export { ThemeSelector } from './components/ThemeSelector';
 export { DocsBrandSwitch } from './components/DocsBrandSwitch';
 export { ThemeCodeBlock } from './components/ThemeCodeBlock';
