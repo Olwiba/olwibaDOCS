@@ -4,6 +4,17 @@
 
 
 
+
+## 0.1.57
+
+### Added
+
+- Support custom brand colors in theme switcher
+
+### Fixed
+
+- Every page opens at the top, back included
+
 ## 0.1.56
 
 ### Added
