@@ -1,6 +1,6 @@
 {
   "name": "@olwiba/docs",
-  "version": "0.1.57",
+  "version": "0.1.58",
   "private": false,
   "type": "module",
   "sideEffects": false,
@@ -75,7 +75,7 @@
     "react-dom": ">=18.0.0"
   },
   "devDependencies": {
-    "@olwiba/cn": "0.1.69",
+    "@olwiba/cn": "0.1.71",
     "@olwiba/dx": "0.0.40",
     "@tailwindcss/vite": "^4.3.1",
     "@tanstack/react-router": "1.154.8",

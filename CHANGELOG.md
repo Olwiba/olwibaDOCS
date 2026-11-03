@@ -5,6 +5,13 @@
 
 
 
+
+## 0.1.58
+
+### Added
+
+- Markdown twins, llms.txt and content negotiation for docs sites
+
 ## 0.1.57
 
 ### Added
