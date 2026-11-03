@@ -11,6 +11,7 @@ describe('published entry points', () => {
     '@olwiba/docs/server',
     '@olwiba/docs/mdx',
     '@olwiba/docs/themes',
+    '@olwiba/docs/agent',
   ])('imports %s from built dist without throwing', async (specifier) => {
     const script = `await import(${JSON.stringify(specifier)}); process.exit(0);`;
     const bunCommand = process.platform === 'win32' ? 'bun.exe' : 'bun';

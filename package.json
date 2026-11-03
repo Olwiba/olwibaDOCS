@@ -32,6 +32,10 @@
     "./feedback": {
       "import": "./dist/lib/feedback.js",
       "types": "./dist/lib/feedback.d.ts"
+    },
+    "./agent": {
+      "import": "./dist/lib/agent.js",
+      "types": "./dist/lib/agent.d.ts"
     }
   },
   "files": [

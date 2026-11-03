@@ -10,6 +10,7 @@ export default defineConfig({
     'src/lib/server.ts',
     'src/lib/themes.ts',
     'src/lib/feedback.ts',
+    'src/lib/agent.ts',
   ],
   format: ['esm'],
   dts: true,
