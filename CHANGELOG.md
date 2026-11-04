@@ -6,6 +6,13 @@
 
 
 
+
+## 0.1.59
+
+### Fixed
+
+- The docs homepage now uses the shared themed `IsometricPlane`, so its isometric preview follows the active theme.
+
 ## 0.1.58
 
 ### Added
