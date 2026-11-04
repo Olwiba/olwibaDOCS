@@ -8,8 +8,19 @@ export interface IsometricImage {
   height?: number;
 }
 
+/** One capture set per page theme; the plane shows whichever matches the page. */
+export interface ThemedIsometricImages {
+  light: IsometricImage[];
+  dark: IsometricImage[];
+}
+
 export interface IsometricPlaneProps {
-  images: IsometricImage[];
+  /**
+   * The cards' screenshots. Pass `{ light, dark }` and the plane follows the
+   * page theme, which is what every docs site should do: light captures on a
+   * light page, dark on a dark one. A plain list is shown in both themes.
+   */
+  images: IsometricImage[] | ThemedIsometricImages;
   cols?: number;
   rows?: number;
   cardWidth?: number;
@@ -34,6 +45,38 @@ function buildGrid<T>(items: T[], rows: number, cols: number): T[][] {
   });
 }
 
+type IsoManifestEntry = { file: string; width: number; height: number; theme: string };
+
+/** Splits an iso-previews manifest into the light and dark sets the plane takes. */
+export function isoImagesByTheme(manifest: IsoManifestEntry[], base = '/iso-previews/'): ThemedIsometricImages {
+  const pick = (theme: string) =>
+    manifest
+      .filter((entry) => entry.theme === theme)
+      .map((entry) => ({ src: `${base}${entry.file}`, width: entry.width, height: entry.height }));
+  return { light: pick('light'), dark: pick('dark') };
+}
+
+/**
+ * The page's current colour scheme, from the `dark` class on <html>.
+ *
+ * Starts at 'light' so the server render and the first client render agree;
+ * the effect corrects it straight after hydration and follows theme switches.
+ */
+function useColorScheme(): 'light' | 'dark' {
+  const [scheme, setScheme] = React.useState<'light' | 'dark'>('light');
+
+  React.useEffect(() => {
+    const read = () =>
+      setScheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  return scheme;
+}
+
 const PORTRAIT_BASELINE = 16 / 9;
 
 function mobilePlaneScale(width: number, height: number) {
@@ -43,13 +86,15 @@ function mobilePlaneScale(width: number, height: number) {
 }
 
 export function IsometricPlane({
-  images,
+  images: imagesProp,
   cols = 13,
   rows = 11,
   cardWidth = 176,
   cardHeight = 'auto',
   scrollDuration = 75,
 }: IsometricPlaneProps) {
+  const scheme = useColorScheme();
+  const images = Array.isArray(imagesProp) ? imagesProp : imagesProp[scheme];
   const baseRows = React.useMemo(
     () => buildGrid(images, rows, cols),
     [images, rows, cols],
