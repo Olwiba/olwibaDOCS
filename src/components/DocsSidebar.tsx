@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useRef, useState, useEffect } from 'react';
-import { useLocation, useRouter } from '@tanstack/react-router';
+import { Link, usePathname } from 'fumadocs-core/framework';
 import { Rocket, ChevronRight } from 'lucide-react';
 import { cn } from '../lib/utils';
 import type { Root, Node, Item } from 'fumadocs-core/page-tree';
@@ -79,7 +79,6 @@ interface SidebarFolderProps {
 function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSection, defaultOpen, pathname, enchanted, itemDecoration }: SidebarFolderProps) {
   const [open, setOpen] = useState(defaultOpen);
   const HeaderRow = enchanted ? Enchanted : 'div';
-  const router = useRouter();
 
   // Open when the user navigates into this section (direct URL, search, etc.).
   useEffect(() => {
@@ -103,17 +102,14 @@ function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSectio
           </CollapsibleTrigger>
 
           <SidebarMenuButton
+            asChild
             isActive={isActive}
             className={cn('flex-1', !isActive && 'text-muted-foreground')}
-            onClick={() => {
-              if (!open) setOpen(true);
-              void router.navigate({ href });
-            }}
           >
-            <>
+            <Link href={href} onClick={() => { if (!open) setOpen(true); }}>
               {FolderIcon && <FolderIcon className="size-4 shrink-0" />}
               {name}
-            </>
+            </Link>
           </SidebarMenuButton>
         </HeaderRow>
 
@@ -150,17 +146,17 @@ function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSectio
                     {...(decorated ? { hoverOnly: !isActive } : {})}
                   >
                     <SidebarMenuSubButton
+                      asChild
                       isActive={isActive}
                       className={cn(itemDecoration?.muted?.(page) && 'text-muted-foreground')}
-                      onClick={() => {
-                        void router.navigate({ href: page.url });
-                      }}
                     >
+                      <Link href={page.url}>
                       <span className="flex w-full items-center gap-1.5">
                         <span className="truncate">{page.name}</span>
                         {suffix}
                         {label && <span className="sr-only">{label}</span>}
                       </span>
+                      </Link>
                     </SidebarMenuSubButton>
                   </RowWrapper>
                 </SidebarMenuSubItem>
@@ -174,9 +170,7 @@ function SidebarFolder({ name, href, icon: FolderIcon, pages, isActive, inSectio
 }
 
 export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, bottomSlot, itemDecoration, ...props }: DocsSidebarProps) {
-  const location = useLocation();
-  const router = useRouter();
-  const pathname = location.pathname;
+  const pathname = usePathname();
   const navSections = sections ?? TOP_LEVEL_SECTIONS;
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showTopFade, setShowTopFade] = useState(false);
@@ -201,9 +195,9 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, b
   }
 
   return (
-    <div className="z-30 hidden w-fit self-stretch lg:flex lg:flex-col transition-[width] duration-150 ease-out" {...props}>
+    <div data-slot="docs-sidebar" className="z-30 hidden w-fit self-stretch lg:flex lg:flex-col transition-[width] duration-150 ease-out" {...props}>
       <div className="h-[var(--top-spacing)] shrink-0" />
-      <div className="relative sticky top-[calc(var(--header-height)+13px)] z-30 h-[calc(100svh-var(--header-height)-13px)] overflow-hidden overscroll-none">
+      <div data-slot="docs-sidebar-panel" className="relative sticky top-[calc(var(--header-height)+13px)] z-30 h-[calc(100svh-var(--header-height)-13px)] overflow-hidden overscroll-none">
         <div
           className="pointer-events-none absolute top-0 left-0 right-0 z-10 h-3 bg-gradient-to-b from-background to-transparent"
           style={{ opacity: showTopFade ? 1 : 0, transition: 'opacity 300ms ease' }}
@@ -254,14 +248,14 @@ export function DocsSidebar({ tree, sections, folderIcons, defaultOpenFolders, b
                     return (
                       <SidebarMenuItem key={href}>
                         <SidebarMenuButton
+                          asChild
                           isActive={inSection}
                           className={cn(!inSection && 'text-muted-foreground')}
-                          onClick={() => {
-                            void router.navigate({ href });
-                          }}
                         >
+                          <Link href={href}>
                             {Icon && <Icon className="size-4" />}
                             {name}
+                          </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     );

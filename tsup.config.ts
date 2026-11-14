@@ -5,6 +5,7 @@ import { projectBanner } from './src/project.config';
 export default defineConfig({
   entry: [
     'src/index.ts',
+    'src/react-router.tsx',
     'src/lib/source.ts',
     'src/lib/mdx-components.tsx',
     'src/lib/server.ts',
@@ -21,6 +22,7 @@ export default defineConfig({
     'react',
     'react-dom',
     '@tanstack/react-router',
+    'react-router',
     '@olwiba/cn',
     'shiki',
   ],

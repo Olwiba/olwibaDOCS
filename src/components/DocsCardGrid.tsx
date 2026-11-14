@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { Link } from '@tanstack/react-router';
+import { Link } from 'fumadocs-core/framework';
 import { cn } from '../lib/utils';
 import { DocsGridPattern, type DocsGridPatternProps } from './DocsHeroPattern';
 
@@ -122,7 +122,7 @@ export function DocsCard({ href, title, description, icon: Icon, pattern, extern
               {linkContent}
             </a>
           ) : (
-            <Link to={href}>{linkContent}</Link>
+            <Link href={href}>{linkContent}</Link>
           )}
         </h3>
         {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}

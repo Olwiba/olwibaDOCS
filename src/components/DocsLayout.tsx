@@ -1,6 +1,6 @@
 // @generated — synced from olwibaCN by sync-from-cn.ts. DO NOT EDIT.
 import * as React from 'react';
-import { Link } from '@tanstack/react-router';
+import { Link } from 'fumadocs-core/framework';
 import { DocsSidebar, type SidebarSection, type SidebarItemDecoration } from './DocsSidebar';
 import { DocsMobileNav } from './DocsMobileNav';
 import { DocsToc, type TocItem } from './DocsToc';
@@ -43,7 +43,11 @@ export function extractTextFromReactNode(node: React.ReactNode): string {
 }
 
 export interface DocsLayoutProps {
-  loaderData: PageLoaderData;
+  className?: string;
+  /** React-authored pages need metadata, not a serialized MDX page tree. */
+  loaderData: Omit<PageLoaderData, 'pageTree'> & { pageTree?: SerializedPageTree };
+  /** Hide Markdown/AI page actions when the host does not expose those documents. */
+  showCopyPage?: boolean;
   pageTree: Root;
   sections?: SidebarSection[];
   defaultOpenFolders?: boolean;
@@ -64,14 +68,14 @@ function cx(...classes: Array<string | false | undefined>) {
   return classes.filter(Boolean).join(' ');
 }
 
-export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders, sidebarBottomSlot, variant = 'technical', itemDecoration, children }: DocsLayoutProps) {
+export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders, sidebarBottomSlot, variant = 'technical', itemDecoration, className, showCopyPage = true, children }: DocsLayoutProps) {
   const product = variant === 'product';
   // No horizontal padding on the outer element. The sidebar already sets its
   // own `px-2`, so an outer gutter stacked on top of it put the sidebar's text
   // 16px from the layout edge and 8px from the rail on its other side. The
   // page's dashed rails provide the outer breathing room.
   return (
-    <div className="flex flex-1 flex-col" data-docs-variant={variant}>
+    <div className={cx('flex flex-1 flex-col', className)} data-docs-variant={variant}>
       <SidebarProvider className="min-h-min flex-1 items-start px-0 [--sidebar-width:220px] [--top-spacing:1.5rem] lg:[--sidebar-width:240px] lg:[--top-spacing:2rem]">
         <DocsSidebar tree={pageTree} sections={sections} defaultOpenFolders={defaultOpenFolders} bottomSlot={sidebarBottomSlot} itemDecoration={itemDecoration} />
         <div
@@ -89,7 +93,7 @@ export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders,
                   product ? 'gap-10 px-6 pb-8 md:px-10 lg:pb-12' : 'gap-8 px-4 pb-6 md:px-6 lg:pb-8',
                 )}
               >
-                <div className="flex flex-col gap-2">
+                <div data-slot="docs-page-heading" className="flex flex-col gap-2">
                   <div className="flex items-start justify-between">
                     <h1
                       className={cx(
@@ -100,16 +104,16 @@ export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders,
                       {loaderData.frontmatter.title}
                     </h1>
                     <div className="flex items-center gap-2 sm:gap-2">
-                      <div className="hidden sm:block">
+                      {showCopyPage && <div className="hidden sm:block">
                         <DocsCopyPage
                           page={loaderData.rawContent}
                           url={typeof window !== 'undefined' ? window.location.href : loaderData.url}
                         />
-                      </div>
+                      </div>}
                       <div className="flex items-center gap-2">
                         {loaderData.neighbours.previous && (
                           <Button asChild size="icon" variant="secondary" className="size-8">
-                            <Link to={loaderData.neighbours.previous.url}>
+                            <Link href={loaderData.neighbours.previous.url}>
                               <ArrowLeft className="size-4" />
                               <span className="sr-only">Previous</span>
                             </Link>
@@ -117,7 +121,7 @@ export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders,
                         )}
                         {loaderData.neighbours.next && (
                           <Button asChild size="icon" variant="secondary" className="size-8">
-                            <Link to={loaderData.neighbours.next.url}>
+                            <Link href={loaderData.neighbours.next.url}>
                               <ArrowRight className="size-4" />
                               <span className="sr-only">Next</span>
                             </Link>
@@ -126,12 +130,12 @@ export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders,
                       </div>
                     </div>
                   </div>
-                  <div className="sm:hidden w-fit">
+                  {showCopyPage && <div className="sm:hidden w-fit">
                     <DocsCopyPage
                       page={loaderData.rawContent}
                       url={typeof window !== 'undefined' ? window.location.href : loaderData.url}
                     />
-                  </div>
+                  </div>}
                   {loaderData.frontmatter.description && (
                     <p className={cx('text-balance text-muted-foreground', product && 'text-lg leading-relaxed')}>
                       {loaderData.frontmatter.description}
@@ -148,14 +152,14 @@ export function DocsLayout({ loaderData, pageTree, sections, defaultOpenFolders,
               <div className="hidden h-16 w-full items-center gap-2 px-4 sm:flex md:px-6">
                 {loaderData.neighbours.previous && (
                   <Button asChild size="sm" variant="secondary">
-                    <Link to={loaderData.neighbours.previous.url}>
+                    <Link href={loaderData.neighbours.previous.url}>
                       <ArrowLeft className="size-4" /> {loaderData.neighbours.previous.name}
                     </Link>
                   </Button>
                 )}
                 {loaderData.neighbours.next && (
                   <Button asChild size="sm" variant="secondary" className="ml-auto">
-                    <Link to={loaderData.neighbours.next.url}>
+                    <Link href={loaderData.neighbours.next.url}>
                       {loaderData.neighbours.next.name} <ArrowRight className="size-4" />
                     </Link>
                   </Button>

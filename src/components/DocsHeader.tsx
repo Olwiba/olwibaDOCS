@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { Link } from '@tanstack/react-router';
+import { Link } from 'fumadocs-core/framework';
 import { cn } from '../lib/utils';
 import { SearchButton } from './SearchButton';
 import { MoreHorizontal } from 'lucide-react';
@@ -78,7 +78,7 @@ export function DocsHeader({
             so it is the only child allowed to shrink. Without `min-w-0` a flex
             item refuses to go below its content width and pushes the controls
             past the edge instead. */}
-        <Link className="flex min-w-0 items-center gap-2" to="/">
+        <Link className="flex min-w-0 items-center gap-2" href="/">
           {/* A step down on the narrowest screens. At `text-lg` the wordmark
               was the first thing to run out of room and truncated mid-word,
               which costs more than the point of type size it saves. */}
@@ -92,7 +92,7 @@ export function DocsHeader({
             {navItems.map((item) => (
               <Link
                 key={item.href}
-                to={item.href}
+                href={item.href}
                 className="text-foreground transition-colors hover:text-foreground/80"
               >
                 {item.label}

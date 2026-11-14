@@ -47,7 +47,35 @@ Consumers should import shared docs-shell primitives from `@olwiba/docs`, not fr
 bun add @olwiba/docs @olwiba/cn
 ```
 
-Peer dependencies: `@olwiba/cn`, `@tanstack/react-router`, `react`, `react-dom`
+Peer dependencies: `@olwiba/cn`, `react`, `react-dom`, and the router for your entry.
+The default entry uses TanStack Router; `@olwiba/docs/react-router` uses React Router 7/8.
+
+### Embed in a React Router application
+
+```tsx
+import { DocsLayout, DocsProvider, Sandbox } from '@olwiba/docs/react-router';
+
+// Render inside your existing React Router data router. No second router,
+// TanStack Start setup, or MDX pipeline is needed for React-authored pages.
+<DocsProvider theme={{ enabled: false }} searchEnabled={false}>
+  <DocsLayout loaderData={pageMetadata} pageTree={navigationTree} variant="product">
+    <Sandbox id="my-example" />
+  </DocsLayout>
+</DocsProvider>
+```
+
+Register consumer-owned previews with `registerSandboxes` from the same entry.
+`searchEnabled={false}` avoids installing a search service for a small embedded
+gallery; enable search only when the app supplies the corresponding endpoints.
+`theme={{ enabled: false }}` preserves the host application's document theme.
+Scan the published DOCS and CN `dist` directories with Tailwind `@source`, import
+the docs styles, and supply the semantic surface/sidebar/code tokens used by the
+shell. Scope host-specific overrides to your docs area rather than copying the
+demo site's global stylesheet. `DocsLayout` accepts a `className`; stable
+`data-slot="docs-page-heading"` and `data-slot="docs-sidebar-panel"` hooks support
+branded surfaces without replacing shell implementations.
+
+The default entry and TanStack bootstrap helpers keep their existing behavior.
 
 ```css
 @import 'fumadocs-ui/css/neutral.css';
