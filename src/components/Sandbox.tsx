@@ -41,6 +41,8 @@ type SandboxProps = {
   defaultViewport?: SandboxViewport;
   height?: number;
   shellPreview?: boolean;
+  /** Hide the theme switch when the demonstrated product supports one mode. */
+  showThemeToggle?: boolean;
 };
 
 type FileNode = {
@@ -328,6 +330,7 @@ export function Sandbox({
   defaultViewport = 'desktop',
   height,
   shellPreview = false,
+  showThemeToggle = true,
 }: SandboxProps) {
   const definition = getSandboxDefinition(id);
 
@@ -658,7 +661,7 @@ export function Sandbox({
             </div>
 
             <div className="flex shrink-0 items-center gap-2">
-              {mode === 'preview' ? (
+              {mode === 'preview' && showThemeToggle ? (
                 <Button
                   aria-label={
                     previewTheme === 'dark' ? 'Preview in light mode' : 'Preview in dark mode'
