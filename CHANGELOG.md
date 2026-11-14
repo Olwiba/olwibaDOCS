@@ -7,6 +7,14 @@
 
 
 
+
+## 0.1.60
+
+### Added
+
+- Allow single-theme sandboxes
+- Support React Router shells
+
 ## 0.1.59
 
 ### Fixed

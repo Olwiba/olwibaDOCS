@@ -1,6 +1,6 @@
 {
   "name": "@olwiba/docs",
-  "version": "0.1.59",
+  "version": "0.1.60",
   "private": false,
   "type": "module",
   "sideEffects": false,
@@ -80,7 +80,7 @@
     "react-router": ">=7.0.0 <9"
   },
   "devDependencies": {
-    "@olwiba/cn": "0.1.73",
+    "@olwiba/cn": "0.1.75",
     "@olwiba/dx": "0.0.43",
     "@tailwindcss/vite": "^4.3.1",
     "@tanstack/react-router": "1.154.8",
